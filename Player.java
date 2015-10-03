@@ -1,13 +1,13 @@
 
 public class Player {
-	Hand hand;
-	int stack;
+   Hand hand;
+   int stack;
 
-	public Player(int stack) {
-		this.stack = stack;
-	}
+   public Player(int stack) {
+      this.stack = stack;
+   }
 
-	public void bet(int bet) {
-		this.stack -= bet;
-	}
+   public void bet(int bet) {
+      this.stack -= bet;
+   }
 }
