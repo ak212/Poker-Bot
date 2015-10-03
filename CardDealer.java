@@ -1,22 +1,19 @@
-import java.util.Collections;
-
 public class CardDealer {
    public static Dealer dealer;
    public static final int PRE_FLOP = 0;
    public static final int FLOP = 1;
    public static final int TURN = 2;
    public static final int RIVER = 3;
-   
+
    private static Card dealCard() {
       Card card = null;
-      
+
       try {
          if (dealer.deckOfCards.deck.size() == 0) {
             throw new Exception("No cards in deck");
          }
          card = dealer.drawCard();
-      }
-      catch (Exception e) {
+      } catch (Exception e) {
          System.err.println(e.getMessage());
       }
 
@@ -32,8 +29,6 @@ public class CardDealer {
 
    public static void main(String[] args) {
       dealer = new Dealer();
-      dealer.deckOfCards = new DeckOfCards();
-      Collections.shuffle(dealer.deckOfCards.deck);
 
       int gameState = 0;
       boolean playGame = true;
@@ -95,6 +90,7 @@ public class CardDealer {
 
          if (gameState > RIVER) {
             gameState = PRE_FLOP;
+            dealer.newHand();
          }
       }
    }

@@ -4,6 +4,8 @@ public class Dealer {
    DeckOfCards deckOfCards;
    ArrayList<Card> communityCards;
    ArrayList<Card> burnCards;
+   int smallBlind;
+   int bigBlind;
    int pot;
    int currentBet;
    ArrayList<Integer> sidePots;
@@ -13,6 +15,7 @@ public class Dealer {
       currentBet = 0;
       communityCards = new ArrayList<Card>();
       burnCards = new ArrayList<Card>();
+      deckOfCards = new DeckOfCards();
    }
 
    public Card drawCard() {
@@ -36,6 +39,15 @@ public class Dealer {
    public void river() {
       burnCards.add(drawCard());
       communityCards.add(drawCard());
+   }
+
+   public void newHand() {
+      burnCards.clear();
+      communityCards.clear();
+      pot = 0;
+      currentBet = 0;
+      sidePots.clear();
+      deckOfCards = new DeckOfCards();
    }
 
    public void printCommunityCards() {
