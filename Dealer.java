@@ -41,7 +41,7 @@ public class Dealer {
    public void printCommunityCards() {
       System.out.println("On the board:");
       for (Card card : communityCards) {
-         System.out.println(card.rank + " of " + card.suit);
+         System.out.println(card.shorten());
       }
    }
 

@@ -1,4 +1,3 @@
-
 public class Hand {
    Card card1;
    Card card2;
@@ -9,7 +8,6 @@ public class Hand {
    }
 
    public void printHand() {
-      System.out.println(this.card1.rank + " of " + this.card1.suit);
-      System.out.println(this.card2.rank + " of " + this.card2.suit);
+      System.out.println(this.card1.shorten() + this.card2.shorten());
    }
 }
