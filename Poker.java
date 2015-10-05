@@ -1,4 +1,4 @@
-public class CardDealer {
+public class Poker {
    public static Dealer dealer;
    public static final int PRE_FLOP = 0;
    public static final int FLOP = 1;
