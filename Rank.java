@@ -1,13 +1,12 @@
-
 public enum Rank {
-   ACE(1), TWO(2), THREE(3), FOUR(4), FIVE(5), SIX(6), SEVEN(7), EIGHT(8), NINE(9), 
-   TEN(10), JACK(11), QUEEN(12), KING(13);
+   TWO(2), THREE(3), FOUR(4), FIVE(5), SIX(6), SEVEN(7), EIGHT(8), NINE(9), TEN(
+         10), JACK(11), QUEEN(12), KING(13), ACE(14);
 
    private int value;
 
    private Rank(int value) {
-         this.value = value;
-      }
+      this.value = value;
+   }
 
    public int getValue() {
       return value;
@@ -17,9 +16,6 @@ public enum Rank {
       Rank rank = null;
 
       switch (r) {
-      case 1:
-         rank = Rank.ACE;
-         break;
       case 2:
          rank = Rank.TWO;
          break;
@@ -55,6 +51,9 @@ public enum Rank {
          break;
       case 13:
          rank = Rank.KING;
+         break;
+      case 14:
+         rank = Rank.ACE;
          break;
       default:
          break;
