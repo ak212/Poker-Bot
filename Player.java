@@ -1,9 +1,10 @@
-
 public class Player {
+   int playerId;
    Hand hand;
    int stack;
 
-   public Player(int stack) {
+   public Player(int id, int stack) {
+      this.playerId = id;
       this.stack = stack;
    }
 

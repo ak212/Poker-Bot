@@ -32,10 +32,11 @@ public class Poker {
 
       int gameState = 0;
       boolean playGame = true;
+      int playerId = 1;
 
       int startingChips = 1000;
-      Player player1 = new Player(startingChips);
-      Player player2 = new Player(startingChips);
+      Player player1 = new Player(playerId++, startingChips);
+      Player player2 = new Player(playerId++, startingChips);
       int betAmount = 100;
 
       while (playGame) {

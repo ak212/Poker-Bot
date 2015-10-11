@@ -16,12 +16,11 @@ public class Dealer {
       communityCards = new ArrayList<Card>();
       burnCards = new ArrayList<Card>();
       deckOfCards = new DeckOfCards();
+      sidePots = new ArrayList<Integer>();
    }
 
    public Card drawCard() {
-      Card card = deckOfCards.deck.get(0);
-      deckOfCards.deck.remove(0);
-      return card;
+      return deckOfCards.deck.remove(0);
    }
 
    public void flop() {
