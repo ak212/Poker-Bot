@@ -8,7 +8,7 @@ public class DeckOfCards {
       deck = new ArrayList<Card>();
 
       for (int i = 0; i < 4; i++) {
-         for (int j = 1; j < 14; j++) {
+         for (int j = 2; j < 15; j++) {
             deck.add(new Card(Suit.getSuit(i), Rank.getRank(j)));
          }
       }

@@ -1,3 +1,5 @@
+import java.util.Scanner;
+
 public class Poker {
    public static Dealer dealer;
    public static final int PRE_FLOP = 0;
@@ -21,10 +23,38 @@ public class Poker {
    }
 
    public static Hand dealHand() {
+      dealer.playersInHand++;
       Card card1 = dealCard();
       Card card2 = dealCard();
 
       return new Hand(card1, card2);
+   }
+
+   public static Player playerInput(Player p) {
+      Player player = p;
+      Scanner scan = new Scanner(System.in);
+      String playerAction = scan.next();
+
+      switch (playerAction) {
+      case "b":
+         dealer.currentBet = scan.nextInt();
+         player.bet(dealer.currentBet);
+         dealer.pot += dealer.currentBet;
+         break;
+      case "c":
+         player.bet(dealer.currentBet);
+         dealer.pot += dealer.currentBet;
+         break;
+      case "f":
+         player.inHand = false;
+         dealer.playersInHand--;
+         System.out.println("Player " + player.playerId + " folds");
+         break;
+      default:
+         break;
+      }
+
+      return player;
    }
 
    public static void main(String[] args) {
@@ -50,46 +80,54 @@ public class Poker {
             System.out.println("Player 2");
             player2.hand.printHand();
 
-            player1.bet(betAmount);
-            dealer.pot += betAmount;
-            player2.bet(betAmount);
-            dealer.pot += betAmount;
+            // TODO need bet period function. players to global vars?
+            player1 = playerInput(player1);
+
+            if (dealer.playersInHand > 1) {
+               player2.bet(dealer.currentBet);
+               dealer.pot += dealer.currentBet;
+            }
             break;
 
          case FLOP:
             dealer.flop();
             dealer.printCommunityCards();
 
-            player1.bet(betAmount);
-            dealer.pot += betAmount;
-            player2.bet(betAmount);
-            dealer.pot += betAmount;
+            player1 = playerInput(player1);
+            if (dealer.playersInHand > 1) {
+               player2.bet(dealer.currentBet);
+               dealer.pot += dealer.currentBet;
+            }
             break;
 
          case TURN:
             dealer.turn();
             dealer.printCommunityCards();
 
-            player1.bet(betAmount);
-            dealer.pot += betAmount;
-            player2.bet(betAmount);
-            dealer.pot += betAmount;
+            player1 = playerInput(player1);
+            if (dealer.playersInHand > 1) {
+               player2.bet(dealer.currentBet);
+               dealer.pot += dealer.currentBet;
+            }
             break;
 
          case RIVER:
             dealer.river();
             dealer.printCommunityCards();
 
-            player1.bet(betAmount);
-            dealer.pot += betAmount;
-            player2.bet(betAmount);
-            dealer.pot += betAmount;
+            player1 = playerInput(player1);
+            if (dealer.playersInHand > 1) {
+               player2.bet(dealer.currentBet);
+               dealer.pot += dealer.currentBet;
+            }
             break;
          }
 
+         dealer.currentBet = 0;
          gameState += 1;
+         System.out.println("Current Pot: " + dealer.pot);
 
-         if (gameState > RIVER) {
+         if (gameState > RIVER || dealer.playersInHand == 1) {
             gameState = PRE_FLOP;
             dealer.newHand();
          }

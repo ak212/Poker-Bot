@@ -9,6 +9,7 @@ public class Dealer {
    int pot;
    int currentBet;
    ArrayList<Integer> sidePots;
+   int playersInHand;
 
    public Dealer() {
       pot = 0;
@@ -52,8 +53,9 @@ public class Dealer {
    public void printCommunityCards() {
       System.out.println("On the board:");
       for (Card card : communityCards) {
-         System.out.println(card.shorten());
+         System.out.print(card.shorten());
       }
+      System.out.println();
    }
 
 }
