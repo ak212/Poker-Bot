@@ -128,6 +128,7 @@ public class Poker {
          System.out.println("Current Pot: " + dealer.pot);
 
          if (gameState > RIVER || dealer.playersInHand == 1) {
+            dealer.playersInHand = 0;
             gameState = PRE_FLOP;
             dealer.newHand();
          }
