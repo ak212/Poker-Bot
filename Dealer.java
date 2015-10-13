@@ -42,6 +42,7 @@ public class Dealer {
    }
 
    public void newHand() {
+      playersInHand = 0;
       burnCards.clear();
       communityCards.clear();
       pot = 0;
