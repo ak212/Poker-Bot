@@ -22,12 +22,12 @@ public class Poker {
       return card;
    }
 
-   public static Hand dealHand() {
+   public static HoleCards dealHoleCards() {
       dealer.playersInHand++;
       Card card1 = dealCard();
       Card card2 = dealCard();
 
-      return new Hand(card1, card2);
+      return new HoleCards(card1, card2);
    }
 
    public static Player playerInput(Player p) {
@@ -72,13 +72,13 @@ public class Poker {
       while (playGame) {
          switch (gameState) {
          case PRE_FLOP:
-            player1.hand = dealHand();
-            player2.hand = dealHand();
+            player1.hand = dealHoleCards();
+            player2.hand = dealHoleCards();
 
             System.out.println("Player 1");
-            player1.hand.printHand();
+            player1.hand.printHoleCards();
             System.out.println("Player 2");
-            player2.hand.printHand();
+            player2.hand.printHoleCards();
 
             // TODO need bet period function. players to global vars?
             player1 = playerInput(player1);

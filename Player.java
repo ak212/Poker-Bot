@@ -1,6 +1,6 @@
 public class Player {
    int playerId;
-   Hand hand;
+   HoleCards hand;
    int stack;
    boolean inHand;
 
