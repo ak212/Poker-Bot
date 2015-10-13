@@ -67,11 +67,11 @@ public class Poker {
       int startingChips = 1000;
       Player player1 = new Player(playerId++, startingChips);
       Player player2 = new Player(playerId++, startingChips);
-      int betAmount = 100;
 
       while (playGame) {
          switch (gameState) {
          case PRE_FLOP:
+            // TODO deal cards in proper order
             player1.hand = dealHoleCards();
             player2.hand = dealHoleCards();
 
