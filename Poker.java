@@ -1,3 +1,4 @@
+import java.util.ArrayList;
 import java.util.Scanner;
 
 public class Poker {
@@ -48,7 +49,7 @@ public class Poker {
       case "f":
          player.inHand = false;
          dealer.playersInHand--;
-         System.out.println("Player " + player.playerId + " folds");
+         System.out.println("Player " + player.playerPosition + " folds");
          break;
       default:
          break;
@@ -62,29 +63,41 @@ public class Poker {
 
       int gameState = 0;
       boolean playGame = true;
-      int playerId = 1;
+      int playerPosition = 0;
 
       int startingChips = 1000;
-      Player player1 = new Player(playerId++, startingChips);
-      Player player2 = new Player(playerId++, startingChips);
-
+      ArrayList<Player> players = new ArrayList<Player>();
+      players.add(new Player(playerPosition++, startingChips));
+      players.add(new Player(playerPosition++, startingChips));
+      
       while (playGame) {
          switch (gameState) {
          case PRE_FLOP:
             // TODO deal cards in proper order
-            player1.hand = dealHoleCards();
-            player2.hand = dealHoleCards();
+            players.get(0).hand = dealHoleCards();
+            players.get(1).hand = dealHoleCards();
+            
+            players.get(dealer.dealerButtonPosition % dealer.playersInHand).dealerButton = true;
 
+            if (dealer.playersInHand == 2) {
+               players.get(dealer.dealerButtonPosition % dealer.playersInHand).smallBlind = true;
+               players.get((dealer.dealerButtonPosition + 1) % dealer.playersInHand).bigBlind = true;
+            }
+            else {
+               players.get(dealer.smallBlindPosition % dealer.playersInHand).smallBlind = true;
+               players.get(dealer.bigBlindPosition % dealer.playersInHand).bigBlind = true;
+            }
+            
             System.out.println("Player 1");
-            player1.hand.printHoleCards();
+            players.get(0).hand.printHoleCards();
             System.out.println("Player 2");
-            player2.hand.printHoleCards();
+            players.get(1).hand.printHoleCards();
 
             // TODO need bet period function. players to global vars?
-            player1 = playerInput(player1);
+            players.set(0, playerInput(players.get(0)));
 
             if (dealer.playersInHand > 1) {
-               player2.bet(dealer.currentBet);
+               players.get(1).bet(dealer.currentBet);
                dealer.pot += dealer.currentBet;
             }
             break;
@@ -93,9 +106,10 @@ public class Poker {
             dealer.flop();
             dealer.printCommunityCards();
 
-            player1 = playerInput(player1);
+            players.set(0, playerInput(players.get(0)));
+
             if (dealer.playersInHand > 1) {
-               player2.bet(dealer.currentBet);
+               players.get(1).bet(dealer.currentBet);
                dealer.pot += dealer.currentBet;
             }
             break;
@@ -104,9 +118,10 @@ public class Poker {
             dealer.turn();
             dealer.printCommunityCards();
 
-            player1 = playerInput(player1);
+            players.set(0, playerInput(players.get(0)));
+
             if (dealer.playersInHand > 1) {
-               player2.bet(dealer.currentBet);
+               players.get(1).bet(dealer.currentBet);
                dealer.pot += dealer.currentBet;
             }
             break;
@@ -115,9 +130,10 @@ public class Poker {
             dealer.river();
             dealer.printCommunityCards();
 
-            player1 = playerInput(player1);
+            players.set(0, playerInput(players.get(0)));
+
             if (dealer.playersInHand > 1) {
-               player2.bet(dealer.currentBet);
+               players.get(1).bet(dealer.currentBet);
                dealer.pot += dealer.currentBet;
             }
             break;
@@ -130,6 +146,12 @@ public class Poker {
          if (gameState > RIVER || dealer.playersInHand == 1) {
             gameState = PRE_FLOP;
             dealer.newHand();
+
+            for (Player player : players) {
+               player.bigBlind = false;
+               player.dealerButton = false;
+               player.smallBlind = false;
+            }
          }
       }
    }

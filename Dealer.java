@@ -4,14 +4,20 @@ public class Dealer {
    DeckOfCards deckOfCards;
    ArrayList<Card> communityCards;
    ArrayList<Card> burnCards;
-   int smallBlind;
-   int bigBlind;
+   int smallBlindAmount;
+   int bigBlindAmount;
+   int dealerButtonPosition;
+   int smallBlindPosition;
+   int bigBlindPosition;
    int pot;
    int currentBet;
    ArrayList<Integer> sidePots;
    int playersInHand;
 
    public Dealer() {
+      dealerButtonPosition = 0;
+      smallBlindPosition = 1;
+      bigBlindPosition = 2;
       pot = 0;
       currentBet = 0;
       communityCards = new ArrayList<Card>();
@@ -42,6 +48,9 @@ public class Dealer {
    }
 
    public void newHand() {
+      dealerButtonPosition++;
+      smallBlindPosition++;
+      bigBlindPosition++;
       playersInHand = 0;
       burnCards.clear();
       communityCards.clear();
