@@ -65,7 +65,7 @@ public class Poker {
       boolean playGame = true;
       int playerPosition = 0;
 
-      int startingChips = 1000;
+      int startingChips = 10000;
       ArrayList<Player> players = new ArrayList<Player>();
       players.add(new Player(playerPosition++, startingChips));
       players.add(new Player(playerPosition++, startingChips));
@@ -75,7 +75,9 @@ public class Poker {
          case PRE_FLOP:
             // TODO deal cards in proper order
             players.get(0).hand = dealHoleCards();
+            players.get(0).inHand = true;
             players.get(1).hand = dealHoleCards();
+            players.get(1).inHand = true;
             
             players.get(dealer.dealerButtonPosition % dealer.playersInHand).dealerButton = true;
 
@@ -88,6 +90,17 @@ public class Poker {
                players.get(dealer.bigBlindPosition % dealer.playersInHand).bigBlind = true;
             }
             
+            for (Player player : players) {
+               if (player.bigBlind) {
+                  player.blind(dealer.bigBlindAmount);
+                  dealer.pot += dealer.bigBlindAmount;
+               } 
+               else if (player.smallBlind) {
+                  player.blind(dealer.smallBlindAmount);
+                  dealer.pot += dealer.smallBlindAmount;
+               }
+            }
+
             System.out.println("Player 1");
             players.get(0).hand.printHoleCards();
             System.out.println("Player 2");
@@ -144,6 +157,14 @@ public class Poker {
          System.out.println("Current Pot: " + dealer.pot);
 
          if (gameState > RIVER || dealer.playersInHand == 1) {
+            if (dealer.playersInHand == 1) {
+               for (Player player : players) {
+                  if (player.inHand) {
+                     player.stack += dealer.pot;
+                  }
+               }
+            }
+
             gameState = PRE_FLOP;
             dealer.newHand();
 

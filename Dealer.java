@@ -18,6 +18,8 @@ public class Dealer {
       dealerButtonPosition = 0;
       smallBlindPosition = 1;
       bigBlindPosition = 2;
+      smallBlindAmount = 25;
+      bigBlindAmount = 50;
       pot = 0;
       currentBet = 0;
       communityCards = new ArrayList<Card>();
