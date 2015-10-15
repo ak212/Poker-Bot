@@ -1,3 +1,4 @@
+package poker;
 public class Player {
    int playerPosition;
    HoleCards holeCards;
