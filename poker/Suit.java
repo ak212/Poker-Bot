@@ -1,3 +1,4 @@
+package poker;
 
 public enum Suit {
    SPADES(0), HEARTS(1), CLUBS(2), DIAMONDS(3);
