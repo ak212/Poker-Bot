@@ -105,10 +105,10 @@ public class Poker {
                }
             }
 
-            System.out.println("Player 1");
-            players.get(0).holeCards.printHoleCards();
-            System.out.println("Player 2");
-            players.get(1).holeCards.printHoleCards();
+            for (Player player : players) {
+               System.out.println("Player " + player.playerPosition);
+               player.holeCards.printHoleCards();
+            }
 
             // TODO need bet period function. players to global vars?
             players.set(0, playerInput(players.get(0)));
