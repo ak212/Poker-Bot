@@ -164,6 +164,7 @@ public class Poker {
             if (dealer.playersInHand == 1) {
                for (Player player : players) {
                   if (player.inHand) {
+                     System.out.println("Player " + player.playerPosition + " wins " + dealer.pot);
                      player.stack += dealer.pot;
                   }
                }
