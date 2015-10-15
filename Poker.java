@@ -23,12 +23,20 @@ public class Poker {
       return card;
    }
 
-   public static HoleCards dealHoleCards() {
-      dealer.playersInHand++;
-      Card card1 = dealCard();
-      Card card2 = dealCard();
+   public static ArrayList<Player> dealHoleCards(ArrayList<Player> players) {
+      Card[] cardsDealt = new Card[players.size() * 2];
+      for (int i = 0; i < players.size() * 2; i++) {
+         cardsDealt[i] = dealer.drawCard();
+      }
 
-      return new HoleCards(card1, card2);
+      for (Player player : players) {
+         player.holeCards = new HoleCards(cardsDealt[player.playerPosition],
+               cardsDealt[player.playerPosition + players.size()]);
+         player.inHand = true;
+         dealer.playersInHand++;
+      }
+
+      return players;
    }
 
    public static Player playerInput(Player p) {
@@ -73,11 +81,7 @@ public class Poker {
       while (playGame) {
          switch (gameState) {
          case PRE_FLOP:
-            // TODO deal cards in proper order
-            players.get(0).hand = dealHoleCards();
-            players.get(0).inHand = true;
-            players.get(1).hand = dealHoleCards();
-            players.get(1).inHand = true;
+            players = dealHoleCards(players);
             
             players.get(dealer.dealerButtonPosition % dealer.playersInHand).dealerButton = true;
 
@@ -102,9 +106,9 @@ public class Poker {
             }
 
             System.out.println("Player 1");
-            players.get(0).hand.printHoleCards();
+            players.get(0).holeCards.printHoleCards();
             System.out.println("Player 2");
-            players.get(1).hand.printHoleCards();
+            players.get(1).holeCards.printHoleCards();
 
             // TODO need bet period function. players to global vars?
             players.set(0, playerInput(players.get(0)));
@@ -165,6 +169,7 @@ public class Poker {
                }
             }
 
+            System.out.println("\n\n");
             gameState = PRE_FLOP;
             dealer.newHand();
 
