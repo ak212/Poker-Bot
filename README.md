@@ -3,7 +3,7 @@
 # To Do:
 * hand evaluation - most valuable hand created from 5 of the (up to) 7 cards available
 * based on hand evaluation, who wins after river
-* rotate order of who acts first based on position (no logic for this yet since we don't have a bot that can make a decision)
+* rotate order of who acts first based on position (no logic for this yet since we don't have a bot that can make a decision), also need to deal cards in this order
 * know when someone is all in - create side pot if two or more other players in the hand
 * get started on planning bot
 
