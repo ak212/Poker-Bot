@@ -31,8 +31,7 @@ public class Poker {
       }
 
       for (Player player : players) {
-         player.holeCards = new HoleCards(cardsDealt[player.playerPosition],
-               cardsDealt[player.playerPosition + players.size()]);
+         player.holeCards = new HoleCards(cardsDealt[player.id], cardsDealt[player.id + players.size()]);
          player.inHand = true;
          dealer.playersInHand++;
       }
@@ -58,7 +57,7 @@ public class Poker {
       case "f":
          player.inHand = false;
          dealer.playersInHand--;
-         System.out.println("Player " + player.playerPosition + " folds");
+         System.out.println("Player " + player.position + " folds");
          break;
       default:
          break;
@@ -72,12 +71,12 @@ public class Poker {
 
       int gameState = 0;
       boolean playGame = true;
-      int playerPosition = 0;
+      int playerId = 0;
 
       int startingChips = 10000;
       ArrayList<Player> players = new ArrayList<Player>();
-      players.add(new Player(playerPosition++, startingChips));
-      players.add(new Player(playerPosition++, startingChips));
+      players.add(new Player(playerId++, startingChips));
+      players.add(new Player(playerId++, startingChips));
       
       while (playGame) {
          switch (gameState) {
@@ -88,11 +87,19 @@ public class Poker {
 
             if (dealer.playersInHand == 2) {
                players.get(dealer.dealerButtonPosition % dealer.playersInHand).smallBlind = true;
+               players.get(dealer.dealerButtonPosition % dealer.playersInHand).position = 1;
                players.get((dealer.dealerButtonPosition + 1) % dealer.playersInHand).bigBlind = true;
+               players.get((dealer.dealerButtonPosition + 1) % dealer.playersInHand).position = 2;
             }
             else {
                players.get(dealer.smallBlindPosition % dealer.playersInHand).smallBlind = true;
+               players.get(dealer.smallBlindPosition % dealer.playersInHand).position = 1;
                players.get(dealer.bigBlindPosition % dealer.playersInHand).bigBlind = true;
+               players.get(dealer.bigBlindPosition % dealer.playersInHand).position = 2;
+
+               for (int i = 2; i < dealer.playersInHand; i++) {
+                  players.get((dealer.smallBlindPosition + i) % dealer.playersInHand).position = i + 1;
+               }
             }
             
             for (Player player : players) {
@@ -107,7 +114,7 @@ public class Poker {
             }
 
             for (Player player : players) {
-               System.out.println("Player " + player.playerPosition);
+               System.out.println("Player " + player.id);
                player.holeCards.printHoleCards();
             }
 
@@ -165,7 +172,7 @@ public class Poker {
             if (dealer.playersInHand == 1) {
                for (Player player : players) {
                   if (player.inHand) {
-                     System.out.println("Player " + player.playerPosition + " wins " + dealer.pot);
+                     System.out.println("Player " + player.id + " wins " + dealer.pot);
                      player.stack += dealer.pot;
                   }
                }
@@ -176,6 +183,7 @@ public class Poker {
             dealer.newHand();
 
             for (Player player : players) {
+               player.position = 0;
                player.bigBlind = false;
                player.dealerButton = false;
                player.smallBlind = false;

@@ -1,6 +1,7 @@
 package poker;
 public class Player {
-   int playerPosition;
+   int id;
+   int position;
    HoleCards holeCards;
    int stack;
    boolean inHand;
@@ -8,8 +9,8 @@ public class Player {
    boolean bigBlind;
    boolean smallBlind;
 
-   public Player(int position, int stack) {
-      this.playerPosition = position;
+   public Player(int id, int stack) {
+      this.id = id;
       this.stack = stack;
    }
 
@@ -18,13 +19,13 @@ public class Player {
       // be problem when we have a gui
       this.stack -= bet;
 
-      System.out.println("Player " + this.playerPosition + (bet == 0 ? " checks" : " bets " + bet));
+      System.out.println("Player " + this.id + (bet == 0 ? " checks" : " bets " + bet));
    }
 
    public void blind(int blind) {
       this.stack -= blind;
 
-      System.out.println("Player " + this.playerPosition + (bigBlind ? " big blind" : " small blind"));
+      System.out.println("Player " + this.id + (bigBlind ? " big blind" : " small blind"));
 
    }
 }
