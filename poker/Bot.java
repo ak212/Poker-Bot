@@ -27,14 +27,15 @@ public class Bot extends Player {
       super(position, stack);
    }
 
-   public int evalHoleCards(HoleCards holecards) {
+   public int evalHoleCards() {
      
       int idx1 = 0, idx2 = 0, temp;
 
-      idx1 = Math.max(holecards.card1.rank.getValue(), holecards.card2.rank.getValue());
-      idx2 = Math.min(holecards.card1.rank.getValue(), holecards.card2.rank.getValue());
+      idx1 = Math.max(this.holeCards.card1.rank.getValue(), this.holeCards.card2.rank.getValue());
+      idx2 = Math.min(this.holeCards.card1.rank.getValue(), this.holeCards.card2.rank.getValue());
       
-      if (holecards.card1.suit != holecards.card2.suit) {
+      //why?
+      if (this.holeCards.card1.suit != this.holeCards.card2.suit) {
          idx1 = temp;
          idx2 = idx1;
          idx2 = temp;
