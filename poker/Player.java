@@ -20,15 +20,12 @@ public class Player {
       // be problem when we have a gui
       this.stack -= bet;
 
-      System.out.println((this.id == 0 ? "Player " : "Bot ") + this.id
-            + (bet == 0 ? " checks" : " bets " + bet));
+      System.out.println((this.id == 0 ? "Player " : "Bot ") + this.id + (bet == 0 ? " checks" : " bets " + bet));
    }
 
    public void blind(int blind) {
       this.stack -= blind;
 
-      System.out.println((this.id == 0 ? "Player " : "Bot ") + this.id
-            + (bigBlind ? " big blind" : " small blind"));
-
+      System.out.println((this.id == 0 ? "Player " : "Bot ") + this.id + (bigBlind ? " big blind" : " small blind"));
    }
 }
