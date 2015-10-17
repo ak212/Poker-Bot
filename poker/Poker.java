@@ -11,8 +11,8 @@ public class Poker {
    public static final int RIVER = 3;
 
    public static ArrayList<Player> dealHoleCards(ArrayList<Player> players) {
-      Card[] cardsDealt = new Card[players.size() * 2];
-      for (int i = 0; i < players.size() * 2; i++) {
+      Card[] cardsDealt = new Card[players.size() * 2 + 1];
+      for (int i = 1; i < players.size() * 2 + 1; i++) {
          try {
             if (dealer.deckOfCards.deck.size() == 0) {
                throw new Exception("No cards in deck");
@@ -24,9 +24,8 @@ public class Poker {
       }
 
       for (Player player : players) {
-         player.holeCards = new HoleCards(cardsDealt[player.id], cardsDealt[player.id + players.size()]);
+         player.holeCards = new HoleCards(cardsDealt[player.position], cardsDealt[player.position + players.size()]);
          player.inHand = true;
-         dealer.playersInHand++;
       }
 
       return players;
@@ -69,15 +68,14 @@ public class Poker {
       int startingChips = 10000;
       ArrayList<Player> players = new ArrayList<Player>();
       players.add(new Player(playerId++, startingChips));
-      players.add(new Player(playerId++, startingChips));
+      players.add(new Bot(playerId++, startingChips));
 
       while (playGame) {
          switch (gameState) {
          case PRE_FLOP:
-            players = dealHoleCards(players);
+            dealer.playersInHand = dealer.getPlayersInHand(players);
 
             players.get(dealer.dealerButtonPosition % dealer.playersInHand).dealerButton = true;
-
             if (dealer.playersInHand == 2) {
                players.get(dealer.dealerButtonPosition % dealer.playersInHand).smallBlind = true;
                players.get(dealer.dealerButtonPosition % dealer.playersInHand).position = 2;
@@ -103,6 +101,8 @@ public class Poker {
                   dealer.pot += dealer.smallBlindAmount;
                }
             }
+
+            players = dealHoleCards(players);
 
             for (Player player : players) {
                System.out.println("Player " + player.id);

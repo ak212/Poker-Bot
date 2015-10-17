@@ -1,4 +1,5 @@
 package poker;
+
 import java.util.ArrayList;
 
 public class Dealer {
@@ -31,6 +32,18 @@ public class Dealer {
 
    public Card drawCard() {
       return deckOfCards.deck.remove(0);
+   }
+
+   public int getPlayersInHand(ArrayList<Player> players) {
+      int count = 0;
+
+      for (Player player : players) {
+         if (player.stack > 0) {
+            count++;
+         }
+      }
+
+      return count;
    }
 
    public void flop() {
