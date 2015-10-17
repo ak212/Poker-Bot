@@ -87,9 +87,9 @@ public class Poker {
 
             if (dealer.playersInHand == 2) {
                players.get(dealer.dealerButtonPosition % dealer.playersInHand).smallBlind = true;
-               players.get(dealer.dealerButtonPosition % dealer.playersInHand).position = 1;
+               players.get(dealer.dealerButtonPosition % dealer.playersInHand).position = 2;
                players.get((dealer.dealerButtonPosition + 1) % dealer.playersInHand).bigBlind = true;
-               players.get((dealer.dealerButtonPosition + 1) % dealer.playersInHand).position = 2;
+               players.get((dealer.dealerButtonPosition + 1) % dealer.playersInHand).position = 1;
             }
             else {
                players.get(dealer.smallBlindPosition % dealer.playersInHand).smallBlind = true;
