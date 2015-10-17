@@ -1,4 +1,5 @@
 package poker;
+
 import java.util.ArrayList;
 import java.util.Scanner;
 
@@ -9,29 +10,22 @@ public class Poker {
    public static final int TURN = 2;
    public static final int RIVER = 3;
 
-   private static Card dealCard() {
-      Card card = null;
-
-      try {
-         if (dealer.deckOfCards.deck.size() == 0) {
-            throw new Exception("No cards in deck");
-         }
-         card = dealer.drawCard();
-      } catch (Exception e) {
-         System.err.println(e.getMessage());
-      }
-
-      return card;
-   }
-
    public static ArrayList<Player> dealHoleCards(ArrayList<Player> players) {
       Card[] cardsDealt = new Card[players.size() * 2];
       for (int i = 0; i < players.size() * 2; i++) {
-         cardsDealt[i] = dealer.drawCard();
+         try {
+            if (dealer.deckOfCards.deck.size() == 0) {
+               throw new Exception("No cards in deck");
+            }
+            cardsDealt[i] = dealer.drawCard();
+         } catch (Exception e) {
+            System.err.println(e.getMessage());
+         }
       }
 
       for (Player player : players) {
-         player.holeCards = new HoleCards(cardsDealt[player.id], cardsDealt[player.id + players.size()]);
+         player.holeCards = new HoleCards(cardsDealt[player.id],
+               cardsDealt[player.id + players.size()]);
          player.inHand = true;
          dealer.playersInHand++;
       }
@@ -77,37 +71,38 @@ public class Poker {
       ArrayList<Player> players = new ArrayList<Player>();
       players.add(new Player(playerId++, startingChips));
       players.add(new Player(playerId++, startingChips));
-      
+
       while (playGame) {
          switch (gameState) {
          case PRE_FLOP:
             players = dealHoleCards(players);
-            
+
             players.get(dealer.dealerButtonPosition % dealer.playersInHand).dealerButton = true;
 
             if (dealer.playersInHand == 2) {
                players.get(dealer.dealerButtonPosition % dealer.playersInHand).smallBlind = true;
                players.get(dealer.dealerButtonPosition % dealer.playersInHand).position = 2;
-               players.get((dealer.dealerButtonPosition + 1) % dealer.playersInHand).bigBlind = true;
-               players.get((dealer.dealerButtonPosition + 1) % dealer.playersInHand).position = 1;
-            }
-            else {
+               players.get((dealer.dealerButtonPosition + 1)
+                     % dealer.playersInHand).bigBlind = true;
+               players.get((dealer.dealerButtonPosition + 1)
+                     % dealer.playersInHand).position = 1;
+            } else {
                players.get(dealer.smallBlindPosition % dealer.playersInHand).smallBlind = true;
                players.get(dealer.smallBlindPosition % dealer.playersInHand).position = 1;
                players.get(dealer.bigBlindPosition % dealer.playersInHand).bigBlind = true;
                players.get(dealer.bigBlindPosition % dealer.playersInHand).position = 2;
 
                for (int i = 2; i < dealer.playersInHand; i++) {
-                  players.get((dealer.smallBlindPosition + i) % dealer.playersInHand).position = i + 1;
+                  players.get((dealer.smallBlindPosition + i)
+                        % dealer.playersInHand).position = i + 1;
                }
             }
-            
+
             for (Player player : players) {
                if (player.bigBlind) {
                   player.blind(dealer.bigBlindAmount);
                   dealer.pot += dealer.bigBlindAmount;
-               } 
-               else if (player.smallBlind) {
+               } else if (player.smallBlind) {
                   player.blind(dealer.smallBlindAmount);
                   dealer.pot += dealer.smallBlindAmount;
                }
@@ -172,7 +167,8 @@ public class Poker {
             if (dealer.playersInHand == 1) {
                for (Player player : players) {
                   if (player.inHand) {
-                     System.out.println("Player " + player.id + " wins " + dealer.pot);
+                     System.out.println("Player " + player.id + " wins "
+                           + dealer.pot);
                      player.stack += dealer.pot;
                   }
                }
