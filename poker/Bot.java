@@ -36,8 +36,8 @@ public class Bot extends Player {
       
       //why?
       // the value of the hand can change between unsuited and suited, the index reversal accounts for that
-      // ex: Ace-Ten suited is a 2, but Ace-Ten unsuited is a 3 (indexing the table Ten-Ace gives the same result)
-      // that is also why the indices are sorted above, the order matters
+      // ex: Ace-Ten (row, col) suited is a 2, but Ace-Ten (col, row) unsuited is a 3 (indexing the table Ten-Ace (row,col) gives the unsuited result)
+      // that is also why the indices are sorted above
       if (this.holeCards.card1.suit.getValue() != this.holeCards.card2.suit.getValue()) {
          idx1 = temp;
          idx2 = idx1;
