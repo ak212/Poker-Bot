@@ -18,10 +18,10 @@ public class Bot extends Player {
          { 0, 0, 8, 8, 8, 7, 7, 6, 6, 5, 4, 1, 4, 3, 3 }, // J
          { 0, 0, 7, 7, 6, 6, 6, 6, 5, 4, 4, 4, 1, 3, 3 }, // Q
          { 0, 0, 6, 6, 5, 5, 5, 4, 4, 4, 3, 3, 3, 1, 2 }, // K
-         { 0, 0, 5, 4, 4, 4, 4, 3, 3, 3, 2, 2, 2, 1, 1 } // A
+         { 0, 0, 5, 4, 4, 4, 4, 3, 3, 3, 2, 2, 2, 1, 1 }  // A
    };
 
-   // 0, 1, 2, 3, 4, 5, 6, 7, 8, 9,10, J, Q, K, A
+        // 0, 1, 2, 3, 4, 5, 6, 7, 8, 9,10, J, Q, K, A
 
    public Bot(int position, int stack) {
       super(position, stack);
@@ -35,7 +35,10 @@ public class Bot extends Player {
       idx2 = Math.min(this.holeCards.card1.rank.getValue(), this.holeCards.card2.rank.getValue());
       
       //why?
-      if (this.holeCards.card1.suit != this.holeCards.card2.suit) {
+      // the value of the hand can change between unsuited and suited, the index reversal accounts for that
+      // ex: Ace-Ten suited is a 2, but Ace-Ten unsuited is a 3 (indexing the table Ten-Ace gives the same result)
+      // that is also why the indices are sorted above, the order matters
+      if (this.holeCards.card1.suit.getValue() != this.holeCards.card2.suit.getValue()) {
          idx1 = temp;
          idx2 = idx1;
          idx2 = temp;
