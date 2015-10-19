@@ -29,19 +29,15 @@ public class Bot extends Player {
 
    public int evalHoleCards() {
      
-      int idx1 = 0, idx2 = 0, temp;
+      int idx1 = 0, idx2 = 0, temp = 0;
 
       idx1 = Math.max(this.holeCards.card1.rank.getValue(), this.holeCards.card2.rank.getValue());
       idx2 = Math.min(this.holeCards.card1.rank.getValue(), this.holeCards.card2.rank.getValue());
-      
-      //why?
-      // the value of the hand can change between unsuited and suited, the index reversal accounts for that
-      // ex: Ace-Ten (row, col) suited is a 2, but Ace-Ten (col, row) unsuited is a 3 (indexing the table Ten-Ace (row,col) gives the unsuited result)
-      // that is also why the indices are sorted above
-      if (this.holeCards.card1.suit.getValue() != this.holeCards.card2.suit.getValue()) {
-         idx1 = temp;
+       
+       if (this.holeCards.card1.suit.getValue() != this.holeCards.card2.suit.getValue()) {
+         temp = idx2;
          idx2 = idx1;
-         idx2 = temp;
+         idx1 = temp;
       }
 
       return holeCardValues[idx1][idx2];
