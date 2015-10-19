@@ -48,6 +48,7 @@ public class Poker {
       ArrayList<Player> players = new ArrayList<Player>();
       players.add(new Player(playerId++, startingChips));
       players.add(new Bot(playerId++, startingChips));
+      players.add(new Bot(playerId++, startingChips));
 
       while (playGame) {
          switch (gameState) {
@@ -84,6 +85,10 @@ public class Poker {
             players = dealer.dealHoleCards(players);
 
             for (Player player : players) {
+               if (player.getClass() == Bot.class) {
+                  ((Bot) player).evalHoleCards();
+               }
+
                System.out.println("Player " + player.id);
                player.holeCards.printHoleCards();
             }
@@ -92,8 +97,10 @@ public class Poker {
             players.set(0, playerInput(players.get(0)));
 
             if (dealer.playersInHand > 1) {
-               players.get(1).bet(dealer.currentBet);
-               dealer.pot += dealer.currentBet;
+               for (int i = 1; i < players.size(); i++) {
+                  players.get(i).bet(dealer.currentBet);
+                  dealer.pot += dealer.currentBet;
+               }
             }
             break;
 
@@ -104,8 +111,10 @@ public class Poker {
             players.set(0, playerInput(players.get(0)));
 
             if (dealer.playersInHand > 1) {
-               players.get(1).bet(dealer.currentBet);
-               dealer.pot += dealer.currentBet;
+               for (int i = 1; i < players.size(); i++) {
+                  players.get(i).bet(dealer.currentBet);
+                  dealer.pot += dealer.currentBet;
+               }
             }
             break;
 
@@ -116,8 +125,10 @@ public class Poker {
             players.set(0, playerInput(players.get(0)));
 
             if (dealer.playersInHand > 1) {
-               players.get(1).bet(dealer.currentBet);
-               dealer.pot += dealer.currentBet;
+               for (int i = 1; i < players.size(); i++) {
+                  players.get(i).bet(dealer.currentBet);
+                  dealer.pot += dealer.currentBet;
+               }
             }
             break;
 
@@ -128,8 +139,10 @@ public class Poker {
             players.set(0, playerInput(players.get(0)));
 
             if (dealer.playersInHand > 1) {
-               players.get(1).bet(dealer.currentBet);
-               dealer.pot += dealer.currentBet;
+               for (int i = 1; i < players.size(); i++) {
+                  players.get(i).bet(dealer.currentBet);
+                  dealer.pot += dealer.currentBet;
+               }
             }
             break;
          }
@@ -145,6 +158,12 @@ public class Poker {
                      System.out.println("Player " + player.id + " wins " + dealer.pot);
                      player.stack += dealer.pot;
                   }
+               }
+            }
+
+            for (Player player : players) {
+               if (player.stack == 0) {
+                  players.remove(player);
                }
             }
 

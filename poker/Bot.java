@@ -1,6 +1,8 @@
 package poker;
 
 public class Bot extends Player {
+   int holeCardsValue;
+   
    // Unsuited: start with column
    // Suited: start with row
    int[][] holeCardValues = new int[][] {
@@ -27,8 +29,7 @@ public class Bot extends Player {
       super(position, stack);
    }
 
-   public int evalHoleCards() {
-     
+   public void evalHoleCards() {
       int idx1 = 0, idx2 = 0, temp = 0;
 
       idx1 = Math.max(this.holeCards.card1.rank.getValue(), this.holeCards.card2.rank.getValue());
@@ -40,6 +41,6 @@ public class Bot extends Player {
          idx1 = temp;
       }
 
-      return holeCardValues[idx1][idx2];
+      this.holeCardsValue = holeCardValues[idx1][idx2];
    }
 }
