@@ -28,7 +28,7 @@ public class Poker {
       case "f":
          player.inHand = false;
          dealer.playersInHand--;
-         System.out.println((player.id == 0 ? "Player " : "Bot ") + player.id + " folds");
+         System.out.println("Player " + player.id + " folds");
          break;
       default:
          break;
