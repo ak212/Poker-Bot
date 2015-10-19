@@ -10,27 +10,6 @@ public class Poker {
    public static final int TURN = 2;
    public static final int RIVER = 3;
 
-   public static ArrayList<Player> dealHoleCards(ArrayList<Player> players) {
-      Card[] cardsDealt = new Card[players.size() * 2 + 1];
-      for (int i = 1; i < players.size() * 2 + 1; i++) {
-         try {
-            if (dealer.deckOfCards.deck.size() == 0) {
-               throw new Exception("No cards in deck");
-            }
-            cardsDealt[i] = dealer.drawCard();
-         } catch (Exception e) {
-            System.err.println(e.getMessage());
-         }
-      }
-
-      for (Player player : players) {
-         player.holeCards = new HoleCards(cardsDealt[player.position], cardsDealt[player.position + players.size()]);
-         player.inHand = true;
-      }
-
-      return players;
-   }
-
    public static Player playerInput(Player p) {
       Player player = p;
       Scanner scan = new Scanner(System.in);
@@ -102,7 +81,7 @@ public class Poker {
                }
             }
 
-            players = dealHoleCards(players);
+            players = dealer.dealHoleCards(players);
 
             for (Player player : players) {
                System.out.println("Player " + player.id);

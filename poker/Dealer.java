@@ -46,6 +46,27 @@ public class Dealer {
       return count;
    }
 
+   public ArrayList<Player> dealHoleCards(ArrayList<Player> players) {
+      Card[] cardsDealt = new Card[players.size() * 2 + 1];
+      for (int i = 1; i < players.size() * 2 + 1; i++) {
+         try {
+            if (deckOfCards.deck.size() == 0) {
+               throw new Exception("No cards in deck");
+            }
+            cardsDealt[i] = drawCard();
+         } catch (Exception e) {
+            System.err.println(e.getMessage());
+         }
+      }
+
+      for (Player player : players) {
+         player.holeCards = new HoleCards(cardsDealt[player.position], cardsDealt[player.position + players.size()]);
+         player.inHand = true;
+      }
+
+      return players;
+   }
+
    public void flop() {
       burnCards.add(drawCard());
       communityCards.add(drawCard());
