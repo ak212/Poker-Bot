@@ -6,6 +6,7 @@ public class Dealer {
    DeckOfCards deckOfCards;
    ArrayList<Card> communityCards;
    ArrayList<Card> burnCards;
+   BetPeriod betPeriod;
    int smallBlindAmount;
    int bigBlindAmount;
    int dealerButtonPosition;

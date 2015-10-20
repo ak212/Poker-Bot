@@ -2,6 +2,7 @@ package poker;
 
 public class Bot extends Player {
    int holeCardsValue;
+   BotTurn botTurn;
    
    // Unsuited: start with column
    // Suited: start with row
@@ -42,5 +43,9 @@ public class Bot extends Player {
       }
 
       this.holeCardsValue = holeCardValues[idx1][idx2];
+   }
+   
+   public void action(int currentBet) {
+      this.botTurn = new BotTurn(Action.CHECKCALL, currentBet);
    }
 }
