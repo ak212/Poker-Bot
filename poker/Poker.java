@@ -129,6 +129,7 @@ public class Poker {
          switch (dealer.betPeriod) {
          case PREFLOP:
             dealer.playersInHand = dealer.getPlayersInHand(players);
+            Collections.sort(players, new IdComparator());
 
             players.get(dealer.dealerButtonPosition % dealer.playersInHand).dealerButton = true;
             if (dealer.playersInHand == 2) {
@@ -154,6 +155,14 @@ public class Poker {
             }
 
             for (Player player : players) {
+               if (player.dealerButton) {
+                  if (player.getClass() == Bot.class) {
+                     System.out.println("Bot " + player.id + " dealer button");
+                  }
+                  else {
+                     System.out.println("Player " + player.id + " dealer button");
+                  }
+               }
                if (player.bigBlind) {
                   player.blind(dealer.bigBlindAmount);
                   dealer.pot += dealer.bigBlindAmount;
@@ -170,9 +179,12 @@ public class Poker {
             for (Player player : players) {
                if (player.getClass() == Bot.class) {
                   ((Bot) player).evalHoleCards();
+                  System.out.println("Bot " + player.id);
+               }
+               else {
+                  System.out.println("Player " + player.id);
                }
 
-               System.out.println("Player " + player.id);
                player.holeCards.printHoleCards();
             }
 

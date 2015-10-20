@@ -25,13 +25,23 @@ public class Player {
       this.potCommitment += bet;
       this.playerActed = true;
 
-      System.out.println((this.id == 0 ? "Player " : "Bot ") + this.id + (bet == 0 ? " checks" : " bets " + bet));
+      if (this.getClass() == Bot.class) {
+         System.out.println("Bot " + this.id + (bet == 0 ? " checks" : " bets " + bet));
+      }
+      else {
+         System.out.println("Player " + this.id + (bet == 0 ? " checks" : " bets " + bet));
+      }
    }
 
    public void blind(int blind) {
       this.stack -= blind;
       this.potCommitment += blind;
 
-      System.out.println((this.id == 0 ? "Player " : "Bot ") + this.id + (bigBlind ? " big blind" : " small blind"));
+      if (this.getClass() == Bot.class) {
+         System.out.println("Bot " + this.id + (bigBlind ? " big blind" : " small blind"));
+      }
+      else {
+         System.out.println("Player " + this.id + (bigBlind ? " big blind" : " small blind"));
+      }
    }
 }
