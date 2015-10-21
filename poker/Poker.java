@@ -128,7 +128,7 @@ public class Poker {
       while (playGame) {
          switch (dealer.betPeriod) {
          case PREFLOP:
-            dealer.playersInHand = dealer.getPlayersInHand(players);
+            dealer.playersInHand = dealer.getPlayersToBeDealt(players);
             Collections.sort(players, new IdComparator());
 
             players.get(dealer.dealerButtonPosition % dealer.playersInHand).dealerButton = true;

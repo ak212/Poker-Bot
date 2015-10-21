@@ -35,7 +35,7 @@ public class Dealer {
       return deckOfCards.deck.remove(0);
    }
 
-   public int getPlayersInHand(ArrayList<Player> players) {
+   public int getPlayersToBeDealt(ArrayList<Player> players) {
       int count = 0;
 
       for (Player player : players) {
@@ -46,6 +46,19 @@ public class Dealer {
 
       return count;
    }
+
+   public int getPlayersInHand(ArrayList<Player> players) {
+      int count = 0;
+
+      for (Player player : players) {
+         if (player.inHand) {
+            count++;
+         }
+      }
+
+      return count;
+   }
+
 
    public ArrayList<Player> dealHoleCards(ArrayList<Player> players) {
       Card[] cardsDealt = new Card[players.size() * 2 + 1];
