@@ -44,4 +44,14 @@ public class Player {
          System.out.println("Player " + this.id + (bigBlind ? " big blind" : " small blind"));
       }
    }
+
+   public void nextHand() {
+      this.potCommitment = 0;
+      this.preFlopPosition = 0;
+      this.position = 0;
+      this.bigBlind = false;
+      this.dealerButton = false;
+      this.smallBlind = false;
+
+   }
 }

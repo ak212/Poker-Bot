@@ -7,29 +7,6 @@ import java.util.Scanner;
 public class Poker {
    public static Dealer dealer;
 
-   public static boolean betSettled(ArrayList<Player> players) {
-      int playersInHand = dealer.getPlayersInHand(players);
-      int playersActed = 0;
-
-      for (Player player : players) {
-         if (player.inHand && player.playerActed) {
-            playersActed++;
-         }
-      }
-
-      return playersInHand == playersActed;
-   }
-
-   public static ArrayList<Player> resetPlayersActed(ArrayList<Player> players, int exception) {
-      for (Player player : players) {
-         if (player.position - 1 != exception) {
-            player.playerActed = false;
-         }
-      }
-
-      return players;
-   }
-
    public static Player playerInput(Player p) {
       Player player = p;
       Scanner scan = new Scanner(System.in);
@@ -190,9 +167,9 @@ public class Poker {
 
             Collections.sort(players, new PreFlopComparator());
 
-            while (!betSettled(players)) {
+            while (!dealer.betSettled(players)) {
                for (Player player : players) {
-                  if (player.inHand) {
+                  if (player.inHand && !player.playerActed) {
                      int curBet = dealer.currentBet;
 
                      if (player.getClass() == Bot.class) {
@@ -202,7 +179,7 @@ public class Poker {
                         players.set(player.preFlopPosition - 1, playerInput(players.get(player.preFlopPosition - 1)));
                      }
                      if (dealer.currentBet != curBet) {
-                        resetPlayersActed(players, player.preFlopPosition - 1);
+                        dealer.resetPlayersActed(players, player.preFlopPosition);
                      }
                   }
                }
@@ -218,7 +195,7 @@ public class Poker {
             Collections.sort(players, new PositionComparator());
 
             if (dealer.playersInHand > 1) {
-               while (!betSettled(players)) {
+               while (!dealer.betSettled(players)) {
                   for (Player player : players) {
                      if (player.inHand && !player.playerActed) {
                         int curBet = dealer.currentBet;
@@ -230,7 +207,7 @@ public class Poker {
                            players.set(player.position - 1, playerInput(players.get(player.position - 1)));
                         }
                         if (dealer.currentBet != curBet) {
-                           resetPlayersActed(players, player.position - 1);
+                           dealer.resetPlayersActed(players, player.position - 1);
                         }
                      }
                   }
@@ -243,7 +220,7 @@ public class Poker {
             dealer.printCommunityCards();
 
             if (dealer.playersInHand > 1) {
-               while (!betSettled(players)) {
+               while (!dealer.betSettled(players)) {
                   for (Player player : players) {
                      if (player.inHand && !player.playerActed) {
                         int curBet = dealer.currentBet;
@@ -255,7 +232,7 @@ public class Poker {
                            players.set(player.position - 1, playerInput(players.get(player.position - 1)));
                         }
                         if (dealer.currentBet != curBet) {
-                           resetPlayersActed(players, player.position - 1);
+                           dealer.resetPlayersActed(players, player.position - 1);
                         }
                      }
                   }
@@ -269,7 +246,7 @@ public class Poker {
             dealer.printCommunityCards();
 
             if (dealer.playersInHand > 1) {
-               while (!betSettled(players)) {
+               while (!dealer.betSettled(players)) {
                   for (Player player : players) {
                      if (player.inHand && !player.playerActed) {
                         int curBet = dealer.currentBet;
@@ -281,7 +258,7 @@ public class Poker {
                            players.set(player.position - 1, playerInput(players.get(player.position - 1)));
                         }
                         if (dealer.currentBet != curBet) {
-                           resetPlayersActed(players, player.position - 1);
+                           dealer.resetPlayersActed(players, player.position - 1);
                         }
                      }
                   }
@@ -322,12 +299,7 @@ public class Poker {
             dealer.newHand();
 
             for (Player player : players) {
-               player.potCommitment = 0;
-               player.preFlopPosition = 0;
-               player.position = 0;
-               player.bigBlind = false;
-               player.dealerButton = false;
-               player.smallBlind = false;
+               player.nextHand();
             }
          }
       }

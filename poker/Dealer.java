@@ -59,6 +59,35 @@ public class Dealer {
       return count;
    }
 
+   public boolean betSettled(ArrayList<Player> players) {
+      int playersInHand = getPlayersInHand(players);
+      int playersActed = 0;
+
+      for (Player player : players) {
+         if (player.inHand && player.playerActed) {
+            playersActed++;
+         }
+      }
+
+      return playersInHand == playersActed;
+   }
+
+   public ArrayList<Player> resetPlayersActed(ArrayList<Player> players, int exception) {
+      for (Player player : players) {
+         if (this.betPeriod.equals(BetPeriod.PREFLOP)) {
+            if (player.preFlopPosition != exception) {
+               player.playerActed = false;
+            }
+         }
+         else {
+            if (player.position - 1 != exception) {
+               player.playerActed = false;
+            }
+         }
+      }
+
+      return players;
+   }
 
    public ArrayList<Player> dealHoleCards(ArrayList<Player> players) {
       Card[] cardsDealt = new Card[players.size() * 2 + 1];
