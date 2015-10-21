@@ -1,7 +1,7 @@
 package poker;
 
 public enum BetPeriod {
-   PREFLOP(0), FLOP(1), TURN(2), RIVER(3);
+   PREFLOP(0), FLOP(1), TURN(2), RIVER(3), EVAL(4);
 
    private final int value;
 
@@ -29,6 +29,8 @@ public enum BetPeriod {
       case 3:
          betPeriod = BetPeriod.RIVER;
          break;
+      case 4:
+	 betPeriod = BetPeriod.EVAL;
       }
       
       return betPeriod;

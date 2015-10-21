@@ -266,6 +266,15 @@ public class Poker {
             }
 
             break;
+	 case EVAL:
+	   
+	    // must be at least 2 player in hand to reach here
+            for (Player player : players) {
+		//loop through all players are store the strongest hand found so far and its owner
+	    }
+	    // store such that 
+	    break;
+	
          default:
             break;
          }
@@ -278,6 +287,7 @@ public class Poker {
             player.playerActed = false;
          }
 
+	 //maybe change gameState check to BetPeriod.EVAL.getValue()
          if (gameState > BetPeriod.RIVER.getValue() || dealer.playersInHand == 1) {
             if (dealer.playersInHand == 1) {
                for (Player player : players) {
@@ -287,6 +297,8 @@ public class Poker {
                   }
                }
             }
+	    //else
+		//strongest Hand owner, determined in EVAL, wins
 
             for (Player player : players) {
                if (player.stack == 0) {
