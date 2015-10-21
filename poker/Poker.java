@@ -270,7 +270,7 @@ public class Poker {
 	   
 	    // must be at least 2 player in hand to reach here
             for (Player player : players) {
-		//loop through all players are store the strongest hand found so far and its owner
+		//loop through all players and store the strongest hand found so far and its owner
 	    }
 	    // store such that 
 	    break;
