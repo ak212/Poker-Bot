@@ -35,7 +35,7 @@ public class HandEvaluator {
          boolean onePair = false, threeOfAKind = false, straight = false, flush = false;
          
          // Card and Rank tallies
-         int rank[] = new int[13], suit[] = new int[4];
+         int rank[] = new int[15], suit[] = new int[4];
          
          ArrayList<Card> sortedHand;
          
@@ -86,10 +86,10 @@ public class HandEvaluator {
          }
          
          // Test for Straight
-         if ( (sortedHand.get(0).rank.getValue() - sortedHand.get(1).rank.getValue() == 1) &&
-              (sortedHand.get(1).rank.getValue() - sortedHand.get(2).rank.getValue() == 1) &&
-              (sortedHand.get(2).rank.getValue() - sortedHand.get(3).rank.getValue() == 1) &&
-              (sortedHand.get(3).rank.getValue() - sortedHand.get(4).rank.getValue() == 1)) {
+         if ( (sortedHand.get(4).rank.getValue() - sortedHand.get(3).rank.getValue() == 1) &&
+              (sortedHand.get(3).rank.getValue() - sortedHand.get(2).rank.getValue() == 1) &&
+              (sortedHand.get(2).rank.getValue() - sortedHand.get(1).rank.getValue() == 1) &&
+              (sortedHand.get(1).rank.getValue() - sortedHand.get(0).rank.getValue() == 1)) {
             straight = true;
             if (highestHand.getValue() < Hand.Straight.getValue()) {
                highestHand = Hand.Straight;
