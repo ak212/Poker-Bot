@@ -48,4 +48,30 @@ public class Bot extends Player {
    public void action(int currentBet) {
       this.botTurn = new BotTurn(Action.CHECKCALL, currentBet);
    }
+
+   public void determinePreFlopAction(int currentBet, int bigBlind) {
+      boolean raise = !(currentBet <= bigBlind);
+
+      if (!raise) {
+         if (this.bigBlind) {
+            this.botTurn = new BotTurn(Action.CHECKCALL, currentBet);
+         }
+         else if (this.smallBlind) {
+            if (this.holeCardsValue <= 7) {
+               this.botTurn = new BotTurn(Action.CHECKCALL, currentBet);
+            }
+            else {
+               this.botTurn = new BotTurn(Action.FOLD, currentBet);
+            }
+         }
+         else {
+            if (this.holeCardsValue <= 5) {
+               this.botTurn = new BotTurn(Action.CHECKCALL, currentBet);
+            }
+            else {
+               this.botTurn = new BotTurn(Action.FOLD, currentBet);
+            }
+         }
+      }
+   }
 }
