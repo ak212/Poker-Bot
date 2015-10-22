@@ -26,7 +26,6 @@ public class Dealer {
       bigBlindAmount = 50;
       pot = 0;
       currentBet = 0;
-      //strongestHand = new HandStrength();
       communityCards = new ArrayList<Card>();
       burnCards = new ArrayList<Card>();
       deckOfCards = new DeckOfCards();
