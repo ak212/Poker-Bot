@@ -55,13 +55,13 @@ public class Poker {
 
       if (dealer.betPeriod.equals(BetPeriod.PREFLOP)) {
          if (b.bigBlind) {
-            b.action(dealer.currentBet - dealer.bigBlindAmount);
+            b.determinePreFlopAction(dealer.currentBet - dealer.bigBlindAmount, dealer.bigBlindAmount);
          }
          else if (b.smallBlind) {
-            b.action(dealer.currentBet - dealer.smallBlindAmount);
+            b.determinePreFlopAction(dealer.currentBet - dealer.smallBlindAmount, dealer.bigBlindAmount);
          }
          else {
-            b.action(dealer.currentBet);
+            b.determinePreFlopAction(dealer.currentBet, dealer.bigBlindAmount);
          }
       }
       else {
@@ -155,8 +155,8 @@ public class Poker {
 
             for (Player player : players) {
                if (player.getClass() == Bot.class) {
-                  ((Bot) player).evalHoleCards();
                   System.out.println("Bot " + player.id);
+                  ((Bot) player).evalHoleCards();
                }
                else {
                   System.out.println("Player " + player.id);
