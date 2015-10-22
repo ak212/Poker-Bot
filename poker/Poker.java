@@ -300,6 +300,7 @@ public class Poker {
 	    //else
 		//strongest Hand owner, determined in EVAL, wins
 
+            // TODO better way to remove players from the game when they are out of chips
             for (Player player : players) {
                if (player.stack == 0) {
                   players.remove(player);
