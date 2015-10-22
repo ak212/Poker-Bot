@@ -9,9 +9,6 @@ public class HandEvaluator {
       // Default to High Card
       Hand highestHand = Hand.HighCard;
       
-      // Hand Booleans
-      boolean onePair = false, threeOfAKind = false, straight = false, flush = false;
-      
       // Check for a pocket pair if there is no board
       if (board.isEmpty()) {
          if (holeCards.card1.rank == holeCards.card2.rank) {
@@ -34,6 +31,12 @@ public class HandEvaluator {
       }
       
       for (ArrayList<Card> hand : subsets) {
+         // Hand Booleans
+         boolean onePair = false, threeOfAKind = false, straight = false, flush = false;
+         
+         // Card and Rank tallies
+         int rank[] = new int[13], suit[] = new int[4];
+         
          ArrayList<Card> sortedHand;
          
          // Sort the hand from highest to lowest
@@ -44,9 +47,42 @@ public class HandEvaluator {
          
          sortedHand = hand;
          
-         // Test for same card hands (One Pair, Two Pair, Three of a Kind, Four of a Kind)
+         // Get tallies
          for (Card card : hand) {
-            
+            rank[card.rank.getValue()] += 1;
+            suit[card.suit.getValue()] += 1;
+         }
+         
+         // Test for same card hands (One Pair, Two Pair, Three of a Kind, Four of a Kind)
+         for (int count : rank) {
+            // One Pair or Two Pair
+            if (count == 2) {
+               if (onePair == false) {
+                  onePair = true;
+                  if (highestHand.getValue() < Hand.OnePair.getValue()) {
+                     highestHand = Hand.OnePair;
+                  }
+               }
+               else {
+                  onePair = false;
+                  if (highestHand.getValue() < Hand.TwoPair.getValue()) {
+                     highestHand = Hand.TwoPair;
+                  }
+               }
+            }
+            // Three of a Kind
+            if (count == 3) {
+               threeOfAKind = true;
+               if (highestHand.getValue() < Hand.ThreeOfAKind.getValue()) {
+                  highestHand = Hand.ThreeOfAKind;
+               }
+            }
+            // Four of a Kind
+            if (count == 4) {
+               if (highestHand.getValue() < Hand.FourOfAKind.getValue()) {
+                  highestHand = Hand.FourOfAKind;
+               }
+            }
          }
          
          // Test for Straight
@@ -61,14 +97,40 @@ public class HandEvaluator {
          }
          
          // Test for Wheel Straight
+         if ( (sortedHand.get(0).rank.getValue() == Rank.TWO.getValue()) &&
+              (sortedHand.get(1).rank.getValue() == Rank.THREE.getValue()) &&
+              (sortedHand.get(2).rank.getValue() == Rank.FOUR.getValue()) &&
+              (sortedHand.get(3).rank.getValue() == Rank.FIVE.getValue()) &&
+              (sortedHand.get(4).rank.getValue() == Rank.ACE.getValue())) {
+             straight = true;
+             if (highestHand.getValue() < Hand.Straight.getValue()) {
+                highestHand = Hand.Straight;
+             }
+          }
          
          // Test for Flush
+         for (int count : suit) {
+            if (count == 5) {
+               flush = true;
+               if (highestHand.getValue() < Hand.Flush.getValue()) {
+                  highestHand = Hand.Flush;
+               }
+            }
+         }
          
          // Test for Full House
-         
-         // Test for Four of a Kind
+         if (onePair && threeOfAKind) {
+            if (highestHand.getValue() < Hand.FullHouse.getValue()) {
+               highestHand = Hand.FullHouse;
+            }
+         }
          
          // Test for Straight Flush
+         if (straight && flush) {
+            if (highestHand.getValue() < Hand.StraightFlush.getValue()) {
+               highestHand = Hand.StraightFlush;
+            }
+         }
       }
       
       // Return the highest hand
