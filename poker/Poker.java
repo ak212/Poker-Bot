@@ -2,90 +2,9 @@ package poker;
 
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Scanner;
 
 public class Poker {
    public static Dealer dealer;
-
-   public static Player playerInput(Player p) {
-      Player player = p;
-      Scanner scan = new Scanner(System.in);
-      String playerAction = scan.next();
-
-      switch (playerAction) {
-      case "b":
-         dealer.currentBet = scan.nextInt();
-         player.bet(dealer.currentBet);
-         dealer.pot += dealer.currentBet;
-         break;
-      case "c":
-         int betAmount = 0;
-         if (dealer.betPeriod.equals(BetPeriod.PREFLOP)) {
-            if (player.bigBlind) {
-               betAmount = dealer.currentBet - dealer.bigBlindAmount;
-            }
-            else if (player.smallBlind) {
-               betAmount = dealer.currentBet - dealer.smallBlindAmount;
-            }
-            else {
-               betAmount = dealer.currentBet;
-            }
-         }
-         else {
-            betAmount = dealer.currentBet;
-         }
-
-         player.bet(betAmount);
-         dealer.pot += betAmount;
-         break;
-      case "f":
-         player.inHand = false;
-         dealer.playersInHand--;
-         System.out.println("Player " + player.id + " folds");
-         break;
-      default:
-         break;
-      }
-
-      return player;
-   }
-
-   public static Player botInput(Player p) {
-      Bot b = (Bot) p;
-
-      if (dealer.betPeriod.equals(BetPeriod.PREFLOP)) {
-         if (b.bigBlind) {
-            b.determinePreFlopAction(dealer.currentBet - dealer.bigBlindAmount, dealer.bigBlindAmount);
-         }
-         else if (b.smallBlind) {
-            b.determinePreFlopAction(dealer.currentBet - dealer.smallBlindAmount, dealer.bigBlindAmount);
-         }
-         else {
-            b.determinePreFlopAction(dealer.currentBet, dealer.bigBlindAmount);
-         }
-      }
-      else {
-         b.action(dealer.currentBet);
-      }
-
-      switch (b.botTurn.botAction) {
-      case CHECKCALL:
-         b.bet(b.botTurn.betAmount);
-         dealer.pot += b.botTurn.betAmount;
-         break;
-      case BET:
-         b.bet(b.botTurn.betAmount);
-         dealer.currentBet = b.botTurn.betAmount;
-         dealer.pot += b.botTurn.betAmount;
-         break;
-      case FOLD:
-         b.inHand = false;
-         dealer.playersInHand--;
-         System.out.println("Bot " + b.id + " folds");
-      }
-
-      return b;
-   }
 
    public static void main(String[] args) {
       dealer = new Dealer();
@@ -167,23 +86,7 @@ public class Poker {
 
             Collections.sort(players, new PreFlopComparator());
 
-            while (!dealer.betSettled(players)) {
-               for (Player player : players) {
-                  if (player.inHand && !player.playerActed) {
-                     int curBet = dealer.currentBet;
-
-                     if (player.getClass() == Bot.class) {
-                        players.set(player.preFlopPosition - 1, botInput(players.get(player.preFlopPosition - 1)));
-                     }
-                     else {
-                        players.set(player.preFlopPosition - 1, playerInput(players.get(player.preFlopPosition - 1)));
-                     }
-                     if (dealer.currentBet != curBet) {
-                        dealer.resetPlayersActed(players, player.preFlopPosition);
-                     }
-                  }
-               }
-            }
+            players = dealer.betPeriod(players);
 
             // TODO need bet period function. players to global vars?
 
@@ -195,23 +98,7 @@ public class Poker {
             Collections.sort(players, new PositionComparator());
 
             if (dealer.playersInHand > 1) {
-               while (!dealer.betSettled(players)) {
-                  for (Player player : players) {
-                     if (player.inHand && !player.playerActed) {
-                        int curBet = dealer.currentBet;
-
-                        if (player.getClass() == Bot.class) {
-                           players.set(player.position - 1, botInput(players.get(player.position - 1)));
-                        }
-                        else {
-                           players.set(player.position - 1, playerInput(players.get(player.position - 1)));
-                        }
-                        if (dealer.currentBet != curBet) {
-                           dealer.resetPlayersActed(players, player.position - 1);
-                        }
-                     }
-                  }
-               }
+               players = dealer.betPeriod(players);
             }
             break;
 
@@ -220,23 +107,7 @@ public class Poker {
             dealer.printCommunityCards();
 
             if (dealer.playersInHand > 1) {
-               while (!dealer.betSettled(players)) {
-                  for (Player player : players) {
-                     if (player.inHand && !player.playerActed) {
-                        int curBet = dealer.currentBet;
-
-                        if (player.getClass() == Bot.class) {
-                           players.set(player.position - 1, botInput(players.get(player.position - 1)));
-                        }
-                        else {
-                           players.set(player.position - 1, playerInput(players.get(player.position - 1)));
-                        }
-                        if (dealer.currentBet != curBet) {
-                           dealer.resetPlayersActed(players, player.position - 1);
-                        }
-                     }
-                  }
-               }
+               players = dealer.betPeriod(players);
             }
 
             break;
@@ -246,23 +117,7 @@ public class Poker {
             dealer.printCommunityCards();
 
             if (dealer.playersInHand > 1) {
-               while (!dealer.betSettled(players)) {
-                  for (Player player : players) {
-                     if (player.inHand && !player.playerActed) {
-                        int curBet = dealer.currentBet;
-
-                        if (player.getClass() == Bot.class) {
-                           players.set(player.position - 1, botInput(players.get(player.position - 1)));
-                        }
-                        else {
-                           players.set(player.position - 1, playerInput(players.get(player.position - 1)));
-                        }
-                        if (dealer.currentBet != curBet) {
-                           dealer.resetPlayersActed(players, player.position - 1);
-                        }
-                     }
-                  }
-               }
+               players = dealer.betPeriod(players);
             }
 
             break;

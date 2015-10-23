@@ -1,6 +1,7 @@
 package poker;
 
 import java.util.ArrayList;
+import java.util.Scanner;
 
 public class Dealer {
    DeckOfCards deckOfCards;
@@ -19,22 +20,96 @@ public class Dealer {
    int playersInHand;
 
    public Dealer() {
-      dealerButtonPosition = 0;
-      smallBlindPosition = 1;
-      bigBlindPosition = 2;
-      smallBlindAmount = 25;
-      bigBlindAmount = 50;
-      pot = 0;
-      currentBet = 0;
+      this.dealerButtonPosition = 0;
+      this.smallBlindPosition = 1;
+      this.bigBlindPosition = 2;
+      this.smallBlindAmount = 25;
+      this.bigBlindAmount = 50;
+      this.pot = 0;
+      this.currentBet = 0;
       //strongestHand = new HandStrength();
-      communityCards = new ArrayList<Card>();
-      burnCards = new ArrayList<Card>();
-      deckOfCards = new DeckOfCards();
-      sidePots = new ArrayList<Integer>();
+      this.communityCards = new ArrayList<Card>();
+      this.burnCards = new ArrayList<Card>();
+      this.deckOfCards = new DeckOfCards();
+      this.sidePots = new ArrayList<Integer>();
    }
 
    public Card drawCard() {
-      return deckOfCards.deck.remove(0);
+      return this.deckOfCards.deck.remove(0);
+   }
+
+   public Player playerInput(Player p) {
+      Player player = p;
+      Scanner scan = new Scanner(System.in);
+      String playerAction = scan.next();
+
+      switch (playerAction) {
+      case "b":
+         this.currentBet = scan.nextInt();
+         player.bet(this.currentBet);
+         this.pot += this.currentBet;
+         break;
+      case "c":
+         int betAmount = 0;
+         if (this.betPeriod.equals(BetPeriod.PREFLOP)) {
+            if (player.bigBlind) {
+               betAmount = this.currentBet - this.bigBlindAmount;
+            } else if (player.smallBlind) {
+               betAmount = this.currentBet - this.smallBlindAmount;
+            } else {
+               betAmount = this.currentBet;
+            }
+         } else {
+            betAmount = this.currentBet;
+         }
+
+         player.bet(betAmount);
+         this.pot += betAmount;
+         break;
+      case "f":
+         player.inHand = false;
+         this.playersInHand--;
+         System.out.println("Player " + player.id + " folds");
+         break;
+      default:
+         break;
+      }
+
+      return player;
+   }
+
+   public Player botInput(Player p) {
+      Bot b = (Bot) p;
+
+      if (this.betPeriod.equals(BetPeriod.PREFLOP)) {
+         if (b.bigBlind) {
+            b.determinePreFlopAction(this.currentBet - this.bigBlindAmount, this.bigBlindAmount);
+         } else if (b.smallBlind) {
+            b.determinePreFlopAction(this.currentBet - this.smallBlindAmount, this.bigBlindAmount);
+         } else {
+            b.determinePreFlopAction(this.currentBet, this.bigBlindAmount);
+         }
+      } else {
+         b.action(this.currentBet);
+      }
+
+      switch (b.botTurn.botAction) {
+      case CHECKCALL:
+         b.bet(b.botTurn.betAmount);
+         this.pot += b.botTurn.betAmount;
+         break;
+      case BET:
+         b.bet(b.botTurn.betAmount);
+         this.currentBet = b.botTurn.betAmount;
+         this.pot += b.botTurn.betAmount;
+         break;
+      case FOLD:
+         b.inHand = false;
+         this.playersInHand--;
+         System.out.println("Bot " + b.id + " folds");
+      }
+
+      return b;
    }
 
    public int getPlayersToBeDealt(ArrayList<Player> players) {
@@ -95,7 +170,7 @@ public class Dealer {
       Card[] cardsDealt = new Card[players.size() * 2 + 1];
       for (int i = 1; i < players.size() * 2 + 1; i++) {
          try {
-            if (deckOfCards.deck.size() == 0) {
+            if (this.deckOfCards.deck.size() == 0) {
                throw new Exception("No cards in deck");
             }
             cardsDealt[i] = drawCard();
@@ -112,42 +187,74 @@ public class Dealer {
       return players;
    }
 
+   public ArrayList<Player> betPeriod(ArrayList<Player> players) {
+      while (!betSettled(players)) {
+         for (Player player : players) {
+            if (player.inHand && !player.playerActed) {
+               int curBet = this.currentBet;
+
+               if (this.betPeriod.equals(BetPeriod.PREFLOP)) {
+                  if (player.getClass() == Bot.class) {
+                     players.set(player.preFlopPosition - 1, botInput(players.get(player.preFlopPosition - 1)));
+                  } else {
+                     players.set(player.preFlopPosition - 1, playerInput(players.get(player.preFlopPosition - 1)));
+                  }
+                  if (this.currentBet != curBet) {
+                     resetPlayersActed(players, player.preFlopPosition);
+                  }
+               }
+               else {
+                  if (player.getClass() == Bot.class) {
+                     players.set(player.position - 1, botInput(players.get(player.position - 1)));
+                  } else {
+                     players.set(player.position - 1, playerInput(players.get(player.position - 1)));
+                  }
+                  if (this.currentBet != curBet) {
+                     this.resetPlayersActed(players, player.position - 1);
+                  }
+               }
+            }
+         }
+      }
+
+      return players;
+   }
+
    public void flop() {
-      burnCards.add(drawCard());
-      communityCards.add(drawCard());
-      communityCards.add(drawCard());
-      communityCards.add(drawCard());
+      this.burnCards.add(drawCard());
+      this.communityCards.add(drawCard());
+      this.communityCards.add(drawCard());
+      this.communityCards.add(drawCard());
    }
 
    public void turn() {
-      burnCards.add(drawCard());
-      communityCards.add(drawCard());
+      this.burnCards.add(drawCard());
+      this.communityCards.add(drawCard());
    }
 
    public void river() {
-      burnCards.add(drawCard());
-      communityCards.add(drawCard());
+      this.burnCards.add(drawCard());
+      this.communityCards.add(drawCard());
    }
 
    public void newHand() {
-      dealerButtonPosition++;
-      smallBlindPosition++;
-      bigBlindPosition++;
-      playersInHand = 0;
-      burnCards.clear();
-      communityCards.clear();
-      pot = 0;
-      currentBet = 0;
-      sidePots.clear();
-      deckOfCards = new DeckOfCards();
+      this.dealerButtonPosition++;
+      this.smallBlindPosition++;
+      this.bigBlindPosition++;
+      this.playersInHand = 0;
+      this.burnCards.clear();
+      this.communityCards.clear();
+      this.pot = 0;
+      this.currentBet = 0;
+      this.sidePots.clear();
+      this.deckOfCards = new DeckOfCards();
    }
 
    public void printCommunityCards() {
       System.out.println("On the board:");
-      for (Card card : communityCards) {
+      for (Card card : this.communityCards) {
          System.out.print(card.shorten());
       }
       System.out.println();
    }
-
 }
