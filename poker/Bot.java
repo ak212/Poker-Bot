@@ -3,7 +3,7 @@ package poker;
 public class Bot extends Player {
    int holeCardsValue;
    BotTurn botTurn;
-   
+
    // Unsuited: start with column
    // Suited: start with row
    int[][] holeCardValues = new int[][] {
@@ -23,7 +23,6 @@ public class Bot extends Player {
          { 0, 0, 6, 6, 5, 5, 5, 4, 4, 4, 3, 3, 3, 1, 2 }, // K
          { 0, 0, 5, 4, 4, 4, 4, 3, 3, 3, 2, 2, 2, 1, 1 }  // A
    };
-
         // 0, 1, 2, 3, 4, 5, 6, 7, 8, 9,10, J, Q, K, A
 
    public Bot(int position, int stack) {
@@ -35,8 +34,8 @@ public class Bot extends Player {
 
       idx1 = Math.max(this.holeCards.card1.rank.getValue(), this.holeCards.card2.rank.getValue());
       idx2 = Math.min(this.holeCards.card1.rank.getValue(), this.holeCards.card2.rank.getValue());
-       
-       if (this.holeCards.card1.suit.getValue() != this.holeCards.card2.suit.getValue()) {
+
+      if (this.holeCards.card1.suit.getValue() != this.holeCards.card2.suit.getValue()) {
          temp = idx2;
          idx2 = idx1;
          idx1 = temp;
@@ -44,7 +43,7 @@ public class Bot extends Player {
 
       this.holeCardsValue = holeCardValues[idx1][idx2];
    }
-   
+
    public void action(int currentBet) {
       this.botTurn = new BotTurn(Action.CHECKCALL, currentBet);
    }
@@ -66,6 +65,32 @@ public class Bot extends Player {
          }
          else {
             if (this.holeCardsValue <= 5) {
+               this.botTurn = new BotTurn(Action.CHECKCALL, currentBet);
+            }
+            else {
+               this.botTurn = new BotTurn(Action.FOLD, currentBet);
+            }
+         }
+      }
+      else {
+         if (this.bigBlind) {
+            if (this.holeCardsValue <= 5) {
+               this.botTurn = new BotTurn(Action.CHECKCALL, currentBet);
+            }
+            else {
+               this.botTurn = new BotTurn(Action.FOLD, currentBet);
+            }
+         }
+         else if (this.smallBlind) {
+            if (this.holeCardsValue <= 4) {
+               this.botTurn = new BotTurn(Action.CHECKCALL, currentBet);
+            }
+            else {
+               this.botTurn = new BotTurn(Action.FOLD, currentBet);
+            }
+         }
+         else {
+            if (this.holeCardsValue <= 3) {
                this.botTurn = new BotTurn(Action.CHECKCALL, currentBet);
             }
             else {
