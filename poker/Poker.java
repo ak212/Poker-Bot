@@ -17,7 +17,7 @@ public class Poker {
       ArrayList<Player> players = new ArrayList<Player>();
       players.add(new Player(playerId++, startingChips));
       players.add(new Bot(playerId++, startingChips));
-      players.add(new Bot(playerId++, startingChips));
+      // players.add(new Bot(playerId++, startingChips));
 
       dealer.betPeriod = BetPeriod.getBetPeriod(gameState);
 
@@ -96,40 +96,46 @@ public class Poker {
             dealer.flop();
             dealer.printCommunityCards();
             Collections.sort(players, new PositionComparator());
-
-            if (dealer.playersInHand > 1) {
-               players = dealer.betPeriod(players);
-            }
+            players = dealer.betPeriod(players);
             break;
 
          case TURN:
             dealer.turn();
             dealer.printCommunityCards();
-
-            if (dealer.playersInHand > 1) {
-               players = dealer.betPeriod(players);
-            }
-
+            players = dealer.betPeriod(players);
             break;
 
          case RIVER:
             dealer.river();
             dealer.printCommunityCards();
+            players = dealer.betPeriod(players);
+            break;
 
-            if (dealer.playersInHand > 1) {
-               players = dealer.betPeriod(players);
+         case EVAL:
+            if (dealer.playersInHand == 1) {
+               for (Player player : players) {
+                  if (player.inHand) {
+                     System.out.println("Player " + player.id + " wins " + dealer.pot);
+                     player.stack += dealer.pot;
+                  }
+               }
+            }
+            else {
+               // TODO Determine winner with hand strengths
+               // TODO New class with Hand and arraylist of kickers to be used in case of tie
             }
 
-            break;
-	 case EVAL:
-	   
-	    // must be at least 2 player in hand to reach here
+            // TODO way to remove players from the game when they are out of chips
+
+            System.out.println("\n\n");
+            dealer.betPeriod = BetPeriod.getBetPeriod(gameState = -1);
+            dealer.newHand();
+
             for (Player player : players) {
-		//loop through all players and store the strongest hand found so far and its owner
-	    }
-	    // store such that 
-	    break;
-	
+               player.nextHand();
+            }
+            break;
+
          default:
             break;
          }
@@ -139,36 +145,19 @@ public class Poker {
          System.out.println("Current Pot: " + dealer.pot);
 
          for (Player player : players) {
+            ArrayList<Card> board = new ArrayList<Card>(dealer.communityCards);
+            Hand hand = HandEvaluator.evaluateForHand(board, player.holeCards);
+            if (player.getClass() == Bot.class) {
+               System.out.println("Bot " + player.id + " has hand " + hand.toString());
+            }
+            else {
+               System.out.println("Player " + player.id + " has hand " + hand.toString());
+            }
             player.playerActed = false;
          }
 
-	 //maybe change gameState check to BetPeriod.EVAL.getValue()
-         if (gameState > BetPeriod.RIVER.getValue() || dealer.playersInHand == 1) {
-            if (dealer.playersInHand == 1) {
-               for (Player player : players) {
-                  if (player.inHand) {
-                     System.out.println("Player " + player.id + " wins " + dealer.pot);
-                     player.stack += dealer.pot;
-                  }
-               }
-            }
-	    //else
-		//strongest Hand owner, determined in EVAL, wins
-
-            // TODO better way to remove players from the game when they are out of chips
-            for (Player player : players) {
-               if (player.stack == 0) {
-                  players.remove(player);
-               }
-            }
-
-            System.out.println("\n\n");
-            dealer.betPeriod = BetPeriod.getBetPeriod(gameState = 0);
-            dealer.newHand();
-
-            for (Player player : players) {
-               player.nextHand();
-            }
+         if (dealer.playersInHand == 1) {
+            dealer.betPeriod = BetPeriod.EVAL;
          }
       }
    }
