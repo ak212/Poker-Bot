@@ -1,6 +1,7 @@
 package poker;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Scanner;
 
 public class Dealer {
@@ -134,6 +135,36 @@ public class Dealer {
       }
 
       return count;
+   }
+
+   public ArrayList<Player> determinePositions(ArrayList<Player> players) {
+      this.playersInHand = this.getPlayersToBeDealt(players);
+      Collections.sort(players, new IdComparator());
+
+      players.get(this.dealerButtonPosition % this.playersInHand).dealerButton = true;
+      if (this.playersInHand == 2) {
+         players.get(this.dealerButtonPosition % this.playersInHand).smallBlind = true;
+         players.get(this.dealerButtonPosition % this.playersInHand).position = 2;
+         players.get(this.dealerButtonPosition % this.playersInHand).preFlopPosition = 1;
+         players.get((this.dealerButtonPosition + 1) % this.playersInHand).bigBlind = true;
+         players.get((this.dealerButtonPosition + 1) % this.playersInHand).position = 1;
+         players.get((this.dealerButtonPosition + 1) % this.playersInHand).preFlopPosition = 2;
+      }
+      else {
+         players.get(this.smallBlindPosition % this.playersInHand).smallBlind = true;
+         players.get(this.smallBlindPosition % this.playersInHand).position = 1;
+         players.get(this.bigBlindPosition % this.playersInHand).bigBlind = true;
+         players.get(this.bigBlindPosition % this.playersInHand).position = 2;
+
+         for (int i = 2; i < this.playersInHand; i++) {
+            players.get((this.smallBlindPosition + i) % this.playersInHand).position = i + 1;
+         }
+         for (int i = 2; i < this.playersInHand + 2; i++) {
+            players.get((this.smallBlindPosition + i) % this.playersInHand).preFlopPosition = i - 1;
+         }
+      }
+
+      return players;
    }
 
    public boolean betSettled(ArrayList<Player> players) {

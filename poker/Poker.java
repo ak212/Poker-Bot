@@ -24,31 +24,7 @@ public class Poker {
       while (playGame) {
          switch (dealer.betPeriod) {
          case PREFLOP:
-            dealer.playersInHand = dealer.getPlayersToBeDealt(players);
-            Collections.sort(players, new IdComparator());
-
-            players.get(dealer.dealerButtonPosition % dealer.playersInHand).dealerButton = true;
-            if (dealer.playersInHand == 2) {
-               players.get(dealer.dealerButtonPosition % dealer.playersInHand).smallBlind = true;
-               players.get(dealer.dealerButtonPosition % dealer.playersInHand).position = 2;
-               players.get(dealer.dealerButtonPosition % dealer.playersInHand).preFlopPosition = 1;
-               players.get((dealer.dealerButtonPosition + 1) % dealer.playersInHand).bigBlind = true;
-               players.get((dealer.dealerButtonPosition + 1) % dealer.playersInHand).position = 1;
-               players.get((dealer.dealerButtonPosition + 1) % dealer.playersInHand).preFlopPosition = 2;
-            }
-            else {
-               players.get(dealer.smallBlindPosition % dealer.playersInHand).smallBlind = true;
-               players.get(dealer.smallBlindPosition % dealer.playersInHand).position = 1;
-               players.get(dealer.bigBlindPosition % dealer.playersInHand).bigBlind = true;
-               players.get(dealer.bigBlindPosition % dealer.playersInHand).position = 2;
-
-               for (int i = 2; i < dealer.playersInHand; i++) {
-                  players.get((dealer.smallBlindPosition + i) % dealer.playersInHand).position = i + 1;
-               }
-               for (int i = 2; i < dealer.playersInHand + 2; i++) {
-                  players.get((dealer.smallBlindPosition + i) % dealer.playersInHand).preFlopPosition = i - 1;
-               }
-            }
+            dealer.determinePositions(players);
 
             for (Player player : players) {
                if (player.dealerButton) {
@@ -85,11 +61,7 @@ public class Poker {
             }
 
             Collections.sort(players, new PreFlopComparator());
-
             players = dealer.betPeriod(players);
-
-            // TODO need bet period function. players to global vars?
-
             break;
 
          case FLOP:
@@ -122,7 +94,9 @@ public class Poker {
             }
             else {
                // TODO Determine winner with hand strengths
-               // TODO New class with Hand and arraylist of kickers to be used in case of tie
+               // TODO New class with Hand, card value of hand and arraylist of kickers to be used in case of tie
+               // TODO Hand comparisons i.e. pair of Js vs pair of Qs.
+
             }
 
             // TODO way to remove players from the game when they are out of chips
