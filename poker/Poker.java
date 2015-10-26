@@ -24,7 +24,7 @@ public class Poker {
       while (playGame) {
          switch (dealer.betPeriod) {
          case PREFLOP:
-            dealer.determinePositions(players);
+            players = dealer.determinePositions(players);
 
             for (Player player : players) {
                if (player.dealerButton) {
