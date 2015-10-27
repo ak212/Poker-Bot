@@ -220,7 +220,7 @@ public class Dealer {
 
    public ArrayList<Player> evaluateHandStrength(ArrayList<Player> players, ArrayList<Card> board) {
       for (Player player : players) {
-         player.currentHand = HandEvaluator.evaluateForHand(board, player.holeCards);
+         player.currentHand = HandEvaluator.evaluateForHand(new ArrayList<Card>(board), player.holeCards);
       }
 
       return players;
