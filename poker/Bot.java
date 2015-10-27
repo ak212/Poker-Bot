@@ -53,10 +53,18 @@ public class Bot extends Player {
 
       if (!raise) {
          if (this.bigBlind) {
-            this.botTurn = new BotTurn(Action.CHECKCALL, currentBet);
+	    if (this.holeCardsValue <= 3) {
+	       this.botTurn = new BotTurn(Action.BET, currentBet * (7 / this.holeCardsValue));	
+	    }
+	    else {
+            	this.botTurn = new BotTurn(Action.CHECKCALL, currentBet);
+	    }
          }
          else if (this.smallBlind) {
-            if (this.holeCardsValue <= 7) {
+	    if (this.holeCardsValue <= 2) {
+	       this.botTurn = new BotTurn(Action.BET, currentBet * (6 / this.holeCardsValue));	
+	    }
+            else if (this.holeCardsValue <= 7) {
                this.botTurn = new BotTurn(Action.CHECKCALL, currentBet);
             }
             else {
@@ -64,7 +72,10 @@ public class Bot extends Player {
             }
          }
          else {
-            if (this.holeCardsValue <= 5) {
+	    if (this.holeCardsValue <= 1) {
+	       this.botTurn = new BotTurn(Action.BET, currentBet * (3 / this.holeCardsValue));	
+	    }
+            else if (this.holeCardsValue <= 5) {
                this.botTurn = new BotTurn(Action.CHECKCALL, currentBet);
             }
             else {
@@ -74,7 +85,10 @@ public class Bot extends Player {
       }
       else {
          if (this.bigBlind) {
-            if (this.holeCardsValue <= 5) {
+	    if (this.holeCardsValue <= 1) {
+	       this.botTurn = new BotTurn(Action.BET, currentBet * (3 / this.holeCardsValue));	
+	    }	
+            else if (this.holeCardsValue <= 5) {
                this.botTurn = new BotTurn(Action.CHECKCALL, currentBet);
             }
             else {
@@ -82,7 +96,10 @@ public class Bot extends Player {
             }
          }
          else if (this.smallBlind) {
-            if (this.holeCardsValue <= 4) {
+	    if (this.holeCardsValue <= 1) {
+	       this.botTurn = new BotTurn(Action.BET, currentBet * (2 / this.holeCardsValue));	
+	    }
+            else if (this.holeCardsValue <= 4) {
                this.botTurn = new BotTurn(Action.CHECKCALL, currentBet);
             }
             else {
@@ -90,7 +107,10 @@ public class Bot extends Player {
             }
          }
          else {
-            if (this.holeCardsValue <= 3) {
+	    if (this.holeCardsValue <= 1) {
+	       this.botTurn = new BotTurn(Action.BET, currentBet * (2 / this.holeCardsValue));	
+	    }
+            else if (this.holeCardsValue <= 3) {
                this.botTurn = new BotTurn(Action.CHECKCALL, currentBet);
             }
             else {
