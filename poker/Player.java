@@ -5,6 +5,7 @@ public class Player {
    int position;
    int preFlopPosition;
    HoleCards holeCards;
+   Hand currentHand;
    int stack;
    int potCommitment;
    boolean playerActed;

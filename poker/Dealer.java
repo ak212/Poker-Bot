@@ -218,6 +218,14 @@ public class Dealer {
       return players;
    }
 
+   public ArrayList<Player> evaluateHandStrength(ArrayList<Player> players, ArrayList<Card> board) {
+      for (Player player : players) {
+         player.currentHand = HandEvaluator.evaluateForHand(board, player.holeCards);
+      }
+
+      return players;
+   }
+
    public ArrayList<Player> betPeriod(ArrayList<Player> players) {
       while (!betSettled(players)) {
          for (Player player : players) {

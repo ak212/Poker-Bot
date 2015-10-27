@@ -28,7 +28,7 @@ public class Poker {
 
             for (Player player : players) {
                if (player.dealerButton) {
-                  if (player.getClass() == Bot.class) {
+                  if (player instanceof Bot) {
                      System.out.println("Bot " + player.id + " dealer button");
                   }
                   else {
@@ -49,7 +49,7 @@ public class Poker {
             players = dealer.dealHoleCards(players);
 
             for (Player player : players) {
-               if (player.getClass() == Bot.class) {
+               if (player instanceof Bot) {
                   System.out.println("Bot " + player.id);
                   ((Bot) player).evalHoleCards();
                }
@@ -61,6 +61,7 @@ public class Poker {
             }
 
             Collections.sort(players, new PreFlopComparator());
+            players = dealer.evaluateHandStrength(players, dealer.communityCards);
             players = dealer.betPeriod(players);
             break;
 
@@ -68,18 +69,21 @@ public class Poker {
             dealer.flop();
             dealer.printCommunityCards();
             Collections.sort(players, new PositionComparator());
+            players = dealer.evaluateHandStrength(players, dealer.communityCards);
             players = dealer.betPeriod(players);
             break;
 
          case TURN:
             dealer.turn();
             dealer.printCommunityCards();
+            players = dealer.evaluateHandStrength(players, dealer.communityCards);
             players = dealer.betPeriod(players);
             break;
 
          case RIVER:
             dealer.river();
             dealer.printCommunityCards();
+            players = dealer.evaluateHandStrength(players, dealer.communityCards);
             players = dealer.betPeriod(players);
             break;
 
@@ -119,13 +123,11 @@ public class Poker {
          System.out.println("Current Pot: " + dealer.pot);
 
          for (Player player : players) {
-            ArrayList<Card> board = new ArrayList<Card>(dealer.communityCards);
-            Hand hand = HandEvaluator.evaluateForHand(board, player.holeCards);
-            if (player.getClass() == Bot.class) {
-               System.out.println("Bot " + player.id + " has hand " + hand.toString());
+            if (player instanceof Bot) {
+               System.out.println("Bot " + player.id + " has hand " + player.currentHand.toString());
             }
             else {
-               System.out.println("Player " + player.id + " has hand " + hand.toString());
+               System.out.println("Player " + player.id + " has hand " + player.currentHand.toString());
             }
             player.playerActed = false;
          }
