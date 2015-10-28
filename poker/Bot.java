@@ -49,7 +49,7 @@ public class Bot extends Player {
    }
 
    public void determinePreFlopAction(int currentBet, int bigBlind) {
-      boolean raise = !(currentBet <= bigBlind);
+      boolean raise = !(currentBet + this.potCommitment <= bigBlind);
 
       if (!raise) {
          if (this.bigBlind) {
