@@ -119,11 +119,13 @@ public class Poker {
          }
 
          dealer.currentBet = 0;
+         dealer.totalBet = 0;
          dealer.betPeriod = BetPeriod.getBetPeriod(++gameState);
          System.out.println("Current Pot: " + dealer.pot);
 
          for (Player player : players) {
             player.playerActed = false;
+            player.totalBet = 0;
          }
 
          try {

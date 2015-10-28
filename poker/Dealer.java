@@ -17,6 +17,7 @@ public class Dealer {
    int bigBlindPosition;
    int pot;
    int currentBet;
+   int totalBet;
    ArrayList<Integer> sidePots;
    int playersInHand;
 
@@ -43,28 +44,56 @@ public class Dealer {
       Player player = p;
       Scanner scan = new Scanner(System.in);
       String playerAction = scan.next();
+      int betAmount = 0;
 
       switch (playerAction) {
       case "b":
-         this.currentBet = scan.nextInt();
+         while (betAmount + player.totalBet < this.totalBet || betAmount == 0) {
+            betAmount = scan.nextInt();
+         }
+
+         if (this.betPeriod.equals(BetPeriod.PREFLOP)) {
+            if (player.smallBlind && !player.calledSB) {
+               this.currentBet = betAmount - this.smallBlindAmount;
+               player.call(this.bigBlindAmount - this.smallBlindAmount);
+               player.calledSB = true;
+               this.pot += (this.bigBlindAmount - this.smallBlindAmount);
+               this.totalBet += this.currentBet;
+            }
+            else {
+               int callAmount = this.totalBet - p.totalBet;
+               player.call(callAmount);
+               this.pot += callAmount;
+               betAmount = betAmount - callAmount;
+               this.currentBet = betAmount;
+               this.totalBet += betAmount;
+            }
+         }
+         else {
+            this.currentBet = betAmount;
+         }
+
          player.bet(this.currentBet);
          this.pot += this.currentBet;
          break;
       case "c":
-         int betAmount = 0;
          if (this.betPeriod.equals(BetPeriod.PREFLOP)) {
-            if (player.bigBlind) {
+            if (player.bigBlind && player.totalBet == this.bigBlindAmount) {
                betAmount = this.currentBet - this.bigBlindAmount;
-            } else if (player.smallBlind) {
+            }
+            else if (player.smallBlind && player.totalBet == this.smallBlindAmount) {
                betAmount = this.currentBet - this.smallBlindAmount;
-            } else {
+               player.calledSB = true;
+            }
+            else {
                betAmount = this.currentBet;
             }
-         } else {
+         }
+         else {
             betAmount = this.currentBet;
          }
 
-         player.bet(betAmount);
+         player.call(betAmount);
          this.pot += betAmount;
          break;
       case "f":
@@ -83,26 +112,28 @@ public class Dealer {
       Bot b = (Bot) p;
 
       if (this.betPeriod.equals(BetPeriod.PREFLOP)) {
-         if (b.bigBlind) {
-            b.determinePreFlopAction(this.currentBet - this.bigBlindAmount, this.bigBlindAmount);
-         } else if (b.smallBlind) {
-            b.determinePreFlopAction(this.currentBet - this.smallBlindAmount, this.bigBlindAmount);
-         } else {
-            b.determinePreFlopAction(this.currentBet, this.bigBlindAmount);
-         }
-      } else {
+         b.determinePreFlopAction(this.currentBet, this.bigBlindAmount, this.smallBlindAmount, this.totalBet);
+      } 
+      else {
          b.action(this.currentBet);
       }
 
       switch (b.botTurn.botAction) {
       case CHECKCALL:
-         b.bet(b.botTurn.betAmount);
+         b.call(b.botTurn.betAmount);
          this.pot += b.botTurn.betAmount;
          break;
       case BET:
-         b.bet(b.botTurn.betAmount);
-         this.currentBet = b.botTurn.betAmount;
-         this.pot += b.botTurn.betAmount;
+         int callAmount = this.totalBet - b.totalBet;
+         if (callAmount > 0) {
+            b.call(callAmount);
+            this.pot += callAmount;
+         }
+         int betAmount = b.botTurn.betAmount - callAmount;
+         b.bet(betAmount);
+         this.currentBet = betAmount;
+         this.totalBet += betAmount;
+         this.pot += betAmount;
          break;
       case FOLD:
          b.inHand = false;
@@ -227,23 +258,25 @@ public class Dealer {
    }
 
    public ArrayList<Player> betPeriod(ArrayList<Player> players) {
+      this.totalBet = this.currentBet;
+
       while (!betSettled(players)) {
          for (Player player : players) {
             if (player.inHand && !player.playerActed) {
-               int curBet = this.currentBet;
+               int curBet = this.totalBet;
 
                if (this.betPeriod.equals(BetPeriod.PREFLOP)) {
-                  if (player.getClass() == Bot.class) {
+                  if (player instanceof Bot) {
                      players.set(player.preFlopPosition - 1, botInput(players.get(player.preFlopPosition - 1)));
                   } else {
                      players.set(player.preFlopPosition - 1, playerInput(players.get(player.preFlopPosition - 1)));
                   }
-                  if (this.currentBet != curBet) {
+                  if (this.totalBet != curBet) {
                      resetPlayersActed(players, player.preFlopPosition);
                   }
                }
                else {
-                  if (player.getClass() == Bot.class) {
+                  if (player instanceof Bot) {
                      players.set(player.position - 1, botInput(players.get(player.position - 1)));
                   } else {
                      players.set(player.position - 1, playerInput(players.get(player.position - 1)));
@@ -285,6 +318,7 @@ public class Dealer {
       this.communityCards.clear();
       this.pot = 0;
       this.currentBet = 0;
+      this.totalBet = 0;
       this.sidePots.clear();
       this.deckOfCards = new DeckOfCards();
    }
