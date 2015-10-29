@@ -6,7 +6,7 @@ public class Bot extends Player {
 
    // Unsuited: start with column
    // Suited: start with row
-   int[][] holeCardValues = new int[][] {
+   int[][] holeCardValues = new int[][] { 
          { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }, // 0
          { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }, // 1
          { 0, 0, 7, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 7, 5 }, // 2
@@ -21,7 +21,7 @@ public class Bot extends Player {
          { 0, 0, 8, 8, 8, 7, 7, 6, 6, 5, 4, 1, 4, 3, 3 }, // J
          { 0, 0, 7, 7, 6, 6, 6, 6, 5, 4, 4, 4, 1, 3, 3 }, // Q
          { 0, 0, 6, 6, 5, 5, 5, 4, 4, 4, 3, 3, 3, 1, 2 }, // K
-         { 0, 0, 5, 4, 4, 4, 4, 3, 3, 3, 2, 2, 2, 1, 1 }  // A
+         { 0, 0, 5, 4, 4, 4, 4, 3, 3, 3, 2, 2, 2, 1, 1 } // A
    };
         // 0, 1, 2, 3, 4, 5, 6, 7, 8, 9,10, J, Q, K, A
 
@@ -54,17 +54,17 @@ public class Bot extends Player {
 
       if (!raise) {
          if (this.bigBlind) {
-	    if (this.holeCardsValue <= 3) {
-	       this.botTurn = new BotTurn(Action.BET, currentBet * (7 / this.holeCardsValue));	
-	    }
-	    else {
+            if (this.holeCardsValue <= 3) {
+               this.botTurn = new BotTurn(Action.BET, currentBet * (7 / this.holeCardsValue));
+            }
+            else {
                this.botTurn = new BotTurn(Action.CHECKCALL, betAmount);
-	    }
+            }
          }
          else if (this.smallBlind) {
-	    if (this.holeCardsValue <= 2) {
-	       this.botTurn = new BotTurn(Action.BET, currentBet * (6 / this.holeCardsValue));	
-	    }
+            if (this.holeCardsValue <= 2) {
+               this.botTurn = new BotTurn(Action.BET, currentBet * (6 / this.holeCardsValue));
+            }
             else if (this.holeCardsValue <= 7) {
                this.botTurn = new BotTurn(Action.CHECKCALL, betAmount);
             }
@@ -73,9 +73,9 @@ public class Bot extends Player {
             }
          }
          else {
-	    if (this.holeCardsValue <= 1) {
-	       this.botTurn = new BotTurn(Action.BET, currentBet * (3 / this.holeCardsValue));	
-	    }
+            if (this.holeCardsValue <= 1) {
+               this.botTurn = new BotTurn(Action.BET, currentBet * (3 / this.holeCardsValue));
+            }
             else if (this.holeCardsValue <= 5) {
                this.botTurn = new BotTurn(Action.CHECKCALL, betAmount);
             }
@@ -86,9 +86,9 @@ public class Bot extends Player {
       }
       else {
          if (this.bigBlind) {
-	    if (this.holeCardsValue <= 1) {
-	       this.botTurn = new BotTurn(Action.BET, currentBet * (3 / this.holeCardsValue));	
-	    }	
+            if (this.holeCardsValue <= 1) {
+               this.botTurn = new BotTurn(Action.BET, currentBet * (3 / this.holeCardsValue));
+            }
             else if (this.holeCardsValue <= 5) {
                this.botTurn = new BotTurn(Action.CHECKCALL, betAmount);
             }
@@ -97,9 +97,9 @@ public class Bot extends Player {
             }
          }
          else if (this.smallBlind) {
-	    if (this.holeCardsValue <= 1) {
-	       this.botTurn = new BotTurn(Action.BET, currentBet * (2 / this.holeCardsValue));	
-	    }
+            if (this.holeCardsValue <= 1) {
+               this.botTurn = new BotTurn(Action.BET, currentBet * (2 / this.holeCardsValue));
+            }
             else if (this.holeCardsValue <= 4) {
                this.botTurn = new BotTurn(Action.CHECKCALL, betAmount);
             }
@@ -108,9 +108,9 @@ public class Bot extends Player {
             }
          }
          else {
-	    if (this.holeCardsValue <= 1) {
-	       this.botTurn = new BotTurn(Action.BET, currentBet * (2 / this.holeCardsValue));	
-	    }
+            if (this.holeCardsValue <= 1) {
+               this.botTurn = new BotTurn(Action.BET, currentBet * (2 / this.holeCardsValue));
+            }
             else if (this.holeCardsValue <= 3) {
                this.botTurn = new BotTurn(Action.CHECKCALL, betAmount);
             }
