@@ -25,6 +25,10 @@ public class Poker {
          switch (dealer.betPeriod) {
          case PREFLOP:
             players = dealer.determinePositions(players);
+            if (players.size() < 2) {
+               playGame = false;
+               break;
+            }
 
             for (Player player : players) {
                if (player.dealerButton) {
@@ -117,8 +121,10 @@ public class Poker {
             }
 
             // TODO way to remove players from the game when they are out of chips
+            // This doesn't work. Comment out player, uncomment 2nd bot - Aaron
             for (Player player : players) {
                if (player.stack == 0) {
+                  System.out.println("Player " + player.id + " eliminated");
                   players.remove(player);
                }
             }
