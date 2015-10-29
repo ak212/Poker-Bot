@@ -63,6 +63,7 @@ public class Poker {
             Collections.sort(players, new PreFlopComparator());
             players = dealer.evaluateHandStrength(players, new ArrayList<Card>());
             players = dealer.betPeriod(players);
+            dealer.printHandValues(players);
             break;
 
          case FLOP:
@@ -71,6 +72,7 @@ public class Poker {
             Collections.sort(players, new PositionComparator());
             players = dealer.evaluateHandStrength(players, dealer.communityCards);
             players = dealer.betPeriod(players);
+            dealer.printHandValues(players);
             break;
 
          case TURN:
@@ -78,6 +80,7 @@ public class Poker {
             dealer.printCommunityCards();
             players = dealer.evaluateHandStrength(players, dealer.communityCards);
             players = dealer.betPeriod(players);
+            dealer.printHandValues(players);
             break;
 
          case RIVER:
@@ -85,6 +88,7 @@ public class Poker {
             dealer.printCommunityCards();
             players = dealer.evaluateHandStrength(players, dealer.communityCards);
             players = dealer.betPeriod(players);
+            dealer.printHandValues(players);
             break;
 
          case EVAL:
@@ -126,20 +130,6 @@ public class Poker {
          for (Player player : players) {
             player.playerActed = false;
             player.totalBet = 0;
-         }
-
-         try {
-            for (Player player : players) {
-               if (player instanceof Bot) {
-                  System.out.println("Bot " + player.id + " has hand " + player.currentHand.toString());
-               }
-               else {
-                  System.out.println("Player " + player.id + " has hand " + player.currentHand.toString());
-               }
-            }
-         }
-         catch (NullPointerException e) {
-            // New hand
          }
 
          if (dealer.playersInHand == 1) {

@@ -48,7 +48,7 @@ public class Bot extends Player {
       this.botTurn = new BotTurn(Action.CHECKCALL, currentBet);
    }
 
-   public void determinePreFlopAction(int currentBet, int bbAmount, int sbAmount, int totalBet) {
+   public void determinePreFlopAction(int currentBet, int totalBet) {
       boolean raise = totalBet > this.totalBet;
       int betAmount = totalBet - this.totalBet;
 
@@ -66,7 +66,7 @@ public class Bot extends Player {
 	       this.botTurn = new BotTurn(Action.BET, currentBet * (6 / this.holeCardsValue));	
 	    }
             else if (this.holeCardsValue <= 7) {
-               this.botTurn = new BotTurn(Action.CHECKCALL, currentBet);
+               this.botTurn = new BotTurn(Action.CHECKCALL, betAmount);
             }
             else {
                this.botTurn = new BotTurn(Action.FOLD, currentBet);
@@ -77,7 +77,7 @@ public class Bot extends Player {
 	       this.botTurn = new BotTurn(Action.BET, currentBet * (3 / this.holeCardsValue));	
 	    }
             else if (this.holeCardsValue <= 5) {
-               this.botTurn = new BotTurn(Action.CHECKCALL, currentBet);
+               this.botTurn = new BotTurn(Action.CHECKCALL, betAmount);
             }
             else {
                this.botTurn = new BotTurn(Action.FOLD, currentBet);
@@ -90,7 +90,7 @@ public class Bot extends Player {
 	       this.botTurn = new BotTurn(Action.BET, currentBet * (3 / this.holeCardsValue));	
 	    }	
             else if (this.holeCardsValue <= 5) {
-               this.botTurn = new BotTurn(Action.CHECKCALL, currentBet);
+               this.botTurn = new BotTurn(Action.CHECKCALL, betAmount);
             }
             else {
                this.botTurn = new BotTurn(Action.FOLD, currentBet);
@@ -101,7 +101,7 @@ public class Bot extends Player {
 	       this.botTurn = new BotTurn(Action.BET, currentBet * (2 / this.holeCardsValue));	
 	    }
             else if (this.holeCardsValue <= 4) {
-               this.botTurn = new BotTurn(Action.CHECKCALL, currentBet);
+               this.botTurn = new BotTurn(Action.CHECKCALL, betAmount);
             }
             else {
                this.botTurn = new BotTurn(Action.FOLD, currentBet);
@@ -112,7 +112,7 @@ public class Bot extends Player {
 	       this.botTurn = new BotTurn(Action.BET, currentBet * (2 / this.holeCardsValue));	
 	    }
             else if (this.holeCardsValue <= 3) {
-               this.botTurn = new BotTurn(Action.CHECKCALL, currentBet);
+               this.botTurn = new BotTurn(Action.CHECKCALL, betAmount);
             }
             else {
                this.botTurn = new BotTurn(Action.FOLD, currentBet);

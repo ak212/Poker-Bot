@@ -62,15 +62,24 @@ public class Dealer {
             }
             else {
                int callAmount = this.totalBet - p.totalBet;
-               player.call(callAmount);
-               this.pot += callAmount;
+               if (callAmount > 0) {
+                  player.call(callAmount);
+                  this.pot += callAmount;
+               }
                betAmount = betAmount - callAmount;
                this.currentBet = betAmount;
                this.totalBet += betAmount;
             }
          }
          else {
+            int callAmount = this.totalBet - p.totalBet;
+            if (callAmount > 0) {
+               player.call(callAmount);
+               this.pot += callAmount;
+            }
+            betAmount = betAmount - callAmount;
             this.currentBet = betAmount;
+            this.totalBet += betAmount;
          }
 
          player.bet(this.currentBet);
@@ -112,7 +121,7 @@ public class Dealer {
       Bot b = (Bot) p;
 
       if (this.betPeriod.equals(BetPeriod.PREFLOP)) {
-         b.determinePreFlopAction(this.currentBet, this.bigBlindAmount, this.smallBlindAmount, this.totalBet);
+         b.determinePreFlopAction(this.currentBet, this.totalBet);
       } 
       else {
          b.action(this.currentBet);
@@ -208,7 +217,7 @@ public class Dealer {
          }
       }
 
-      return playersInHand == playersActed;
+      return playersInHand == playersActed || playersInHand == 1;
    }
 
    public ArrayList<Player> resetPlayersActed(ArrayList<Player> players, int exception) {
@@ -286,10 +295,26 @@ public class Dealer {
                   }
                }
             }
+            if (!player.inHand) {
+               if (getPlayersInHand(players) == 1) {
+                  break;
+               }
+            }
          }
       }
 
       return players;
+   }
+
+   public void printHandValues(ArrayList<Player> players) {
+      for (Player player : players) {
+         if (player instanceof Bot) {
+            System.out.println("Bot " + player.id + " has hand " + player.currentHand.toString());
+         }
+         else {
+            System.out.println("Player " + player.id + " has hand " + player.currentHand.toString());
+         }
+      }
    }
 
    public void flop() {
