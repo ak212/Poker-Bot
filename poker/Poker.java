@@ -12,9 +12,11 @@ public class Poker {
       int gameState = 0;
       boolean playGame = true;
       int playerId = 0;
+      int loopIndex = 0;
 
       int startingChips = 10000;
       ArrayList<Player> players = new ArrayList<Player>();
+      ArrayList<Integer> playersEliminated = new ArrayList<Integer>();
       players.add(new Player(playerId++, startingChips));
       players.add(new Bot(playerId++, startingChips));
       // players.add(new Bot(playerId++, startingChips));
@@ -115,12 +117,21 @@ public class Poker {
 
             // TODO way to remove players from the game when they are out of chips
             // This doesn't work. Comment out player, uncomment 2nd bot - Aaron
+            loopIndex = 0;
             for (Player player : players) {
                if (player.stack == 0) {
                   System.out.println("Player " + player.id + " eliminated");
-                  players.remove(player);
+                  playersEliminated.add(loopIndex);
+               }
+               loopIndex++;
+            }
+
+            if (!playersEliminated.isEmpty()) {
+               for (Integer i : playersEliminated) {
+                  players.remove(i);
                }
             }
+            playersEliminated.clear();
 
             System.out.println("\n\n");
             dealer.betPeriod = BetPeriod.getBetPeriod(gameState = -1);
