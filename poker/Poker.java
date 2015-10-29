@@ -71,9 +71,6 @@ public class Poker {
             break;
 
          case FLOP:
-            for (Player player : players) {
-               System.out.println("Player " + player.id + " stack: " + player.stack);
-            }
             dealer.flop();
             dealer.printCommunityCards();
             Collections.sort(players, new PositionComparator());
@@ -83,9 +80,6 @@ public class Poker {
             break;
 
          case TURN:
-            for (Player player : players) {
-               System.out.println("Player " + player.id + " stack: " + player.stack);
-            }
             dealer.turn();
             dealer.printCommunityCards();
             players = dealer.evaluateHandStrength(players, dealer.communityCards);
@@ -94,9 +88,6 @@ public class Poker {
             break;
 
          case RIVER:
-            for (Player player : players) {
-               System.out.println("Player " + player.id + " stack: " + player.stack);
-            }
             dealer.river();
             dealer.printCommunityCards();
             players = dealer.evaluateHandStrength(players, dealer.communityCards);
@@ -105,6 +96,8 @@ public class Poker {
             break;
 
          case EVAL:
+            dealer.printStackValues(players);
+
             if (dealer.playersInHand == 1) {
                for (Player player : players) {
                   if (player.inHand) {

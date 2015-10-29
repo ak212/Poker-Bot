@@ -318,6 +318,17 @@ public class Dealer {
       }
    }
 
+   public void printStackValues(ArrayList<Player> players) {
+      for (Player player : players) {
+         if (player instanceof Bot) {
+            System.out.println("Bot " + player.id + " stack: " + player.stack);
+         }
+         else {
+            System.out.println("Player " + player.id + " stack: " + player.stack);
+         }
+      }
+   }
+
    public void flop() {
       this.burnCards.add(drawCard());
       this.communityCards.add(drawCard());
