@@ -67,6 +67,9 @@ public class Poker {
             break;
 
          case FLOP:
+            for (Player player : players) {
+               System.out.println("Player " + player.id + " stack: " + player.stack);
+            }
             dealer.flop();
             dealer.printCommunityCards();
             Collections.sort(players, new PositionComparator());
@@ -76,6 +79,9 @@ public class Poker {
             break;
 
          case TURN:
+            for (Player player : players) {
+               System.out.println("Player " + player.id + " stack: " + player.stack);
+            }
             dealer.turn();
             dealer.printCommunityCards();
             players = dealer.evaluateHandStrength(players, dealer.communityCards);
@@ -84,6 +90,9 @@ public class Poker {
             break;
 
          case RIVER:
+            for (Player player : players) {
+               System.out.println("Player " + player.id + " stack: " + player.stack);
+            }
             dealer.river();
             dealer.printCommunityCards();
             players = dealer.evaluateHandStrength(players, dealer.communityCards);
@@ -108,6 +117,11 @@ public class Poker {
             }
 
             // TODO way to remove players from the game when they are out of chips
+            for (Player player : players) {
+               if (player.stack == 0) {
+                  players.remove(player);
+               }
+            }
 
             System.out.println("\n\n");
             dealer.betPeriod = BetPeriod.getBetPeriod(gameState = -1);
