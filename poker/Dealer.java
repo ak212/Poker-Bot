@@ -260,6 +260,7 @@ public class Dealer {
    public ArrayList<Player> betPeriod(ArrayList<Player> players) {
       this.totalBet = this.currentBet;
 
+      System.out.println("Current bet: " + this.totalBet);
       while (!betSettled(players)) {
          for (Player player : players) {
             if (player.inHand && !player.playerActed) {
