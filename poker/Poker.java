@@ -16,21 +16,22 @@ public class Poker {
 
       int startingChips = 10000;
       ArrayList<Player> players = new ArrayList<Player>();
-      ArrayList<Integer> playersEliminated = new ArrayList<Integer>();
-      players.add(new Player(playerId++, startingChips));
+      ArrayList<Player> playersEliminated = new ArrayList<Player>();
+      // players.add(new Player(playerId++, startingChips));
       players.add(new Bot(playerId++, startingChips));
-      // players.add(new Bot(playerId++, startingChips));
+      players.add(new Bot(playerId++, startingChips));
 
       dealer.betPeriod = BetPeriod.getBetPeriod(gameState);
 
       while (playGame) {
          switch (dealer.betPeriod) {
          case PREFLOP:
-            players = dealer.determinePositions(players);
-            if (players.size() < 2) {
+            if (dealer.getPlayersToBeDealt(players) < 2) {
                playGame = false;
                break;
             }
+
+            players = dealer.determinePositions(players);
 
             for (Player player : players) {
                if (player.dealerButton) {
@@ -117,21 +118,8 @@ public class Poker {
 
             // TODO way to remove players from the game when they are out of chips
             // This doesn't work. Comment out player, uncomment 2nd bot - Aaron
-            loopIndex = 0;
-            for (Player player : players) {
-               if (player.stack == 0) {
-                  System.out.println("Player " + player.id + " eliminated");
-                  playersEliminated.add(loopIndex);
-               }
-               loopIndex++;
-            }
-
-            if (!playersEliminated.isEmpty()) {
-               for (Integer i : playersEliminated) {
-                  players.remove(i);
-               }
-            }
-            playersEliminated.clear();
+            playersEliminated.addAll(dealer.retrieveEliminatedPlayers(players));
+            players = dealer.removeEliminatedPlayers(players);
 
             System.out.println("\n\n");
             dealer.betPeriod = BetPeriod.getBetPeriod(gameState = -1);

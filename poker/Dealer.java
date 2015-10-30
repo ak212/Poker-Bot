@@ -307,6 +307,37 @@ public class Dealer {
       return players;
    }
 
+   public ArrayList<Player> retrieveEliminatedPlayers(ArrayList<Player> players) {
+      ArrayList<Player> playersToBeRemoved = new ArrayList<Player>();
+
+      for (Player player : players) {
+         if (player.stack <= 0) {
+            playersToBeRemoved.add(player);
+         }
+      }
+
+      return playersToBeRemoved;
+   }
+
+   public ArrayList<Player> removeEliminatedPlayers(ArrayList<Player> players) {
+      ArrayList<Player> playersToBeRemoved = new ArrayList<Player>();
+
+      for (Player player : players) {
+         if (player.stack <= 0) {
+            System.out.println("Player " + player.id + " eliminated");
+            playersToBeRemoved.add(player);
+         }
+      }
+
+      if (!playersToBeRemoved.isEmpty()) {
+         for (Player player : playersToBeRemoved) {
+            players.remove(player);
+         }
+      }
+
+      return players;
+   }
+
    public void printHandValues(ArrayList<Player> players) {
       for (Player player : players) {
          if (player instanceof Bot) {
