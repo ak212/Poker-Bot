@@ -9,7 +9,8 @@ public class Dealer {
    ArrayList<Card> communityCards;
    ArrayList<Card> burnCards;
    BetPeriod betPeriod;
-   //HandStrength strongestHand;
+   Player winner;
+   ArrayList<Player> playersTied;
    int smallBlindAmount;
    int bigBlindAmount;
    int dealerButtonPosition;
@@ -29,7 +30,9 @@ public class Dealer {
       this.bigBlindAmount = 50;
       this.pot = 0;
       this.currentBet = 0;
-      //strongestHand = new HandStrength();
+      this.winner = new Player(-1, 0);
+      this.winner.currentHand = Hand.NoHand;
+      this.playersTied = new ArrayList<Player>();
       this.communityCards = new ArrayList<Card>();
       this.burnCards = new ArrayList<Card>();
       this.deckOfCards = new DeckOfCards();
@@ -360,6 +363,39 @@ public class Dealer {
       }
    }
 
+   public void compareHandStrength(Player p) {
+      // use hand strength to compare p against this.winner
+      // if tie, keep winner the same, add p to playersTied
+      // if not, set winner to p, clear playersTied
+      playersTied.add(p);
+   }
+
+   public ArrayList<Player> determineWinner(ArrayList<Player> players) {
+      
+      if (this.playersTied.isEmpty()) { //no tie
+         System.out.println("Player " + this.winner.id + " wins " + this.pot);
+         for (Player player : players) {
+            if (player.id == this.winner.id) {
+               player.stack += this.pot;
+            }
+         }
+      }
+      else { //tie
+         playersTied.add(this.winner);
+         int split = this.pot / this.playersTied.size();
+         for (Player p : playersTied) {
+            System.out.println("Player " + p.id + " wins " + split);
+            for (Player player : players) {
+               if (player.id == p.id) {
+                  player.stack += split;
+               }
+            }
+         }
+      }
+     
+      return players;
+   }
+
    public void flop() {
       this.burnCards.add(drawCard());
       this.communityCards.add(drawCard());
@@ -389,6 +425,9 @@ public class Dealer {
       this.totalBet = 0;
       this.sidePots.clear();
       this.deckOfCards = new DeckOfCards();
+      this.playersTied.clear();
+      this.winner = new Player (-1, 0);
+      this.winner.currentHand = Hand.NoHand;
    }
 
    public void printCommunityCards() {

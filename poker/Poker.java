@@ -12,7 +12,6 @@ public class Poker {
       int gameState = 0;
       boolean playGame = true;
       int playerId = 0;
-      int loopIndex = 0;
 
       int startingChips = 10000;
       ArrayList<Player> players = new ArrayList<Player>();
@@ -113,7 +112,18 @@ public class Poker {
                // TODO Determine winner with hand strengths
                // TODO New class with Hand, card value of hand and arraylist of kickers to be used in case of tie
                // TODO Hand comparisons i.e. pair of Js vs pair of Qs.
+               
+               for (Player player : players) {
+                  if (player.currentHand.getValue() > dealer.winner.currentHand.getValue()) {
+                     dealer.winner = player;
+                     dealer.playersTied.clear();
+                  }
+                  else if (player.currentHand.getValue() == dealer.winner.currentHand.getValue()) {
+                     dealer.compareHandStrength(player);
+                  }  
+               }
 
+               players = dealer.determineWinner(players);
             }
 
             // TODO way to remove players from the game when they are out of chips

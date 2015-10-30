@@ -9,7 +9,8 @@ public enum Hand {
    ThreeOfAKind(3),
    TwoPair(2),
    OnePair(1),
-   HighCard(0);
+   HighCard(0),
+   NoHand(-1);
    
    private final int value;
    
