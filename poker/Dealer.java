@@ -315,6 +315,7 @@ public class Dealer {
 
       for (Player player : players) {
          if (player.stack <= 0) {
+            System.out.println("Player " + player.id + " eliminated");
             playersToBeRemoved.add(player);
          }
       }
@@ -323,14 +324,7 @@ public class Dealer {
    }
 
    public ArrayList<Player> removeEliminatedPlayers(ArrayList<Player> players) {
-      ArrayList<Player> playersToBeRemoved = new ArrayList<Player>();
-
-      for (Player player : players) {
-         if (player.stack <= 0) {
-            System.out.println("Player " + player.id + " eliminated");
-            playersToBeRemoved.add(player);
-         }
-      }
+      ArrayList<Player> playersToBeRemoved = retrieveEliminatedPlayers(players);
 
       if (!playersToBeRemoved.isEmpty()) {
          for (Player player : playersToBeRemoved) {
