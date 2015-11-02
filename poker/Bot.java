@@ -51,6 +51,82 @@ public class Bot extends Player {
    public void determinePreFlopAction(int currentBet, int totalBet) {
       boolean raise = totalBet > this.totalBet;
       int betAmount = totalBet - this.totalBet;
+      int handValue = this.currentHand.getValue();
+
+      if (!raise) {
+         if (this.bigBlind) {
+            if (this.holeCardsValue <= 3) {
+               this.botTurn = new BotTurn(Action.BET, currentBet * (7 / this.holeCardsValue));
+            }
+            else {
+               this.botTurn = new BotTurn(Action.CHECKCALL, betAmount);
+            }
+         }
+         else if (this.smallBlind) {
+            if (this.holeCardsValue <= 2) {
+               this.botTurn = new BotTurn(Action.BET, currentBet * (6 / this.holeCardsValue));
+            }
+            else if (this.holeCardsValue <= 7) {
+               this.botTurn = new BotTurn(Action.CHECKCALL, betAmount);
+            }
+            else {
+               this.botTurn = new BotTurn(Action.FOLD, currentBet);
+            }
+         }
+         else {
+            if (this.holeCardsValue <= 1) {
+               this.botTurn = new BotTurn(Action.BET, currentBet * (3 / this.holeCardsValue));
+            }
+            else if (this.holeCardsValue <= 5) {
+               this.botTurn = new BotTurn(Action.CHECKCALL, betAmount);
+            }
+            else {
+               this.botTurn = new BotTurn(Action.FOLD, currentBet);
+            }
+         }
+      }
+      else {
+         if (this.bigBlind) {
+            if (this.holeCardsValue <= 1) {
+               this.botTurn = new BotTurn(Action.BET, currentBet * (3 / this.holeCardsValue));
+            }
+            else if (this.holeCardsValue <= 5) {
+               this.botTurn = new BotTurn(Action.CHECKCALL, betAmount);
+            }
+            else {
+               this.botTurn = new BotTurn(Action.FOLD, currentBet);
+            }
+         }
+         else if (this.smallBlind) {
+            if (this.holeCardsValue <= 1) {
+               this.botTurn = new BotTurn(Action.BET, currentBet * (2 / this.holeCardsValue));
+            }
+            else if (this.holeCardsValue <= 4) {
+               this.botTurn = new BotTurn(Action.CHECKCALL, betAmount);
+            }
+            else {
+               this.botTurn = new BotTurn(Action.FOLD, currentBet);
+            }
+         }
+         else {
+            if (this.holeCardsValue <= 1) {
+               this.botTurn = new BotTurn(Action.BET, currentBet * (2 / this.holeCardsValue));
+            }
+            else if (this.holeCardsValue <= 3) {
+               this.botTurn = new BotTurn(Action.CHECKCALL, betAmount);
+            }
+            else {
+               this.botTurn = new BotTurn(Action.FOLD, currentBet);
+            }
+         }
+      }
+   }
+
+   public void determinePostFlopAction(int currentBet, int totalBet) {
+      boolean raise = totalBet > this.totalBet;
+      int betAmount = totalBet - this.totalBet;
+
+      //need to have information about current hand, current bet, position, relative stack size
 
       if (!raise) {
          if (this.bigBlind) {
