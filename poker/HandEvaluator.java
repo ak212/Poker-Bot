@@ -5,6 +5,8 @@ import java.util.Collections;
 import java.util.Comparator;
 
 public class HandEvaluator {
+   
+   // TODO Convert to return a HandStrength 
    public static Hand evaluateForHand(ArrayList<Card> board, HoleCards holeCards) {
       // Default to High Card
       Hand highestHand = Hand.HighCard;
@@ -39,7 +41,7 @@ public class HandEvaluator {
          
          ArrayList<Card> sortedHand;
          
-         // Sort the hand from highest to lowest
+         // Sort the hand from lowest to highest
          Collections.sort(hand, new Comparator<Card>() {
             public int compare(Card left, Card right) {
                 return left.rank.getValue() - right.rank.getValue();             }
@@ -157,6 +159,44 @@ public class HandEvaluator {
       
       current.remove(x);
       getSubsets(superSet, k, idx+1, current, solution);
-  }
+   }
+   
+   
+   // Currently defunct. DO NOT USE
+//   private static Player breakTie(ArrayList<Player> tiedPlayers, ArrayList<Card> board, Hand hand) {
+//      
+//      Player winningPlayer = null;
+//      
+//      
+//      for (Player player : tiedPlayers) {
+//         int rank[] = new int[15];
+//      
+//         switch (hand) {
+//         case HighCard:
+//            break;
+//         case OnePair:
+//            break;
+//         case TwoPair:
+//            break;
+//         case ThreeOfAKind:
+//            break;
+//         case Straight:
+//            break;
+//         case Flush:
+//            break;
+//         case FullHouse:
+//            break;
+//         case FourOfAKind:
+//            break;
+//         case StraightFlush:
+//            break;
+//         default:
+//            break;
+//         }
+//      }
+//      
+//      
+//      return winningPlayer;
+//   }
 }
 
