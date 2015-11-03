@@ -16,9 +16,9 @@ public class Poker {
       int startingChips = 10000;
       ArrayList<Player> players = new ArrayList<Player>();
       ArrayList<Player> playersEliminated = new ArrayList<Player>();
-      // players.add(new Player(playerId++, startingChips));
+      players.add(new Player(playerId++, startingChips));
       players.add(new Bot(playerId++, startingChips));
-      players.add(new Bot(playerId++, startingChips));
+      // players.add(new Bot(playerId++, startingChips));
 
       dealer.betPeriod = BetPeriod.getBetPeriod(gameState);
 
@@ -98,8 +98,6 @@ public class Poker {
             break;
 
          case EVAL:
-            dealer.printStackValues(players);
-
             if (dealer.playersInHand == 1) {
                for (Player player : players) {
                   if (player.inHand) {
@@ -126,8 +124,7 @@ public class Poker {
                players = dealer.determineWinner(players);
             }
 
-            // TODO way to remove players from the game when they are out of chips
-            // This doesn't work. Comment out player, uncomment 2nd bot - Aaron
+            dealer.printStackValues(players);
             playersEliminated.addAll(dealer.retrieveEliminatedPlayers(players));
             players = dealer.removeEliminatedPlayers(players);
 
@@ -137,6 +134,12 @@ public class Poker {
 
             for (Player player : players) {
                player.nextHand();
+            }
+            try {
+               Thread.sleep(3000);
+            }
+            catch (InterruptedException e) {
+               e.printStackTrace();
             }
             break;
 

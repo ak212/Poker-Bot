@@ -272,7 +272,7 @@ public class Dealer {
    public ArrayList<Player> betPeriod(ArrayList<Player> players) {
       this.totalBet = this.currentBet;
 
-      System.out.println("Current bet: " + this.totalBet);
+      // System.out.println("Current bet: " + this.totalBet);
       while (!betSettled(players)) {
          for (Player player : players) {
             if (player.inHand && !player.playerActed) {
@@ -315,7 +315,6 @@ public class Dealer {
 
       for (Player player : players) {
          if (player.stack <= 0) {
-            System.out.println("Player " + player.id + " eliminated");
             playersToBeRemoved.add(player);
          }
       }
@@ -328,6 +327,7 @@ public class Dealer {
 
       if (!playersToBeRemoved.isEmpty()) {
          for (Player player : playersToBeRemoved) {
+            System.out.println("Player " + player.id + " eliminated");
             players.remove(player);
          }
       }
