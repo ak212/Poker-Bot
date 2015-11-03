@@ -365,11 +365,16 @@ public class Dealer {
    }
 
    public ArrayList<Player> determineWinner(ArrayList<Player> players) {
-      
       if (this.playersTied.isEmpty()) { //no tie
-         System.out.println("Player " + this.winner.id + " wins " + this.pot);
          for (Player player : players) {
             if (player.id == this.winner.id) {
+               if (player instanceof Bot) {
+                  System.out.println("Bot " + this.winner.id + " wins " + this.pot);
+               }
+               else {
+                  System.out.println("Player " + this.winner.id + " wins " + this.pot);
+               }
+
                player.stack += this.pot;
             }
          }
@@ -380,6 +385,13 @@ public class Dealer {
          System.out.println("Player " + this.winner.id + " wins " + this.pot);
          for (Player player : players) {
             if (player.id == this.winner.id) {
+               if (player instanceof Bot) {
+                  System.out.println("Bot " + this.winner.id + " wins " + this.pot);
+               }
+               else {
+                  System.out.println("Player " + this.winner.id + " wins " + this.pot);
+               }
+
                player.stack += this.pot;
             }
          }

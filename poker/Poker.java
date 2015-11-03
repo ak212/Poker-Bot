@@ -68,8 +68,8 @@ public class Poker {
 
             Collections.sort(players, new PreFlopComparator());
             players = dealer.evaluateHandStrength(players, new ArrayList<Card>());
-            players = dealer.betPeriod(players);
             dealer.printHandValues(players);
+            players = dealer.betPeriod(players);
             break;
 
          case FLOP:
@@ -77,31 +77,36 @@ public class Poker {
             dealer.printCommunityCards();
             Collections.sort(players, new PositionComparator());
             players = dealer.evaluateHandStrength(players, dealer.communityCards);
-            players = dealer.betPeriod(players);
             dealer.printHandValues(players);
+            players = dealer.betPeriod(players);
             break;
 
          case TURN:
             dealer.turn();
             dealer.printCommunityCards();
             players = dealer.evaluateHandStrength(players, dealer.communityCards);
-            players = dealer.betPeriod(players);
             dealer.printHandValues(players);
+            players = dealer.betPeriod(players);
             break;
 
          case RIVER:
             dealer.river();
             dealer.printCommunityCards();
             players = dealer.evaluateHandStrength(players, dealer.communityCards);
-            players = dealer.betPeriod(players);
             dealer.printHandValues(players);
+            players = dealer.betPeriod(players);
             break;
 
          case EVAL:
             if (dealer.playersInHand == 1) {
                for (Player player : players) {
                   if (player.inHand) {
-                     System.out.println("Player " + player.id + " wins " + dealer.pot);
+                     if (player instanceof Bot) {
+                        System.out.println("Bot " + player.id + " wins " + dealer.pot);
+                     }
+                     else {
+                        System.out.println("Player " + player.id + " wins " + dealer.pot);
+                     }
                      player.stack += dealer.pot;
                   }
                }
