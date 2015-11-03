@@ -51,7 +51,6 @@ public class Bot extends Player {
    public void determinePreFlopAction(int currentBet, int totalBet) {
       boolean raise = totalBet > this.totalBet;
       int betAmount = totalBet - this.totalBet;
-      int handValue = this.currentHand.getValue();
 
       if (!raise) {
          if (this.bigBlind) {
@@ -125,6 +124,7 @@ public class Bot extends Player {
    public void determinePostFlopAction(int currentBet, int totalBet) {
       boolean raise = totalBet > this.totalBet;
       int betAmount = totalBet - this.totalBet;
+      int handValue = this.currentHand.getValue();
 
       //need to have information about current hand, current bet, position, relative stack size
 
