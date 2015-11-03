@@ -163,7 +163,7 @@ public class HandEvaluator {
    
    
    // Currently only works for same card hands and odesn't account for kickers
-   private static Player breakTie(ArrayList<Player> tiedPlayers, ArrayList<Card> board, Hand hand) {
+   public static Player breakTie(ArrayList<Player> tiedPlayers, ArrayList<Card> board, Hand hand) {
       
       Player winningPlayer = null;
       int bestRank = Rank.TWO.getValue();

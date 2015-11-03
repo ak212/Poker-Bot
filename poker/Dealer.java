@@ -375,16 +375,25 @@ public class Dealer {
          }
       }
       else { //tie
-         playersTied.add(this.winner);
-         int split = this.pot / this.playersTied.size();
-         for (Player p : playersTied) {
-            System.out.println("Player " + p.id + " wins " + split);
-            for (Player player : players) {
-               if (player.id == p.id) {
-                  player.stack += split;
-               }
+         this.winner = HandEvaluator.breakTie(playersTied, communityCards, players.get(0).currentHand);
+         
+         System.out.println("Player " + this.winner.id + " wins " + this.pot);
+         for (Player player : players) {
+            if (player.id == this.winner.id) {
+               player.stack += this.pot;
             }
          }
+         
+//         playersTied.add(this.winner);
+//         int split = this.pot / this.playersTied.size();
+//         for (Player p : playersTied) {
+//            System.out.println("Player " + p.id + " wins " + split);
+//            for (Player player : players) {
+//               if (player.id == p.id) {
+//                  player.stack += split;
+//               }
+//            }
+//         }
       }
      
       return players;

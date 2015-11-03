@@ -117,10 +117,11 @@ public class Poker {
                      dealer.playersTied.clear();
                   }
                   else if (player.currentHand.getValue() == dealer.winner.currentHand.getValue()) {
-                     dealer.compareHandStrength(player);
+                     //dealer.compareHandStrength(player);
+                     dealer.playersTied.add(player);
                   }  
                }
-
+               
                players = dealer.determineWinner(players);
             }
 
