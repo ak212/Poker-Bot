@@ -162,41 +162,99 @@ public class HandEvaluator {
    }
    
    
-   // Currently defunct. DO NOT USE
-//   private static Player breakTie(ArrayList<Player> tiedPlayers, ArrayList<Card> board, Hand hand) {
-//      
-//      Player winningPlayer = null;
-//      
-//      
-//      for (Player player : tiedPlayers) {
-//         int rank[] = new int[15];
-//      
-//         switch (hand) {
-//         case HighCard:
-//            break;
-//         case OnePair:
-//            break;
-//         case TwoPair:
-//            break;
-//         case ThreeOfAKind:
-//            break;
-//         case Straight:
-//            break;
-//         case Flush:
-//            break;
-//         case FullHouse:
-//            break;
-//         case FourOfAKind:
-//            break;
-//         case StraightFlush:
-//            break;
-//         default:
-//            break;
-//         }
-//      }
-//      
-//      
-//      return winningPlayer;
-//   }
+   // Currently only works for same card hands and odesn't account for kickers
+   private static Player breakTie(ArrayList<Player> tiedPlayers, ArrayList<Card> board, Hand hand) {
+      
+      Player winningPlayer = null;
+      int bestRank = Rank.TWO.getValue();
+      
+      
+      for (Player player : tiedPlayers) {
+         int rank[] = new int[15];
+         
+         ArrayList<Card> boardAndHoleCards = board;
+         boardAndHoleCards.add(player.holeCards.card1);
+         boardAndHoleCards.add(player.holeCards.card2);
+         
+         ArrayList<Card> sortedHand;
+         
+         // Sort the hand from lowest to highest
+         Collections.sort(boardAndHoleCards, new Comparator<Card>() {
+            public int compare(Card left, Card right) {
+                return left.rank.getValue() - right.rank.getValue();
+            }
+         });
+         
+         sortedHand = boardAndHoleCards;
+         
+         // Get tallies
+         for (Card card : boardAndHoleCards) {
+            rank[card.rank.getValue()] += 1;
+         }
+      
+         switch (hand) {
+         case HighCard:
+            winningPlayer = tiedPlayers.get(0);
+            break;
+         case OnePair:
+            for (int i = 0; i < rank.length; i++) {
+               if (rank[i] == 2) {
+                  if (i > bestRank) {
+                     bestRank = i;
+                     winningPlayer = player;
+                  }
+               }
+            }
+            break;
+         case TwoPair:
+            for (int i = 0; i < rank.length; i++) {
+               if (rank[i] == 2) {
+                  if (i > bestRank) {
+                     bestRank = i;
+                     winningPlayer = player;
+                  }
+               }
+            }
+            break;
+         case ThreeOfAKind:
+            for (int i = 0; i < rank.length; i++) {
+               if (rank[i] == 3) {
+                  if (i > bestRank) {
+                     bestRank = i;
+                     winningPlayer = player;
+                  }
+               }
+            }
+            break;
+         case Straight:
+            winningPlayer = tiedPlayers.get(0);
+            break;
+         case Flush:
+            winningPlayer = tiedPlayers.get(0);
+            break;
+         case FullHouse:
+            winningPlayer = tiedPlayers.get(0);
+            break;
+         case FourOfAKind:
+            for (int i = 0; i < rank.length; i++) {
+               if (rank[i] == 4) {
+                  if (i > bestRank) {
+                     bestRank = i;
+                     winningPlayer = player;
+                  }
+               }
+            }
+            break;
+         case StraightFlush:
+            winningPlayer = tiedPlayers.get(0);
+            break;
+         default:
+            break;
+         }
+      }
+      
+      
+      return winningPlayer;
+   }
 }
 
