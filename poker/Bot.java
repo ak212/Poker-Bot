@@ -48,8 +48,16 @@ public class Bot extends Player {
       this.botTurn = new BotTurn(Action.CHECKCALL, currentBet);
    }
 
-   public void determinePreFlopAction(int currentBet, int totalBet) {
-      boolean raise = totalBet > this.totalBet;
+   public void determinePreFlopAction(int currentBet, int totalBet, int bbAmount) {
+      boolean raise;
+
+      if (this.smallBlind && !this.calledSB) {
+         raise = totalBet != bbAmount;
+      }
+      else {
+         raise = totalBet > this.totalBet;
+      }
+
       int betAmount = totalBet - this.totalBet;
 
       if (!raise) {

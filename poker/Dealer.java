@@ -124,7 +124,7 @@ public class Dealer {
       Bot b = (Bot) p;
 
       if (this.betPeriod.equals(BetPeriod.PREFLOP)) {
-         b.determinePreFlopAction(this.currentBet, this.totalBet);
+         b.determinePreFlopAction(this.currentBet, this.totalBet, this.bigBlindAmount);
       } 
       else {
          b.determinePostFlopAction(this.currentBet, this.totalBet, this);
