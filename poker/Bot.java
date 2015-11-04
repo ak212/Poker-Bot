@@ -131,7 +131,7 @@ public class Bot extends Player {
       int seatPosition = (this.position <= positionDivider) ? 1 : (this.position <= positionDivider * 2) ? 2 : 3;
 
       if (!raise) {
-         if (seatPositon == 1) {   // Early position
+         if (seatPosition == 1) { // Early position
             if (this.position == 1) {   // Under the Gun
                this.botTurn = new BotTurn(Action.BET, currentBet * (7 / this.holeCardsValue));
             }
