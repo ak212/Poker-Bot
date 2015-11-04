@@ -124,21 +124,22 @@ public class Bot extends Player {
    public void determinePostFlopAction(int currentBet, int totalBet, Dealer dealer) {
       boolean raise = totalBet > this.totalBet;
       int betAmount = totalBet - this.totalBet;
-      int handValue = this.currentHand.getValue();
+      int numPlayers = dealer.playersInHand;
+      double positionDivider = (numPlayers == 2) ? 1.5 : numPlayers / 3;
 
       //need to have information about current hand, current bet, position, relative stack size
-       
+      int seatPosition = (this.position <= positionDivider) ? 1 : (this.position <= positionDivider * 2) ? 2 : 3;
 
       if (!raise) {
-         if (this.bigBlind) {
-            if (this.holeCardsValue <= 3) {
+         if (seatPositon == 1) {   // Early position
+            if (this.position == 1) {   // Under the Gun
                this.botTurn = new BotTurn(Action.BET, currentBet * (7 / this.holeCardsValue));
             }
             else {
                this.botTurn = new BotTurn(Action.CHECKCALL, betAmount);
             }
          }
-         else if (this.smallBlind) {
+         else if (seatPosition == 2) {   // Middle position
             if (this.holeCardsValue <= 2) {
                this.botTurn = new BotTurn(Action.BET, currentBet * (6 / this.holeCardsValue));
             }
@@ -149,8 +150,8 @@ public class Bot extends Player {
                this.botTurn = new BotTurn(Action.FOLD, currentBet);
             }
          }
-         else {
-            if (this.holeCardsValue <= 1) {
+         else {   // Late Position
+            if (this.position == numPlayers) {   // On the Button
                this.botTurn = new BotTurn(Action.BET, currentBet * (3 / this.holeCardsValue));
             }
             else if (this.holeCardsValue <= 5) {
@@ -162,7 +163,7 @@ public class Bot extends Player {
          }
       }
       else {
-         if (this.bigBlind) {
+         if (seatPosition == 1) {   // Early position
             if (this.holeCardsValue <= 1) {
                this.botTurn = new BotTurn(Action.BET, currentBet * (3 / this.holeCardsValue));
             }
@@ -173,7 +174,7 @@ public class Bot extends Player {
                this.botTurn = new BotTurn(Action.FOLD, currentBet);
             }
          }
-         else if (this.smallBlind) {
+         else if (seatPosition == 2) {   // Middle Position
             if (this.holeCardsValue <= 1) {
                this.botTurn = new BotTurn(Action.BET, currentBet * (2 / this.holeCardsValue));
             }
@@ -184,7 +185,7 @@ public class Bot extends Player {
                this.botTurn = new BotTurn(Action.FOLD, currentBet);
             }
          }
-         else {
+         else {   // Late Position
             if (this.holeCardsValue <= 1) {
                this.botTurn = new BotTurn(Action.BET, currentBet * (2 / this.holeCardsValue));
             }
