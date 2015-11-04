@@ -127,7 +127,7 @@ public class Dealer {
          b.determinePreFlopAction(this.currentBet, this.totalBet);
       } 
       else {
-         b.action(this.currentBet);
+         b.determinePostFlopAction(this.currentBet, this.totalBet, this);
       }
 
       switch (b.botTurn.botAction) {
