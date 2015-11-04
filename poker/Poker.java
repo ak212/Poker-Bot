@@ -74,27 +74,18 @@ public class Poker {
 
          case FLOP:
             dealer.flop();
-            dealer.printCommunityCards();
             Collections.sort(players, new PositionComparator());
-            players = dealer.evaluateHandStrength(players, dealer.communityCards);
-            dealer.printHandValues(players);
-            players = dealer.betPeriod(players);
+            players = dealer.completeRound(players);
             break;
 
          case TURN:
             dealer.turn();
-            dealer.printCommunityCards();
-            players = dealer.evaluateHandStrength(players, dealer.communityCards);
-            dealer.printHandValues(players);
-            players = dealer.betPeriod(players);
+            players = dealer.completeRound(players);
             break;
 
          case RIVER:
             dealer.river();
-            dealer.printCommunityCards();
-            players = dealer.evaluateHandStrength(players, dealer.communityCards);
-            dealer.printHandValues(players);
-            players = dealer.betPeriod(players);
+            players = dealer.completeRound(players);
             break;
 
          case EVAL:

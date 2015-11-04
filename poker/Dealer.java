@@ -308,7 +308,7 @@ public class Dealer {
          }
       }
 
-      return updatePosition(players);
+      return players;
    }
 
    public ArrayList<Player> updatePosition(ArrayList<Player> players) {
@@ -438,6 +438,16 @@ public class Dealer {
    public void river() {
       this.burnCards.add(drawCard());
       this.communityCards.add(drawCard());
+   }
+
+   public ArrayList<Player> completeRound(ArrayList<Player> players) {
+      this.printCommunityCards();
+      players = this.updatePosition(players);
+      players = this.evaluateHandStrength(players, this.communityCards);
+      this.printHandValues(players);
+      players = this.betPeriod(players);
+
+      return players;
    }
 
    public void newHand() {
