@@ -72,9 +72,11 @@ public class Bot extends Player {
          else if (this.smallBlind) {
             if (this.holeCardsValue <= 2) {
                this.botTurn = new BotTurn(Action.BET, currentBet * (6 / this.holeCardsValue));
+               this.calledSB = true;
             }
             else if (this.holeCardsValue <= 7) {
                this.botTurn = new BotTurn(Action.CHECKCALL, betAmount);
+               this.calledSB = true;
             }
             else {
                this.botTurn = new BotTurn(Action.FOLD, currentBet);
@@ -107,9 +109,11 @@ public class Bot extends Player {
          else if (this.smallBlind) {
             if (this.holeCardsValue <= 1) {
                this.botTurn = new BotTurn(Action.BET, currentBet * (2 / this.holeCardsValue));
+               this.calledSB = true;
             }
             else if (this.holeCardsValue <= 4) {
                this.botTurn = new BotTurn(Action.CHECKCALL, betAmount);
+               this.calledSB = true;
             }
             else {
                this.botTurn = new BotTurn(Action.FOLD, currentBet);
