@@ -300,10 +300,23 @@ public class Dealer {
                }
             }
             if (!player.inHand) {
-               if (getPlayersInHand(players) == 1) {
+               this.playersInHand = getPlayersInHand(players);
+               if (this.playersInHand == 1) {
                   break;
                }
             }
+         }
+      }
+
+      return updatePosition(players);
+   }
+
+   public ArrayList<Player> updatePosition(ArrayList<Player> players) {
+      int i = 1;
+
+      for (Player player : players) {
+         if (player.inHand) {
+            player.position = i++;
          }
       }
 
@@ -382,7 +395,6 @@ public class Dealer {
       else { //tie
          this.winner = HandEvaluator.breakTie(playersTied, communityCards, players.get(0).currentHand);
          
-         System.out.println("Player " + this.winner.id + " wins " + this.pot);
          for (Player player : players) {
             if (player.id == this.winner.id) {
                if (player instanceof Bot) {

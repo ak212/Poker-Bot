@@ -24,6 +24,10 @@ public class Player {
    public void bet(int bet) {
       // TODO need to handle case where bet exceeds stack, exception? shouldn't
       // be problem when we have a gui
+
+      if (bet > this.stack) {
+         bet = this.stack;
+      }
       this.stack -= bet;
       this.potCommitment += bet;
       this.totalBet += bet;
