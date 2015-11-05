@@ -462,10 +462,10 @@ public class Dealer {
          int split = this.pot / this.playersTied.size();
          for (Player p : playersTied) {
             if (p instanceof Bot) {
-               System.out.println("Bot " + this.getWinner().getId() + " wins " + split);
+               System.out.println("Bot " + p.getId() + " wins " + split);
             }
             else {
-               System.out.println("Player " + this.getWinner().getId() + " wins " + split);
+               System.out.println("Player " + p.getId() + " wins " + split);
             }
             for (Player player : players) {
                if (player.getId() == p.getId()) {
