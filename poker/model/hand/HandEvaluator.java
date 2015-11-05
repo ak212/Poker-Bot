@@ -1,8 +1,13 @@
-package poker;
+package poker.model.hand;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
+
+import poker.model.cards.Card;
+import poker.model.cards.HoleCards;
+import poker.model.cards.Rank;
+import poker.model.player.Player;
 
 public class HandEvaluator {
    
@@ -13,7 +18,7 @@ public class HandEvaluator {
       
       // Check for a pocket pair if there is no board
       if (board.isEmpty()) {
-         if (holeCards.card1.rank == holeCards.card2.rank) {
+         if (holeCards.getCard1().getRank() == holeCards.getCard2().getRank()) {
             return Hand.OnePair;
          }
          else {
@@ -22,8 +27,8 @@ public class HandEvaluator {
       }
       
       ArrayList<Card> boardAndHoleCards = board;
-      boardAndHoleCards.add(holeCards.card1);
-      boardAndHoleCards.add(holeCards.card2);
+      boardAndHoleCards.add(holeCards.getCard1());
+      boardAndHoleCards.add(holeCards.getCard2());
       
       ArrayList<ArrayList<Card>> subsets = getSubsets(boardAndHoleCards, 5);
       
@@ -44,15 +49,15 @@ public class HandEvaluator {
          // Sort the hand from lowest to highest
          Collections.sort(hand, new Comparator<Card>() {
             public int compare(Card left, Card right) {
-                return left.rank.getValue() - right.rank.getValue();             }
+                return left.getRank().getValue() - right.getRank().getValue();             }
          });
          
          sortedHand = hand;
          
          // Get tallies
          for (Card card : hand) {
-            rank[card.rank.getValue()] += 1;
-            suit[card.suit.getValue()] += 1;
+            rank[card.getRank().getValue()] += 1;
+            suit[card.getSuit().getValue()] += 1;
          }
          
          // Test for same card hands (One Pair, Two Pair, Three of a Kind, Four of a Kind)
@@ -88,10 +93,10 @@ public class HandEvaluator {
          }
          
          // Test for Straight
-         if ( (sortedHand.get(4).rank.getValue() - sortedHand.get(3).rank.getValue() == 1) &&
-              (sortedHand.get(3).rank.getValue() - sortedHand.get(2).rank.getValue() == 1) &&
-              (sortedHand.get(2).rank.getValue() - sortedHand.get(1).rank.getValue() == 1) &&
-              (sortedHand.get(1).rank.getValue() - sortedHand.get(0).rank.getValue() == 1)) {
+         if ( (sortedHand.get(4).getRank().getValue() - sortedHand.get(3).getRank().getValue() == 1) &&
+              (sortedHand.get(3).getRank().getValue() - sortedHand.get(2).getRank().getValue() == 1) &&
+              (sortedHand.get(2).getRank().getValue() - sortedHand.get(1).getRank().getValue() == 1) &&
+              (sortedHand.get(1).getRank().getValue() - sortedHand.get(0).getRank().getValue() == 1)) {
             straight = true;
             if (highestHand.getValue() < Hand.Straight.getValue()) {
                highestHand = Hand.Straight;
@@ -99,11 +104,11 @@ public class HandEvaluator {
          }
          
          // Test for Wheel Straight
-         if ( (sortedHand.get(0).rank.getValue() == Rank.TWO.getValue()) &&
-              (sortedHand.get(1).rank.getValue() == Rank.THREE.getValue()) &&
-              (sortedHand.get(2).rank.getValue() == Rank.FOUR.getValue()) &&
-              (sortedHand.get(3).rank.getValue() == Rank.FIVE.getValue()) &&
-              (sortedHand.get(4).rank.getValue() == Rank.ACE.getValue())) {
+         if ( (sortedHand.get(0).getRank().getValue() == Rank.TWO.getValue()) &&
+              (sortedHand.get(1).getRank().getValue() == Rank.THREE.getValue()) &&
+              (sortedHand.get(2).getRank().getValue() == Rank.FOUR.getValue()) &&
+              (sortedHand.get(3).getRank().getValue() == Rank.FIVE.getValue()) &&
+              (sortedHand.get(4).getRank().getValue() == Rank.ACE.getValue())) {
              straight = true;
              if (highestHand.getValue() < Hand.Straight.getValue()) {
                 highestHand = Hand.Straight;
@@ -173,15 +178,15 @@ public class HandEvaluator {
          int rank[] = new int[15];
          
          ArrayList<Card> boardAndHoleCards = board;
-         boardAndHoleCards.add(player.holeCards.card1);
-         boardAndHoleCards.add(player.holeCards.card2);
+         boardAndHoleCards.add(player.getHoleCards().getCard1());
+         boardAndHoleCards.add(player.getHoleCards().getCard2());
          
          ArrayList<Card> sortedHand;
          
          // Sort the hand from lowest to highest
          Collections.sort(boardAndHoleCards, new Comparator<Card>() {
             public int compare(Card left, Card right) {
-                return left.rank.getValue() - right.rank.getValue();
+                return left.getRank().getValue() - right.getRank().getValue();
             }
          });
          
@@ -189,7 +194,7 @@ public class HandEvaluator {
          
          // Get tallies
          for (Card card : boardAndHoleCards) {
-            rank[card.rank.getValue()] += 1;
+            rank[card.getRank().getValue()] += 1;
          }
       
          switch (hand) {
