@@ -18,6 +18,7 @@ public class Player {
    private boolean bigBlind;
    private boolean smallBlind;
    private boolean calledSB;
+   private PlayerStats stats;
 
    public Player(int id, int stack) {
       this.setId(id);
