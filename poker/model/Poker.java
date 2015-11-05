@@ -14,7 +14,7 @@ import poker.model.player.Player;
 public class Poker {
    public static Dealer dealer;
 
-   public static void main(String[] args) {
+   public void playPoker() {
       dealer = new Dealer();
 
       int gameState = 0;
