@@ -1,5 +1,7 @@
 package poker.model.player;
 
+import java.util.ArrayList;
+
 import poker.model.game.Dealer;
 
 public class Bot extends Player {
