@@ -107,6 +107,11 @@ public class Poker {
                         System.out.println("Player " + player.getId() + " wins " + dealer.getPot());
                      }
                      player.setStack(player.getStack() + dealer.getPot());
+                     player.stats.wins++;
+                     player.stats.setWinnings(dealer.getPot());
+                     if (dealer.getPot() > player.stats.biggestWin) {
+                        player.stats.biggestWin = dealer.getPot();
+                     }
                   }
                }
             }

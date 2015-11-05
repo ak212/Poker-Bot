@@ -18,10 +18,12 @@ public class Player {
    private boolean bigBlind;
    private boolean smallBlind;
    private boolean calledSB;
+   public PlayerStats stats;
 
    public Player(int id, int stack) {
       this.setId(id);
       this.setStack(stack);
+      this.stats = new PlayerStats();
    }
 
    public void bet(int bet) {

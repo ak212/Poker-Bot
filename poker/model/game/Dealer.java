@@ -122,6 +122,26 @@ public class Dealer {
          player.setInHand(false);
          this.setPlayersInHand(this.getPlayersInHand() - 1);
          System.out.println("Player " + player.getId() + " folds");
+
+         player.stats.folds++;
+         switch (this.betPeriod) {
+         case PREFLOP:
+            player.stats.preFlopFolds++;
+            break;
+         case FLOP:
+            player.stats.flopFolds++;
+            break;
+         case TURN:
+            player.stats.turnFolds++;
+            break;
+         case RIVER:
+            player.stats.riverFolds++;
+            break;
+         case EVAL:
+            break;
+         default:
+            break;
+         }
          break;
       default:
          break;
@@ -161,6 +181,26 @@ public class Dealer {
          b.setInHand(false);
          this.setPlayersInHand(this.getPlayersInHand() - 1);
          System.out.println("Bot " + b.getId() + " folds");
+
+         b.stats.folds++;
+         switch (this.betPeriod) {
+         case PREFLOP:
+            b.stats.preFlopFolds++;
+            break;
+         case FLOP:
+            b.stats.flopFolds++;
+            break;
+         case TURN:
+            b.stats.turnFolds++;
+            break;
+         case RIVER:
+            b.stats.riverFolds++;
+            break;
+         case EVAL:
+            break;
+         default:
+            break;
+         }
       }
 
       return b;
@@ -266,6 +306,7 @@ public class Dealer {
       for (Player player : players) {
          player.setHoleCards(new HoleCards(cardsDealt[player.getPosition()], cardsDealt[player.getPosition() + players.size()]));
          player.setInHand(true);
+         player.stats.hands++;
       }
 
       return players;
@@ -274,6 +315,10 @@ public class Dealer {
    public ArrayList<Player> evaluateHandStrength(ArrayList<Player> players, ArrayList<Card> board) {
       for (Player player : players) {
          player.setCurrentHand(HandEvaluator.evaluateForHand(new ArrayList<Card>(board), player.getHoleCards()));
+
+         if (player.getCurrentHand().hand.compareTo(player.stats.bestHand) < 0) {
+            player.stats.bestHand = player.getCurrentHand().hand;
+         }
       }
 
       return players;
@@ -399,6 +444,14 @@ public class Dealer {
                }
 
                player.setStack(player.getStack() + this.getPot());
+               player.stats.wins++;
+               player.stats.setWinnings(this.getPot());
+               if (this.getPot() > player.stats.biggestWin) {
+                  player.stats.biggestWin = this.getPot();
+               }
+            }
+            else {
+               player.stats.losses--;
             }
          }
       }
@@ -411,6 +464,16 @@ public class Dealer {
             for (Player player : players) {
                if (player.getId() == p.getId()) {
                   player.setStack(player.getStack() + split);
+               }
+
+               player.setStack(player.getStack() + this.getPot());
+               player.stats.wins++;
+               player.stats.setWinnings(this.getPot());
+               if (this.getPot() > player.stats.biggestWin) {
+                  player.stats.biggestWin = this.getPot();
+               }
+               else {
+                  player.stats.losses++;
                }
             }
          }
