@@ -139,7 +139,7 @@ public class Bot extends Player {
       }
    }
 
-   public void determinePostFlopAction(int currentBet, int totalBet, Dealer dealer, ArrayList<Player> players) {
+   public void determinePostFlopAction(int currentBet, int totalBet, Dealer dealer) {
 
       boolean raise = totalBet > this.getTotalBet();
       int betAmount = totalBet - this.getTotalBet();
