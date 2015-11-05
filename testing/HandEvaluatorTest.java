@@ -1,13 +1,18 @@
 package testing;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 
-import poker.*;
-
 import org.junit.Test;
+
+import poker.model.cards.Card;
+import poker.model.cards.HoleCards;
+import poker.model.cards.Rank;
+import poker.model.cards.Suit;
+import poker.model.hand.Hand;
+import poker.model.hand.HandEvaluator;
 
 public class HandEvaluatorTest {
 

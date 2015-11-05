@@ -1,4 +1,4 @@
-package poker;
+package poker.model.hand;
 
 public enum Hand {
    StraightFlush(8),

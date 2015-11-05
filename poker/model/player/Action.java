@@ -1,4 +1,4 @@
-package poker;
+package poker.model.player;
 
 public enum Action {
    CHECKCALL(0), BET(1), FOLD(2);

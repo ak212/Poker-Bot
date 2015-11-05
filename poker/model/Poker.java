@@ -1,7 +1,15 @@
-package poker;
+package poker.model;
 
 import java.util.ArrayList;
 import java.util.Collections;
+
+import poker.model.cards.Card;
+import poker.model.game.BetPeriod;
+import poker.model.game.Dealer;
+import poker.model.game.PositionComparator;
+import poker.model.game.PreFlopComparator;
+import poker.model.player.Bot;
+import poker.model.player.Player;
 
 public class Poker {
    public static Dealer dealer;
@@ -20,10 +28,10 @@ public class Poker {
       players.add(new Bot(playerId++, startingChips));
       // players.add(new Bot(playerId++, startingChips));
 
-      dealer.betPeriod = BetPeriod.getBetPeriod(gameState);
+      dealer.setBetPeriod(BetPeriod.getBetPeriod(gameState));
 
       while (playGame) {
-         switch (dealer.betPeriod) {
+         switch (dealer.getBetPeriod()) {
          case PREFLOP:
             if (dealer.getPlayersToBeDealt(players) < 2) {
                playGame = false;
@@ -33,22 +41,22 @@ public class Poker {
             players = dealer.determinePositions(players);
 
             for (Player player : players) {
-               if (player.dealerButton) {
+               if (player.isDealerButton()) {
                   if (player instanceof Bot) {
-                     System.out.println("Bot " + player.id + " dealer button");
+                     System.out.println("Bot " + player.getId() + " dealer button");
                   }
                   else {
-                     System.out.println("Player " + player.id + " dealer button");
+                     System.out.println("Player " + player.getId() + " dealer button");
                   }
                }
-               if (player.bigBlind) {
-                  player.blind(dealer.bigBlindAmount);
-                  dealer.pot += dealer.bigBlindAmount;
-                  dealer.currentBet = dealer.bigBlindAmount;
+               if (player.isBigBlind()) {
+                  player.blind(dealer.getBigBlindAmount());
+                  dealer.setPot(dealer.getPot() + dealer.getBigBlindAmount());
+                  dealer.setCurrentBet(dealer.getBigBlindAmount());
                }
-               else if (player.smallBlind) {
-                  player.blind(dealer.smallBlindAmount);
-                  dealer.pot += dealer.smallBlindAmount;
+               else if (player.isSmallBlind()) {
+                  player.blind(dealer.getSmallBlindAmount());
+                  dealer.setPot(dealer.getPot() + dealer.getSmallBlindAmount());
                }
             }
 
@@ -56,53 +64,49 @@ public class Poker {
 
             for (Player player : players) {
                if (player instanceof Bot) {
-                  System.out.println("Bot " + player.id);
+                  System.out.println("Bot " + player.getId());
                   ((Bot) player).evalHoleCards();
                }
                else {
-                  System.out.println("Player " + player.id);
+                  System.out.println("Player " + player.getId());
                }
 
-               player.holeCards.printHoleCards();
+               player.getHoleCards().printHoleCards();
             }
 
             Collections.sort(players, new PreFlopComparator());
             players = dealer.evaluateHandStrength(players, new ArrayList<Card>());
-            players = dealer.betPeriod(players);
             dealer.printHandValues(players);
+            players = dealer.betPeriod(players);
             break;
 
          case FLOP:
             dealer.flop();
-            dealer.printCommunityCards();
             Collections.sort(players, new PositionComparator());
-            players = dealer.evaluateHandStrength(players, dealer.communityCards);
-            players = dealer.betPeriod(players);
-            dealer.printHandValues(players);
+            players = dealer.completeRound(players);
             break;
 
          case TURN:
             dealer.turn();
-            dealer.printCommunityCards();
-            players = dealer.evaluateHandStrength(players, dealer.communityCards);
-            players = dealer.betPeriod(players);
-            dealer.printHandValues(players);
+            players = dealer.completeRound(players);
             break;
 
          case RIVER:
             dealer.river();
-            dealer.printCommunityCards();
-            players = dealer.evaluateHandStrength(players, dealer.communityCards);
-            players = dealer.betPeriod(players);
-            dealer.printHandValues(players);
+            players = dealer.completeRound(players);
             break;
 
          case EVAL:
-            if (dealer.playersInHand == 1) {
+            if (dealer.getPlayersInHand() == 1) {
                for (Player player : players) {
-                  if (player.inHand) {
-                     System.out.println("Player " + player.id + " wins " + dealer.pot);
-                     player.stack += dealer.pot;
+                  if (player.isInHand()) {
+                     if (player instanceof Bot) {
+                        System.out.println("Bot " + player.getId() + " wins " + dealer.getPot());
+                     }
+                     else {
+                        System.out.println("Player " + player.getId() + " wins " + dealer.getPot());
+                     }
+                     player.setStack(player.getStack() + dealer.getPot());
                   }
                }
             }
@@ -112,13 +116,13 @@ public class Poker {
                // TODO Hand comparisons i.e. pair of Js vs pair of Qs.
                
                for (Player player : players) {
-                  if (player.currentHand.getValue() > dealer.winner.currentHand.getValue()) {
-                     dealer.winner = player;
-                     dealer.playersTied.clear();
+                  if (player.getCurrentHand().getValue() > dealer.getWinner().getCurrentHand().getValue()) {
+                     dealer.setWinner(player);
+                     dealer.getPlayersTied().clear();
                   }
-                  else if (player.currentHand.getValue() == dealer.winner.currentHand.getValue()) {
+                  else if (player.getCurrentHand().getValue() == dealer.getWinner().getCurrentHand().getValue()) {
                      //dealer.compareHandStrength(player);
-                     dealer.playersTied.add(player);
+                     dealer.getPlayersTied().add(player);
                   }  
                }
                
@@ -130,7 +134,7 @@ public class Poker {
             players = dealer.removeEliminatedPlayers(players);
 
             System.out.println("\n\n");
-            dealer.betPeriod = BetPeriod.getBetPeriod(gameState = -1);
+            dealer.setBetPeriod(BetPeriod.getBetPeriod(gameState = -1));
             dealer.newHand();
 
             for (Player player : players) {
@@ -148,18 +152,18 @@ public class Poker {
             break;
          }
 
-         dealer.currentBet = 0;
-         dealer.totalBet = 0;
-         dealer.betPeriod = BetPeriod.getBetPeriod(++gameState);
-         System.out.println("Current Pot: " + dealer.pot);
+         dealer.setCurrentBet(0);
+         dealer.setTotalBet(0);
+         dealer.setBetPeriod(BetPeriod.getBetPeriod(++gameState));
+         System.out.println("Current Pot: " + dealer.getPot());
 
          for (Player player : players) {
-            player.playerActed = false;
-            player.totalBet = 0;
+            player.setPlayerActed(false);
+            player.setTotalBet(0);
          }
 
-         if (dealer.playersInHand == 1) {
-            dealer.betPeriod = BetPeriod.EVAL;
+         if (dealer.getPlayersInHand() == 1) {
+            dealer.setBetPeriod(BetPeriod.EVAL);
          }
       }
    }

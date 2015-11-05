@@ -1,6 +1,8 @@
-package poker;
+package poker.model.hand;
 
 import java.util.ArrayList;
+
+import poker.model.cards.Card;
 
 public class HandStrength {
    public Hand hand;
