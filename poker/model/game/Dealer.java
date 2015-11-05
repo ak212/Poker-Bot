@@ -150,8 +150,10 @@ public class Dealer {
       return player;
    }
 
-   public Player botInput(Player p) {
+   public Player botInput(Player p, ArrayList<Player> players) {
       Bot b = (Bot) p;
+
+      b.getOpponentStackSizes(players);
 
       if (this.getBetPeriod().equals(BetPeriod.PREFLOP)) {
          b.determinePreFlopAction(this.getCurrentBet(), this.getTotalBet(), this.getBigBlindAmount());
@@ -335,7 +337,7 @@ public class Dealer {
 
                if (this.getBetPeriod().equals(BetPeriod.PREFLOP)) {
                   if (player instanceof Bot) {
-                     players.set(player.getPreFlopPosition() - 1, botInput(players.get(player.getPreFlopPosition() - 1)));
+                     players.set(player.getPreFlopPosition() - 1, botInput(players.get(player.getPreFlopPosition() - 1, players)));
                   } else {
                      players.set(player.getPreFlopPosition() - 1, playerInput(players.get(player.getPreFlopPosition() - 1)));
                   }
@@ -345,7 +347,7 @@ public class Dealer {
                }
                else {
                   if (player instanceof Bot) {
-                     players.set(player.getPosition() - 1, botInput(players.get(player.getPosition() - 1)));
+                     players.set(player.getPosition() - 1, botInput(players.get(player.getPosition() - 1, players)));
                   } else {
                      players.set(player.getPosition() - 1, playerInput(players.get(player.getPosition() - 1)));
                   }
@@ -530,6 +532,10 @@ public class Dealer {
       this.getPlayersTied().clear();
       this.setWinner(new Player (-1, 0));
       this.getWinner().setCurrentHand(new HandStrength(Hand.NoHand, new ArrayList<Integer>()));
+   }
+
+   public ArrayList<Card> getCommunityCards() {
+      return this.communityCards;
    }
 
    public void printCommunityCards() {

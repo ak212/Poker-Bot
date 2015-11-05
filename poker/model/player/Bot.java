@@ -5,6 +5,7 @@ import poker.model.game.Dealer;
 public class Bot extends Player {
    int holeCardsValue;
    private BotTurn botTurn;
+   private ArrayList<Integer> opponentStackSizes;
 
    // Unsuited: start with column
    // Suited: start with row
@@ -29,6 +30,7 @@ public class Bot extends Player {
 
    public Bot(int position, int stack) {
       super(position, stack);
+      this.opponentStackSizes = new ArrayList<Integer>();
    }
 
    public void evalHoleCards() {
@@ -43,6 +45,8 @@ public class Bot extends Player {
          idx1 = temp;
       }
 
+      // modify this value to change bot profile
+      // i.e: if value > 1, value - 1 to simulate an aggressive player (add profile characteristic to bot)
       this.holeCardsValue = holeCardValues[idx1][idx2];
    }
 
@@ -135,82 +139,52 @@ public class Bot extends Player {
       }
    }
 
-   public void determinePostFlopAction(int currentBet, int totalBet, Dealer dealer) {
+   public void determinePostFlopAction(int currentBet, int totalBet, Dealer dealer, ArrayList<Player> players) {
+
       boolean raise = totalBet > this.getTotalBet();
       int betAmount = totalBet - this.getTotalBet();
       int numPlayers = dealer.getPlayersInHand();
-      double positionDivider = (numPlayers == 2) ? 1.5 : numPlayers / 3;
+      int playersBehind = numPlayers - this.getPosition();
+      int playersInFront = numPlayers - playersBehind - 1;
+      int potSize = dealer.getPot();
+      
 
-      //need to have information about current hand, current bet, position, relative stack size
-      int seatPosition = (this.getPosition() <= positionDivider) ? 1 : (this.getPosition() <= positionDivider * 2) ? 2 : 3;
+      /* factors to consider:
+       - if there is a raise and how large it is relative to size of pot
+       - position of the Bot
+       - stack size of the Bot relative to other players
+       - what type of hand the bot has:
+          - if the bot has a hand, how strong is it relative to the board (using HandEvaluator)
+             - if the pair is on the board or in hand, number of relevant overcards, draws (straight, flush) -> (4 cards needed)
 
-      if (!raise) {
-         if (seatPosition == 1) { // Early position
-            if (this.getPosition() == 1) {   // Under the Gun
-               this.setBotTurn(new BotTurn(Action.BET, currentBet * (7 / this.holeCardsValue)));
-            }
-            else {
-               this.setBotTurn(new BotTurn(Action.CHECKCALL, betAmount));
-            }
+
+       - this.determineHand(dealer.getCommunityCards());
+      */
+
+      /*if (!raise) {
+         if (playersInFront == 0) {   // Under the Gun
+            this.setBotTurn(new BotTurn(Action.BET, currentBet * (7 / this.holeCardsValue)));
          }
-         else if (seatPosition == 2) {   // Middle position
-            if (this.holeCardsValue <= 2) {
-               this.setBotTurn(new BotTurn(Action.BET, currentBet * (6 / this.holeCardsValue)));
-            }
-            else if (this.holeCardsValue <= 7) {
-               this.setBotTurn(new BotTurn(Action.CHECKCALL, betAmount));
-            }
-            else {
-               this.setBotTurn(new BotTurn(Action.FOLD, currentBet));
-            }
+         else if (playersBehind == 0) {   // On the Button
+            this.setBotTurn(new BotTurn(Action.BET, currentBet * (3 / this.holeCardsValue)));
          }
-         else {   // Late Position
-            if (this.getPosition() == numPlayers) {   // On the Button
-               this.setBotTurn(new BotTurn(Action.BET, currentBet * (3 / this.holeCardsValue)));
-            }
-            else if (this.holeCardsValue <= 5) {
-               this.setBotTurn(new BotTurn(Action.CHECKCALL, betAmount));
-            }
-            else {
-               this.setBotTurn(new BotTurn(Action.FOLD, currentBet));
-            }
+         else {
+            //use playersInfront and playersbehind
          }
       }
       else {
-         if (seatPosition == 1) {   // Early position
-            if (this.holeCardsValue <= 1) {
-               this.setBotTurn(new BotTurn(Action.BET, currentBet * (3 / this.holeCardsValue)));
-            }
-            else if (this.holeCardsValue <= 5) {
-               this.setBotTurn(new BotTurn(Action.CHECKCALL, betAmount));
-            }
-            else {
-               this.setBotTurn(new BotTurn(Action.FOLD, currentBet));
-            }
+         if (playersInFront == 0) {   // Under the Gun
+            this.setBotTurn(new BotTurn(Action.BET, currentBet * (7 / this.holeCardsValue)));
          }
-         else if (seatPosition == 2) {   // Middle Position
-            if (this.holeCardsValue <= 1) {
-               this.setBotTurn(new BotTurn(Action.BET, currentBet * (2 / this.holeCardsValue)));
-            }
-            else if (this.holeCardsValue <= 4) {
-               this.setBotTurn(new BotTurn(Action.CHECKCALL, betAmount));
-            }
-            else {
-               this.setBotTurn(new BotTurn(Action.FOLD, currentBet));
-            }
+         else if (playersBehind == 0) {   // On the Button
+            this.setBotTurn(new BotTurn(Action.BET, currentBet * (3 / this.holeCardsValue)));
          }
-         else {   // Late Position
-            if (this.holeCardsValue <= 1) {
-               this.setBotTurn(new BotTurn(Action.BET, currentBet * (2 / this.holeCardsValue)));
-            }
-            else if (this.holeCardsValue <= 3) {
-               this.setBotTurn(new BotTurn(Action.CHECKCALL, betAmount));
-            }
-            else {
-               this.setBotTurn(new BotTurn(Action.FOLD, currentBet));
-            }
+         else {
+            //use playersinfront and playersbehind
          }
-      }
+      }*/
+
+      this.setBotTurn(new BotTurn(Action.CHECKCALL, betAmount));
    }
 
    public BotTurn getBotTurn() {
@@ -219,5 +193,13 @@ public class Bot extends Player {
 
    public void setBotTurn(BotTurn botTurn) {
       this.botTurn = botTurn;
+   }
+
+   public void getOpponentStackSizes(ArrayList<Player> players) {
+      for (Player player : players) {
+         if (player.isInHand()) {
+            opponentStackSizes.add(player.getStack());
+         }
+      }
    }
 }

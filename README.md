@@ -8,8 +8,7 @@
 ### Bot
 * actions based on pot odds
 * preflop and postflop decision making for raising, calling, folding
-* factors to consider:
-
+* factors to consider
 * if there is a raise and how large it is
 * position of the Bot
 * stack size of the Bot relative to other players
