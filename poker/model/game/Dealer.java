@@ -9,6 +9,7 @@ import poker.model.cards.DeckOfCards;
 import poker.model.cards.HoleCards;
 import poker.model.hand.Hand;
 import poker.model.hand.HandEvaluator;
+import poker.model.hand.HandStrength;
 import poker.model.player.Bot;
 import poker.model.player.Player;
 
@@ -39,7 +40,7 @@ public class Dealer {
       this.setPot(0);
       this.setCurrentBet(0);
       this.setWinner(new Player(-1, 0));
-      this.getWinner().setCurrentHand(Hand.NoHand);
+      this.getWinner().setCurrentHand(new HandStrength(Hand.NoHand, new ArrayList<Integer>()));
       this.setPlayersTied(new ArrayList<Player>());
       this.communityCards = new ArrayList<Card>();
       this.burnCards = new ArrayList<Card>();
@@ -360,10 +361,10 @@ public class Dealer {
    public void printHandValues(ArrayList<Player> players) {
       for (Player player : players) {
          if (player instanceof Bot) {
-            System.out.println("Bot " + player.getId() + " has hand " + player.getCurrentHand().toString());
+            System.out.println("Bot " + player.getId() + " has hand " + player.getCurrentHand().hand.toString());
          }
          else {
-            System.out.println("Player " + player.getId() + " has hand " + player.getCurrentHand().toString());
+            System.out.println("Player " + player.getId() + " has hand " + player.getCurrentHand().hand.toString());
          }
       }
    }
@@ -402,31 +403,17 @@ public class Dealer {
          }
       }
       else { //tie
-         this.setWinner(HandEvaluator.breakTie(getPlayersTied(), communityCards, players.get(0).getCurrentHand()));
          
-         for (Player player : players) {
-            if (player.getId() == this.getWinner().getId()) {
-               if (player instanceof Bot) {
-                  System.out.println("Bot " + this.getWinner().getId() + " wins " + this.getPot());
+         playersTied.add(this.winner);
+         int split = this.pot / this.playersTied.size();
+         for (Player p : playersTied) {
+            System.out.println("Player " + p.getId() + " wins " + split);
+            for (Player player : players) {
+               if (player.getId() == p.getId()) {
+                  player.setStack(player.getStack() + split);
                }
-               else {
-                  System.out.println("Player " + this.getWinner().getId() + " wins " + this.getPot());
-               }
-
-               player.setStack(player.getStack() + this.getPot());
             }
          }
-         
-//         playersTied.add(this.winner);
-//         int split = this.pot / this.playersTied.size();
-//         for (Player p : playersTied) {
-//            System.out.println("Player " + p.id + " wins " + split);
-//            for (Player player : players) {
-//               if (player.id == p.id) {
-//                  player.stack += split;
-//               }
-//            }
-//         }
       }
      
       return players;
@@ -473,7 +460,7 @@ public class Dealer {
       this.deckOfCards = new DeckOfCards();
       this.getPlayersTied().clear();
       this.setWinner(new Player (-1, 0));
-      this.getWinner().setCurrentHand(Hand.NoHand);
+      this.getWinner().setCurrentHand(new HandStrength(Hand.NoHand, new ArrayList<Integer>()));
    }
 
    public void printCommunityCards() {

@@ -1,14 +1,14 @@
 package poker.model.player;
 
 import poker.model.cards.HoleCards;
-import poker.model.hand.Hand;
+import poker.model.hand.HandStrength;
 
 public class Player {
    private int id;
    private int position;
    private int preFlopPosition;
    private HoleCards holeCards;
-   private Hand currentHand;
+   private HandStrength currentHand;
    private int stack;
    int potCommitment;
    private int totalBet;
@@ -81,11 +81,11 @@ public class Player {
       this.setCalledSB(false);
    }
 
-   public Hand getCurrentHand() {
+   public HandStrength getCurrentHand() {
       return currentHand;
    }
 
-   public void setCurrentHand(Hand currentHand) {
+   public void setCurrentHand(HandStrength currentHand) {
       this.currentHand = currentHand;
    }
 

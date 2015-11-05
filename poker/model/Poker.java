@@ -116,11 +116,11 @@ public class Poker {
                // TODO Hand comparisons i.e. pair of Js vs pair of Qs.
                
                for (Player player : players) {
-                  if (player.getCurrentHand().getValue() > dealer.getWinner().getCurrentHand().getValue()) {
+                  if (player.getCurrentHand().hand.getValue() > dealer.getWinner().getCurrentHand().hand.getValue()) {
                      dealer.setWinner(player);
                      dealer.getPlayersTied().clear();
                   }
-                  else if (player.getCurrentHand().getValue() == dealer.getWinner().getCurrentHand().getValue()) {
+                  else if (player.getCurrentHand().hand.getValue() == dealer.getWinner().getCurrentHand().hand.getValue()) {
                      //dealer.compareHandStrength(player);
                      dealer.getPlayersTied().add(player);
                   }  
