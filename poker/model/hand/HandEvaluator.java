@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.HashSet;
+import java.util.Set;
 
 import poker.model.cards.Card;
 import poker.model.cards.HoleCards;
@@ -265,6 +267,10 @@ public class HandEvaluator {
          }
       }
       
+      Set<Player> noDup = new HashSet<Player>(winningPlayers);
+      winningPlayers.clear();
+      winningPlayers.addAll(noDup);
+
       return winningPlayers;
    }
 }
