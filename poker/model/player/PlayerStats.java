@@ -3,18 +3,19 @@ package poker.model.player;
 import poker.model.hand.Hand;
 
 public class PlayerStats {
-   int hands;
-   int wins;
-   int folds;
-   int losses;
-   int preFlopFolds;
-   int flopFolds;
-   int turnFolds;
-   int riverFolds;
-   int raises;
-   int averageWinningPerHand;
-   Hand bestHand;
-   int biggestWin;
+   public int hands;
+   public int wins;
+   public int folds;
+   public int losses;
+   public int preFlopFolds;
+   public int flopFolds;
+   public int turnFolds;
+   public int riverFolds;
+   public int raises;
+   public double averageWinningPerHand;
+   public int winnings;
+   public Hand bestHand;
+   public int biggestWin;
 
    public PlayerStats() {
       this.hands = 0;
@@ -27,7 +28,13 @@ public class PlayerStats {
       this.riverFolds = 0;
       this.raises = 0;
       this.averageWinningPerHand = 0;
+      this.winnings = 0;
       this.bestHand = Hand.NoHand;
       this.biggestWin = 0;
+   }
+
+   public void setWinnings(int num) {
+      this.winnings += num;
+      this.averageWinningPerHand = this.winnings / this.wins;
    }
 }
