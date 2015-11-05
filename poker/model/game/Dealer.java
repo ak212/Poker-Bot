@@ -457,10 +457,16 @@ public class Dealer {
       }
       else { //tie
          
-         playersTied.add(this.winner);
+         this.playersTied.add(this.winner);
+         this.playersTied = HandEvaluator.breakTie(this.playersTied);
          int split = this.pot / this.playersTied.size();
          for (Player p : playersTied) {
-            System.out.println("Player " + p.getId() + " wins " + split);
+            if (p instanceof Bot) {
+               System.out.println("Bot " + this.getWinner().getId() + " wins " + split);
+            }
+            else {
+               System.out.println("Player " + this.getWinner().getId() + " wins " + split);
+            }
             for (Player player : players) {
                if (player.getId() == p.getId()) {
                   player.setStack(player.getStack() + split);
