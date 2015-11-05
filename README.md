@@ -8,6 +8,15 @@
 ### Bot
 * actions based on pot odds
 * preflop and postflop decision making for raising, calling, folding
+* factors to consider:
+
+* if there is a raise and how large it is
+* position of the Bot
+* stack size of the Bot relative to other players
+* what type of hand the bot has:
+* if the bot has a hand, how strong is it relative to the board (using HandStrength and  dealer.communityCards)
+* ex: if the pair is on the board or in hand, number of overcards, draws (gutshot, openended, flush) -> (4 cards needed)
+
 
 ## Ideas:
 * possibly configuration/settings file for blind amounts, starting amounts, how many hands or amount of time between upping the blinds - could be done through GUI as splash screen
