@@ -26,7 +26,7 @@ public class Poker {
       ArrayList<Player> playersEliminated = new ArrayList<Player>();
       players.add(new Player(playerId++, startingChips));
       players.add(new Bot(playerId++, startingChips));
-      // players.add(new Bot(playerId++, startingChips));
+      //players.add(new Bot(playerId++, startingChips));
 
       dealer.setBetPeriod(BetPeriod.getBetPeriod(gameState));
 
@@ -126,7 +126,6 @@ public class Poker {
                      dealer.getPlayersTied().clear();
                   }
                   else if (player.getCurrentHand().hand.getValue() == dealer.getWinner().getCurrentHand().hand.getValue()) {
-                     //dealer.compareHandStrength(player);
                      dealer.getPlayersTied().add(player);
                   }  
                }

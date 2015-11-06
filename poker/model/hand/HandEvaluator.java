@@ -17,8 +17,10 @@ public class HandEvaluator {
    public static HandStrength evaluateForHand(ArrayList<Card> board, HoleCards holeCards) {
       // Default to High Card
       Hand highestHand = Hand.HighCard;
-      ArrayList<Integer> kickers = new ArrayList<Integer>(5);
-      ArrayList<Integer> t_kickers = new ArrayList<Integer>(5);
+      Hand tempHand = Hand.NoHand;
+      ArrayList<Integer> kickers = new ArrayList<Integer>();
+      ArrayList<Integer> t_kickers = new ArrayList<Integer>();
+      ArrayList<Integer> c_kickers;
       
       // Check for a pocket pair if there is no board
       if (board.isEmpty()) {
@@ -64,58 +66,68 @@ public class HandEvaluator {
             rank[card.getRank().getValue()] += 1;
             suit[card.getSuit().getValue()] += 1;
          }
+
+         /*for (int i = 0; i < rank.length; i++) {
+            if (rank[i] > 0)
+               System.err.print(rank[i] + " " + i + "'s ");
+         }
+         System.err.println();*/
          
          // Test for same card hands (One Pair, Two Pair, Three of a Kind, Four of a Kind)
          for (int i = 0; i < rank.length; i++) {
-            // One Pair or Two Pair
+            // OnePair or twoPair
             if (rank[i] == 2) {
-               if (onePair == false) {
-                  onePair = true;
-                  if (highestHand.getValue() <= Hand.OnePair.getValue()) {
-                     t_kickers.clear();
-                     t_kickers.add(i);
-                     for (int j = rank.length - 1; j >= 0; j--) {
-                        if (rank[j] == 1) {
-                           t_kickers.add(j);
-                        }
+               onePair = true;
+               tempHand = Hand.OnePair;
+               if (highestHand.getValue() <= Hand.OnePair.getValue()) {
+                  t_kickers.clear();
+                  t_kickers.add(i);
+                  for (int j = rank.length - 1; j >= 0; j--) {
+                     if (rank[j] == 3) {
+                        t_kickers.clear();
+                        t_kickers.add(j);
+                        t_kickers.add(i);
+                        tempHand = Hand.FullHouse;
+                        onePair = false;
                      }
-                     highestHand = Hand.OnePair;
-                     kickers = (kickers.isEmpty()) ? t_kickers : compareKickers(kickers, t_kickers);
+                     if (rank[j] == 2 && j != i) {
+                        c_kickers = new ArrayList<Integer>(t_kickers);
+                        t_kickers.clear();
+                        t_kickers.add(j);
+                        t_kickers.addAll(c_kickers);
+                        tempHand = Hand.TwoPair;
+                        onePair = false;
+                     }
+                     if (rank[j] == 1) {
+                        t_kickers.add(j);
+                     }
                   }
-               }
-               else {
-                  onePair = false;
-                  if (highestHand.getValue() <= Hand.TwoPair.getValue()) {
-                     t_kickers.clear();
-                     t_kickers.add(i);
-                     for (int j = rank.length - 1; j >= 0; j--) {
-                        if (rank[j] == 2 && j != i) {
-                           t_kickers.add(j);
-                        }
-                     }
-                     for (int j = rank.length - 1; j >= 0; j--) {
-                        if (rank[j] == 1) {
-                           t_kickers.add(j);
-                        }
-                     }
-                     highestHand = Hand.TwoPair;
-                     kickers = (kickers.isEmpty()) ? t_kickers : compareKickers(kickers, t_kickers);
-                  }
+                  
+                  kickers = (kickers.isEmpty() || highestHand.getValue() < tempHand.getValue()) 
+                     ? new ArrayList<Integer>(t_kickers) : compareKickers(kickers, t_kickers);
+
+                  highestHand = tempHand;
                }
             }
             // Three of a Kind
             if (rank[i] == 3) {
                threeOfAKind = true;
+               tempHand = Hand.ThreeOfAKind;
                if (highestHand.getValue() <= Hand.ThreeOfAKind.getValue()) {
                   t_kickers.clear();
                   t_kickers.add(i);
                   for (int j = rank.length - 1; j >= 0; j--) {
+                     if (rank[j] == 2) {
+                        t_kickers.add(j);
+                        tempHand = Hand.FullHouse;
+                     }
                      if (rank[j] == 1) {
                         t_kickers.add(j);
                      }
                   }
-                  highestHand = Hand.ThreeOfAKind;
-                  kickers = (kickers.isEmpty()) ? t_kickers : compareKickers(kickers, t_kickers);
+                  kickers = (kickers.isEmpty() || highestHand.getValue() < tempHand.getValue()) 
+                     ? new ArrayList<Integer>(t_kickers) : compareKickers(kickers, t_kickers);
+                  highestHand = tempHand;
                }
             }
             // Four of a Kind
@@ -128,8 +140,9 @@ public class HandEvaluator {
                         t_kickers.add(j);
                      }
                   }
+                  kickers = (kickers.isEmpty() || highestHand.getValue() < Hand.FourOfAKind.getValue()) 
+                     ? t_kickers : compareKickers(kickers, t_kickers);
                   highestHand = Hand.FourOfAKind;
-                  kickers = (kickers.isEmpty()) ? t_kickers : compareKickers(kickers, t_kickers);
                }
             }
          }
@@ -143,8 +156,9 @@ public class HandEvaluator {
             if (highestHand.getValue() <= Hand.Straight.getValue()) {
                t_kickers.clear();
                t_kickers.add(sortedHand.get(4).getRank().getValue());
+               kickers = (kickers.isEmpty() || highestHand.getValue() < Hand.Straight.getValue()) 
+                  ? new ArrayList<Integer>(t_kickers) : compareKickers(kickers, t_kickers);
                highestHand = Hand.Straight;
-               kickers = (kickers.isEmpty()) ? t_kickers : compareKickers(kickers, t_kickers);
             }
          }
          
@@ -158,8 +172,9 @@ public class HandEvaluator {
              if (highestHand.getValue() <= Hand.Straight.getValue()) {
                 t_kickers.clear();
                 t_kickers.add(sortedHand.get(3).getRank().getValue());
+                kickers = (kickers.isEmpty() || highestHand.getValue() < Hand.Straight.getValue()) 
+                   ? new ArrayList<Integer>(t_kickers) : compareKickers(kickers, t_kickers);
                 highestHand = Hand.Straight;
-                kickers = (kickers.isEmpty()) ? t_kickers : compareKickers(kickers, t_kickers);
              }
           }
          
@@ -174,36 +189,39 @@ public class HandEvaluator {
                   t_kickers.add(sortedHand.get(2).getRank().getValue());
                   t_kickers.add(sortedHand.get(1).getRank().getValue());
                   t_kickers.add(sortedHand.get(0).getRank().getValue());
+                  kickers = (kickers.isEmpty() || highestHand.getValue() < Hand.Flush.getValue()) 
+                     ? new ArrayList<Integer>(t_kickers) : compareKickers(kickers, t_kickers);
                   highestHand = Hand.Flush;
-                  kickers = (kickers.isEmpty()) ? t_kickers : compareKickers(kickers, t_kickers);
                }
             }
          }
          
          // Test for Full House
-         if (onePair && threeOfAKind) {
+         /*if (onePair && threeOfAKind) {
             if (highestHand.getValue() <= Hand.FullHouse.getValue()) {
-               kickers.clear();
+               t_kickers.clear();
                for (int j = rank.length - 1; j >= 0; j--) {
                   if (rank[j] == 3) {
-                     kickers.add(j);
+                     t_kickers.add(j);
                   }
                   if (rank[j] == 2) {
-                     kickers.add(j);
+                     t_kickers.add(j);
                   }
                }
+               kickers = (kickers.isEmpty() || highestHand.getValue() < Hand.FullHouse.getValue()) 
+                  ? new ArrayList<Integer>(t_kickers) : compareKickers(kickers, t_kickers);
                highestHand = Hand.FullHouse;
-               kickers = (kickers.isEmpty()) ? t_kickers : compareKickers(kickers, t_kickers);
             }
-         }
+         }*/
          
          // Test for Straight Flush
          if (straight && flush) {
             if (highestHand.getValue() <= Hand.StraightFlush.getValue()) {
-               kickers.clear();
-               kickers.add(sortedHand.get(4).getRank().getValue());
+               t_kickers.clear();
+               t_kickers.add(sortedHand.get(4).getRank().getValue());
+               kickers = (kickers.isEmpty() || highestHand.getValue() < Hand.StraightFlush.getValue()) 
+                  ? new ArrayList<Integer>(t_kickers) : compareKickers(kickers, t_kickers);
                highestHand = Hand.StraightFlush;
-               kickers = (kickers.isEmpty()) ? t_kickers : compareKickers(kickers, t_kickers);
             }
          }
          
@@ -262,25 +280,25 @@ public class HandEvaluator {
       ArrayList<Player> winningPlayers = new ArrayList<Player>();
       ArrayList<Integer> highestKickers = tiedPlayers.get(0).getCurrentHand().kickers;
       winningPlayers.add(tiedPlayers.get(0));
-
-      System.err.println("break tie: number of tied players: " + tiedPlayers.size());
       
       for (Player player : tiedPlayers) {
-         System.err.print("HE.breakTie: Id: " + player.getId() + " kickers: ");
-         for (int i = 0; i < player.getCurrentHand().kickers.size(); i++)
-            System.out.print(player.getCurrentHand().kickers.get(i) + ",");
-         System.err.println();
 
          for (int i = 0; i < player.getCurrentHand().kickers.size(); i++) {
             if (player.getCurrentHand().kickers.get(i) > highestKickers.get(i)) {
                winningPlayers.clear();
                winningPlayers.add(player);
                highestKickers = player.getCurrentHand().kickers;
+               //System.err.println("new winner");
+               break;
             }
-            if (player.getCurrentHand().kickers.get(i) == highestKickers.get(i)) {
+            else if (player.getCurrentHand().kickers.get(i) == highestKickers.get(i)) {
                if (i == (player.getCurrentHand().kickers.size() - 1)) {
                   winningPlayers.add(player);
+                  //System.err.println("player " + player.getId() + " tied with winner " + winningPlayers.get(0).getId());
                }
+            }
+            else {
+               break;
             }
          }
       }
@@ -294,17 +312,28 @@ public class HandEvaluator {
 
    public static ArrayList<Integer> compareKickers(ArrayList<Integer> kickers, ArrayList<Integer> testKickers) {  
 
-      /*System.out.println("inside compare Kickers");
-      System.err.println("kickers size: " + kickers.size() + " test size: " + testKickers.size());
-      for (int i = 0; i < Math.min(kickers.size(), testKickers.size()); i++) {
+      /*System.err.println("compareKickers");
+
+      System.err.print("kickers: ");
+      for (Integer a : kickers)
+         System.err.print(a + ",");
+      System.err.println();
+
+      System.err.print("testkickers: ");
+      for (Integer a : testKickers)
+         System.err.print(a + ",");
+      System.err.println();*/
+
+      for (int i = 0; i < Math.min(kickers.size(), 5); i++) {
          if (kickers.get(i) < testKickers.get(i)) {
-            return testKickers;
+            return new ArrayList<Integer>(testKickers);
          }
          else if (kickers.get(i) > testKickers.get(i)) {
-            return kickers;
+            return new ArrayList<Integer>(kickers);
          }
-      }*/
-      return kickers;
+      }
+      //System.out.println("actual tie");
+      return new ArrayList<Integer>(kickers);
    }
 }
 

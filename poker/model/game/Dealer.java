@@ -12,6 +12,7 @@ import poker.model.hand.HandEvaluator;
 import poker.model.hand.HandStrength;
 import poker.model.player.Bot;
 import poker.model.player.Player;
+import poker.model.game.IdComparator;
 
 public class Dealer {
    DeckOfCards deckOfCards;
@@ -409,11 +410,15 @@ public class Dealer {
    public void printHandValues(ArrayList<Player> players) {
       for (Player player : players) {
          if (player instanceof Bot) {
-            System.out.println("Bot " + player.getId() + " has hand " + player.getCurrentHand().hand.toString());
+            System.out.print("Bot " + player.getId() + " has hand " + player.getCurrentHand().hand.toString());
          }
          else {
-            System.out.println("Player " + player.getId() + " has hand " + player.getCurrentHand().hand.toString());
+            System.out.print("Player " + player.getId() + " has hand " + player.getCurrentHand().hand.toString());
          }
+         System.out.print(" Kickers: ");
+         for (Integer i : player.getCurrentHand().kickers)
+            System.out.print(i + ",");
+         System.out.println();
       }
    }
 
@@ -459,8 +464,8 @@ public class Dealer {
          }
       }
       else { //tie
-         
          this.playersTied.add(this.winner);
+
          this.playersTied = HandEvaluator.breakTie(this.playersTied);
          int split = this.pot / this.playersTied.size();
          for (Player p : playersTied) {
