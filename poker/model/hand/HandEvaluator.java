@@ -141,7 +141,7 @@ public class HandEvaluator {
                      }
                   }
                   kickers = (kickers.isEmpty() || highestHand.getValue() < Hand.FourOfAKind.getValue()) 
-                     ? t_kickers : compareKickers(kickers, t_kickers);
+                     ? new ArrayList<Integer>(t_kickers) : compareKickers(kickers, t_kickers);
                   highestHand = Hand.FourOfAKind;
                }
             }
