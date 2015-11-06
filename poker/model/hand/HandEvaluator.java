@@ -262,15 +262,22 @@ public class HandEvaluator {
       ArrayList<Player> winningPlayers = new ArrayList<Player>();
       ArrayList<Integer> highestKickers = tiedPlayers.get(0).getCurrentHand().kickers;
       winningPlayers.add(tiedPlayers.get(0));
+
+      System.err.println("break tie: number of tied players: " + tiedPlayers.size());
       
       for (Player player : tiedPlayers) {
+         System.err.print("HE.breakTie: Id: " + player.getId() + " kickers: ");
+         for (int i = 0; i < player.getCurrentHand().kickers.size(); i++)
+            System.out.print(player.getCurrentHand().kickers.get(i) + ",");
+         System.err.println();
+
          for (int i = 0; i < player.getCurrentHand().kickers.size(); i++) {
             if (player.getCurrentHand().kickers.get(i) > highestKickers.get(i)) {
                winningPlayers.clear();
                winningPlayers.add(player);
                highestKickers = player.getCurrentHand().kickers;
             }
-            if (player.getCurrentHand().kickers.get(i) == highestKickers.get(i)) {
+            else if (player.getCurrentHand().kickers.get(i) == highestKickers.get(i)) {
                if (i == (player.getCurrentHand().kickers.size() - 1)) {
                   winningPlayers.add(player);
                }
@@ -285,15 +292,18 @@ public class HandEvaluator {
       return winningPlayers;
    }
 
-   public ArrayList<Card> compareKickers(ArrayList<Card> kickers, ArrayList<Card> testKickers) {
-      for (int i = 0; i < 5; i++) {
+   public static ArrayList<Integer> compareKickers(ArrayList<Integer> kickers, ArrayList<Integer> testKickers) {  
+
+      /*System.out.println("inside compare Kickers");
+      System.err.println("kickers size: " + kickers.size() + " test size: " + testKickers.size());
+      for (int i = 0; i < Math.min(kickers.size(), testKickers.size()); i++) {
          if (kickers.get(i) < testKickers.get(i)) {
             return testKickers;
          }
          else if (kickers.get(i) > testKickers.get(i)) {
             return kickers;
          }
-      }
+      }*/
       return kickers;
    }
 }
