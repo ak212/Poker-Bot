@@ -277,7 +277,7 @@ public class HandEvaluator {
                winningPlayers.add(player);
                highestKickers = player.getCurrentHand().kickers;
             }
-            else if (player.getCurrentHand().kickers.get(i) == highestKickers.get(i)) {
+            if (player.getCurrentHand().kickers.get(i) == highestKickers.get(i)) {
                if (i == (player.getCurrentHand().kickers.size() - 1)) {
                   winningPlayers.add(player);
                }
