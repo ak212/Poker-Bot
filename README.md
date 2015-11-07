@@ -22,7 +22,7 @@
 * Record player actions so the bot can learn how its opponent plays and it can build a profile on them.
 * Preflop - Bot uses lookup table for hole card strength and counts number of players raises to estimate player hand strength and make correct moves
 * Postflop - Bot uses pot odds to make correct moves and win the hand vs the player. The bot calculates pot odds by dividing the number of chips required to call by the total number of chips in the pot. The bot will then use the calculated pot odds to determine if it will make the correct move based on the information of the player's hole cards.
-* Maybe each bot can have some knowledge as to how much money they have compared to the other players in the hand (for betting)
+* side pots: creation of a pot class, each pot would know the players contributing to it, its current size, and the most recent bet, dealer would have an arraylist of pots, betPeriod would determine the pot that is active for each player, determineWinner would loo through all pots
 
 ## Sources:
 * card suit icons available on icons8.com
