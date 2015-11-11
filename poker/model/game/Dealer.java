@@ -364,6 +364,9 @@ public class Dealer {
                   break;
                }
             }
+
+            mainApp.updateCurrentBet(Integer.toString(this.totalBet));
+            mainApp.updatePot(Integer.toString(this.pot));
          }
       }
 

@@ -71,6 +71,24 @@ public class Main extends Application {
       });
    }
 
+   public void updatePot(String text) {
+      Platform.runLater(new Runnable() {
+         @Override
+         public void run() {
+            tableController.updatePot(text);
+         }
+      });
+   }
+
+   public void updateCurrentBet(String text) {
+      Platform.runLater(new Runnable() {
+         @Override
+         public void run() {
+            tableController.updateCurrentBet(text);
+         }
+      });
+   }
+
    public Stage getPrimaryStage() {
       return primaryStage;
    }

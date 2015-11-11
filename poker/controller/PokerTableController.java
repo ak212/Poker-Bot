@@ -2,6 +2,7 @@ package poker.controller;
 
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
+import javafx.scene.control.Label;
 import javafx.scene.control.TextArea;
 import poker.Main;
 
@@ -12,18 +13,26 @@ public class PokerTableController {
    private TextArea logTextArea;
 
    @FXML
+   private Label potValueLabel, currentBetValueLabel;
+
+   @FXML
    private Button checkCallButton;
 
    @FXML
    private void intialize() {
-      logTextArea.textProperty().addListener((observable, oldValue, newValue) -> {
-         logTextArea.setText(newValue);
-      });
 
    }
 
    public void addText(String text) {
       logTextArea.appendText(text + "\n");
+   }
+
+   public void updatePot(String text) {
+      potValueLabel.setText(text);
+   }
+
+   public void updateCurrentBet(String text) {
+      currentBetValueLabel.setText(text);
    }
 
    /**

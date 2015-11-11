@@ -27,9 +27,9 @@ public class Poker {
       int startingChips = 10000;
       ArrayList<Player> players = new ArrayList<Player>();
       ArrayList<Player> playersEliminated = new ArrayList<Player>();
-      // players.add(new Player(playerId++, startingChips));
+      players.add(new Player(playerId++, startingChips));
       players.add(new Bot(playerId++, startingChips));
-      players.add(new Bot(playerId++, startingChips));
+      // players.add(new Bot(playerId++, startingChips));
 
       for (Player player : players) {
          player.setMainApp(mainApp);
@@ -129,10 +129,6 @@ public class Poker {
                }
             }
             else {
-               // TODO Determine winner with hand strengths
-               // TODO New class with Hand, card value of hand and arraylist of kickers to be used in case of tie
-               // TODO Hand comparisons i.e. pair of Js vs pair of Qs.
-               
                for (Player player : players) {
                   if (player.getCurrentHand().hand.getValue() > dealer.getWinner().getCurrentHand().hand.getValue()) {
                      dealer.setWinner(player);
@@ -155,6 +151,7 @@ public class Poker {
             mainApp.updateConsole("\n\n");
             dealer.setBetPeriod(BetPeriod.getBetPeriod(gameState = -1));
             dealer.newHand();
+            mainApp.updatePot("0");
 
             for (Player player : players) {
                player.nextHand();
@@ -172,6 +169,7 @@ public class Poker {
          }
 
          dealer.setCurrentBet(0);
+         mainApp.updateCurrentBet("0");
          dealer.setTotalBet(0);
          dealer.setBetPeriod(BetPeriod.getBetPeriod(++gameState));
          System.out.println("Current Pot: " + dealer.getPot());

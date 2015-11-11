@@ -20,7 +20,7 @@
             <Font name="Arial" size="24.0" />
          </font>
       </Label>
-      <Label layoutX="500.0" layoutY="273.0" prefHeight="27.0" prefWidth="141.0" text="Current bet" textAlignment="CENTER" textFill="WHITE">
+      <Label fx:id="currentBetValueLabel" layoutX="500.0" layoutY="273.0" prefHeight="27.0" prefWidth="141.0" text="Current bet" textAlignment="CENTER" textFill="WHITE">
          <font>
             <Font name="Arial" size="24.0" />
          </font>
@@ -37,7 +37,7 @@
             <Font name="Arial" size="24.0" />
          </font>
       </Label>
-      <Label layoutX="450.0" layoutY="8.0" prefHeight="17.0" prefWidth="66.0" text="Pot" textAlignment="CENTER" textFill="WHITE">
+      <Label fx:id="potValueLabel" layoutX="450.0" layoutY="8.0" prefHeight="17.0" prefWidth="66.0" text="Pot" textAlignment="CENTER" textFill="WHITE">
          <font>
             <Font name="Arial" size="24.0" />
          </font>
