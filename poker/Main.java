@@ -15,9 +15,7 @@ import poker.model.Poker;
 public class Main extends Application {
 
    private Stage primaryStage;
-
    private AnchorPane rootLayout;
-
    private PokerTableController tableController;
 
    @Override
@@ -28,7 +26,6 @@ public class Main extends Application {
       Poker poker = new Poker();
       poker.setMainApp(this);
 
-      // TODO Run game and UI on separate threads
       Task task = new Task<Void>() {
          @Override
          public Void call() {
@@ -47,9 +44,11 @@ public class Main extends Application {
          FXMLLoader loader = new FXMLLoader();
          loader.setLocation(Main.class.getResource("view/PokerTable.fxml"));
          rootLayout = (AnchorPane) loader.load();
+         rootLayout.setId("pane");
 
          // Show the scene containing the root layout.
          Scene scene = new Scene(rootLayout);
+         scene.getStylesheets().addAll(this.getClass().getResource("view/style.css").toExternalForm());
          primaryStage.setScene(scene);
          primaryStage.show();
 

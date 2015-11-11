@@ -3,8 +3,6 @@ public class HoleCards {
    private Card card1;
    private Card card2;
 
-   // TODO fix this so we can have 2, 5, 6, 7 card hands
-
    public HoleCards(Card card1, Card card2) {
       this.setCard1(card1);
       this.setCard2(card2);

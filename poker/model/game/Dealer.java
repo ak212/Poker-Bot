@@ -411,13 +411,17 @@ public class Dealer {
    public void printHandValues(ArrayList<Player> players) {
       for (Player player : players) {
          if (player instanceof Bot) {
-            System.out.println("Bot " + player.getId() + " has hand " + player.getCurrentHand().hand.toString());
+            System.out.print("Bot " + player.getId() + " has hand " + player.getCurrentHand().hand.toString());
             mainApp.updateConsole("Bot " + player.getId() + " has hand " + player.getCurrentHand().hand.toString());
          }
          else {
-            System.out.println("Player " + player.getId() + " has hand " + player.getCurrentHand().hand.toString());
+            System.out.print("Player " + player.getId() + " has hand " + player.getCurrentHand().hand.toString());
             mainApp.updateConsole("Player " + player.getId() + " has hand " + player.getCurrentHand().hand.toString());
          }
+         System.out.print(" Kickers: ");
+         for (Integer i : player.getCurrentHand().kickers)
+            System.out.print(i + ",");
+         System.out.println();
       }
    }
 
@@ -483,13 +487,12 @@ public class Dealer {
             for (Player player : players) {
                if (player.getId() == p.getId()) {
                   player.setStack(player.getStack() + split);
-               }
 
-               player.setStack(player.getStack() + this.getPot());
-               player.stats.wins++;
-               player.stats.setWinnings(this.getPot());
-               if (this.getPot() > player.stats.biggestWin) {
-                  player.stats.biggestWin = this.getPot();
+                  player.stats.wins++;
+                  player.stats.setWinnings(split);
+                  if (split > player.stats.biggestWin) {
+                     player.stats.biggestWin = split;
+                  }
                }
                else {
                   player.stats.losses++;
