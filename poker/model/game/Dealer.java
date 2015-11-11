@@ -169,6 +169,7 @@ public class Dealer {
          this.setPot(this.getPot() + b.getBotTurn().getBetAmount());
          break;
       case BET:
+    	 System.out.println("Total Bet: " + this.getTotalBet() + ", Bot bet: " + b.getTotalBet());
          int callAmount = this.getTotalBet() - b.getTotalBet();
          if (callAmount > 0) {
             b.call(callAmount);
@@ -409,16 +410,18 @@ public class Dealer {
 
    public void printHandValues(ArrayList<Player> players) {
       for (Player player : players) {
-         if (player instanceof Bot) {
-            System.out.print("Bot " + player.getId() + " has hand " + player.getCurrentHand().hand.toString());
+         if (player.isInHand()) {
+            if (player instanceof Bot) {
+               System.out.print("Bot " + player.getId() + " has hand " + player.getCurrentHand().hand.toString());
+            }
+            else {
+               System.out.print("Player " + player.getId() + " has hand " + player.getCurrentHand().hand.toString());
+            }
+            System.out.print(" Kickers: ");
+            for (Integer i : player.getCurrentHand().kickers)
+               System.out.print(i + ",");
+            System.out.println();
          }
-         else {
-            System.out.print("Player " + player.getId() + " has hand " + player.getCurrentHand().hand.toString());
-         }
-         System.out.print(" Kickers: ");
-         for (Integer i : player.getCurrentHand().kickers)
-            System.out.print(i + ",");
-         System.out.println();
       }
    }
 

@@ -26,7 +26,7 @@ public class Poker {
       ArrayList<Player> playersEliminated = new ArrayList<Player>();
       players.add(new Player(playerId++, startingChips));
       players.add(new Bot(playerId++, startingChips));
-      //players.add(new Bot(playerId++, startingChips));
+      players.add(new Bot(playerId++, startingChips));
 
       dealer.setBetPeriod(BetPeriod.getBetPeriod(gameState));
 

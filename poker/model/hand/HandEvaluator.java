@@ -21,6 +21,10 @@ public class HandEvaluator {
       ArrayList<Integer> kickers = new ArrayList<Integer>();
       ArrayList<Integer> t_kickers = new ArrayList<Integer>();
       ArrayList<Integer> c_kickers;
+      boolean flushDraw = false, gutshotStraightDraw = false, openendedStraightDraw = false;
+      boolean straightChecks[] = new boolean[2];
+      int startIdx = 0, overCards = 0;
+      int flushCheck[] = new int[4];
       
       // Check for a pocket pair if there is no board
       if (board.isEmpty()) {
@@ -36,19 +40,49 @@ public class HandEvaluator {
       boardAndHoleCards.add(holeCards.getCard1());
       boardAndHoleCards.add(holeCards.getCard2());
       
-      ArrayList<ArrayList<Card>> subsets = getSubsets(boardAndHoleCards, 5);
-      
       // If a wrong number of board cards are there, return null
       if (boardAndHoleCards.size() < 5 || boardAndHoleCards.size() > 7) {
          return null;
       }
       
+      ArrayList<Card> sortedAvailableCards;
+      Collections.sort(boardAndHoleCards, new Comparator<Card>() {
+          public int compare(Card left, Card right) {
+             return left.getRank().getValue() - right.getRank().getValue();             
+          }
+      });
+      sortedAvailableCards = boardAndHoleCards;
+      
+      for (Card card : sortedAvailableCards) {
+          flushCheck[card.getSuit().getValue()] += 1;
+      }
+      
+      if (sortedAvailableCards.size() < 7) {
+         startIdx = (sortedAvailableCards.size() == 5) ? 4 : 5;
+         straightChecks = checkForStraightDraws(sortedAvailableCards, startIdx);
+         gutshotStraightDraw = straightChecks[0];
+         openendedStraightDraw = straightChecks[1];
+         
+         for (Card card : sortedAvailableCards) {
+            flushCheck[card.getSuit().getValue()] += 1;
+         }
+         
+         for (int count : flushCheck) {
+            if (count == 4)
+               flushDraw = true;
+         }
+      }
+      
+      ArrayList<ArrayList<Card>> subsets = getSubsets(boardAndHoleCards, 5);
+      
       for (ArrayList<Card> hand : subsets) {
          // Hand Booleans
-         boolean onePair = false, threeOfAKind = false, straight = false, flush = false;
+         boolean straight = false, flush = false;
          
          // Card and Rank tallies
          int rank[] = new int[15], suit[] = new int[4];
+         
+         overCards = 0;
          
          ArrayList<Card> sortedHand;
          
@@ -77,7 +111,6 @@ public class HandEvaluator {
          for (int i = 0; i < rank.length; i++) {
             // OnePair or twoPair
             if (rank[i] == 2) {
-               onePair = true;
                tempHand = Hand.OnePair;
                if (highestHand.getValue() <= Hand.OnePair.getValue()) {
                   t_kickers.clear();
@@ -88,7 +121,6 @@ public class HandEvaluator {
                         t_kickers.add(j);
                         t_kickers.add(i);
                         tempHand = Hand.FullHouse;
-                        onePair = false;
                      }
                      if (rank[j] == 2 && j != i) {
                         c_kickers = new ArrayList<Integer>(t_kickers);
@@ -96,7 +128,6 @@ public class HandEvaluator {
                         t_kickers.add(j);
                         t_kickers.addAll(c_kickers);
                         tempHand = Hand.TwoPair;
-                        onePair = false;
                      }
                      if (rank[j] == 1) {
                         t_kickers.add(j);
@@ -111,7 +142,6 @@ public class HandEvaluator {
             }
             // Three of a Kind
             if (rank[i] == 3) {
-               threeOfAKind = true;
                tempHand = Hand.ThreeOfAKind;
                if (highestHand.getValue() <= Hand.ThreeOfAKind.getValue()) {
                   t_kickers.clear();
@@ -148,7 +178,7 @@ public class HandEvaluator {
          }
          
          // Test for Straight
-         if ( (sortedHand.get(4).getRank().getValue() - sortedHand.get(3).getRank().getValue() == 1) &&
+         if ((sortedHand.get(4).getRank().getValue() - sortedHand.get(3).getRank().getValue() == 1) &&
               (sortedHand.get(3).getRank().getValue() - sortedHand.get(2).getRank().getValue() == 1) &&
               (sortedHand.get(2).getRank().getValue() - sortedHand.get(1).getRank().getValue() == 1) &&
               (sortedHand.get(1).getRank().getValue() - sortedHand.get(0).getRank().getValue() == 1)) {
@@ -189,30 +219,16 @@ public class HandEvaluator {
                   t_kickers.add(sortedHand.get(2).getRank().getValue());
                   t_kickers.add(sortedHand.get(1).getRank().getValue());
                   t_kickers.add(sortedHand.get(0).getRank().getValue());
+                  
                   kickers = (kickers.isEmpty() || highestHand.getValue() < Hand.Flush.getValue()) 
                      ? new ArrayList<Integer>(t_kickers) : compareKickers(kickers, t_kickers);
                   highestHand = Hand.Flush;
                }
             }
-         }
-         
-         // Test for Full House
-         /*if (onePair && threeOfAKind) {
-            if (highestHand.getValue() <= Hand.FullHouse.getValue()) {
-               t_kickers.clear();
-               for (int j = rank.length - 1; j >= 0; j--) {
-                  if (rank[j] == 3) {
-                     t_kickers.add(j);
-                  }
-                  if (rank[j] == 2) {
-                     t_kickers.add(j);
-                  }
-               }
-               kickers = (kickers.isEmpty() || highestHand.getValue() < Hand.FullHouse.getValue()) 
-                  ? new ArrayList<Integer>(t_kickers) : compareKickers(kickers, t_kickers);
-               highestHand = Hand.FullHouse;
+            if (count == 4) {
+               flushDraw = true;
             }
-         }*/
+         }
          
          // Test for Straight Flush
          if (straight && flush) {
@@ -249,7 +265,8 @@ public class HandEvaluator {
       }
       
       // Return the best hand strength
-      return new HandStrength(highestHand, kickers);
+      return new HandStrength(highestHand, kickers, flushDraw, gutshotStraightDraw, 
+         openendedStraightDraw, overCards, board.size());
    }
    
    private static ArrayList<ArrayList<Card>> getSubsets(ArrayList<Card> superSet, int k) {
@@ -334,6 +351,22 @@ public class HandEvaluator {
       }
       //System.out.println("actual tie");
       return new ArrayList<Integer>(kickers);
+   }
+   
+   public static boolean[] checkForStraightDraws(ArrayList<Card> cards, int startIdx) {
+	  boolean results[] = new boolean[] {false, false};
+	  
+      for (int i = startIdx; i > 2; i--) {
+         if (cards.get(i).getRank().getValue() != cards.get(i - 1).getRank().getValue() &&
+            cards.get(i - 1).getRank().getValue() != cards.get(i - 2).getRank().getValue() &&
+            cards.get(i - 2).getRank().getValue() != cards.get(i - 3).getRank().getValue()) {
+        	if (cards.get(i - 3).getRank().getValue() - cards.get(i).getRank().getValue() == 4)
+        	   results[0] = true;   //gutshot
+        	if (cards.get(i - 3).getRank().getValue() - cards.get(i).getRank().getValue() == 3)
+        	   results[1] = true;   //openended
+         }
+      }
+      return results;
    }
 }
 

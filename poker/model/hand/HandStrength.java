@@ -9,20 +9,30 @@ public class HandStrength {
    public Hand hand;
    public ArrayList<Integer> kickers;
    public boolean flushDraw;
-   public Card highFlushDrawCard;
-   public boolean straightDraw;
-   public Card highStraightDrawCard;
+   public boolean gutshotStraightDraw;
+   public boolean openendedStraightDraw;
    public int numRelevantOverCards;
-   public int numHandCardsOnBoard;
+   public int numCardsOnBoard;
    
    public HandStrength(Hand hand, ArrayList<Integer> kickers) {
       this.hand = hand;
       this.kickers = kickers;
       this.flushDraw = false;
-      this.highFlushDrawCard = new Card(Suit.getSuit(0), Rank.getRank(1));
-      this.straightDraw = false;
-      this.highStraightDrawCard = new Card(Suit.getSuit(0), Rank.getRank(1));
+      this.gutshotStraightDraw = false;
+      this.openendedStraightDraw = false;
       this.numRelevantOverCards = 0;
-      this.numHandCardsOnBoard = 0;
+      this.numCardsOnBoard = 0;
+   }
+   
+   public HandStrength(Hand hand, ArrayList<Integer> kickers, boolean flushDraw,
+         boolean gutshotStraightDraw, boolean openendedStraightDraw, 
+         int numRelevantOverCards, int numCardsOnBoard) {
+      this.hand = hand;
+      this.kickers = kickers;
+      this.flushDraw = flushDraw;
+      this.gutshotStraightDraw = gutshotStraightDraw;
+      this.openendedStraightDraw = openendedStraightDraw;
+      this.numRelevantOverCards = numRelevantOverCards;
+      this.numCardsOnBoard = numCardsOnBoard;
    }
 }
