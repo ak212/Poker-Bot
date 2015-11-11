@@ -4,6 +4,7 @@ import java.io.IOException;
 
 import javafx.application.Application;
 import javafx.application.Platform;
+import javafx.concurrent.Task;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.layout.AnchorPane;
@@ -25,14 +26,18 @@ public class Main extends Application {
       this.primaryStage.setTitle("Poker");
       showMainView();
       Poker poker = new Poker();
+      poker.setMainApp(this);
 
       // TODO Run game and UI on separate threads
-      Platform.runLater(new Runnable() {
+      Task task = new Task<Void>() {
          @Override
-         public void run() {
+         public Void call() {
             poker.playPoker();
+            return null;
          }
-      });
+      };
+
+      new Thread(task).start();
    }
 
    public void showMainView() {

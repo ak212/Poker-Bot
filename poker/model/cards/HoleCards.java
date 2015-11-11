@@ -10,10 +10,6 @@ public class HoleCards {
       this.setCard2(card2);
    }
 
-   public void printHoleCards() {
-      System.out.println(this.getCard1().shorten() + this.getCard2().shorten());
-   }
-
    public Card getCard1() {
       return card1;
    }

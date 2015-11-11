@@ -1,5 +1,6 @@
 package poker.model.player;
 
+import poker.Main;
 import poker.model.cards.HoleCards;
 import poker.model.hand.HandStrength;
 
@@ -19,6 +20,7 @@ public class Player {
    private boolean smallBlind;
    private boolean calledSB;
    public PlayerStats stats;
+   Main mainApp;
 
    public Player(int id, int stack) {
       this.setId(id);
@@ -40,9 +42,11 @@ public class Player {
 
       if (this instanceof Bot) {
          System.out.println("Bot " + this.getId() + (bet == 0 ? " checks" : " bets " + bet));
+         mainApp.updateConsole("Bot " + this.getId() + (bet == 0 ? " checks" : " bets " + bet));
       }
       else {
          System.out.println("Player " + this.getId() + (bet == 0 ? " checks" : " bets " + bet));
+         mainApp.updateConsole("Player " + this.getId() + (bet == 0 ? " checks" : " bets " + bet));
       }
    }
 
@@ -54,9 +58,11 @@ public class Player {
 
       if (this instanceof Bot) {
          System.out.println("Bot " + this.getId() + (call == 0 ? " checks " : (" calls " + call)));
+         mainApp.updateConsole("Bot " + this.getId() + (call == 0 ? " checks " : (" calls " + call)));
       }
       else {
          System.out.println("Player " + this.getId() + (call == 0 ? " checks " : (" calls " + call)));
+         mainApp.updateConsole("Player " + this.getId() + (call == 0 ? " checks " : (" calls " + call)));
       }
    }
 
@@ -67,9 +73,11 @@ public class Player {
 
       if (this instanceof Bot) {
          System.out.println("Bot " + this.getId() + (isBigBlind() ? " big blind" : " small blind"));
+         mainApp.updateConsole("Bot " + this.getId() + (isBigBlind() ? " big blind" : " small blind"));
       }
       else {
          System.out.println("Player " + this.getId() + (isBigBlind() ? " big blind" : " small blind"));
+         mainApp.updateConsole("Player " + this.getId() + (isBigBlind() ? " big blind" : " small blind"));
       }
    }
 
@@ -81,6 +89,11 @@ public class Player {
       this.setDealerButton(false);
       this.setSmallBlind(false);
       this.setCalledSB(false);
+   }
+
+   public void printHoleCards() {
+      System.out.println(this.holeCards.getCard1().shorten() + this.holeCards.getCard2().shorten());
+      mainApp.updateConsole(this.holeCards.getCard1().shorten() + this.holeCards.getCard2().shorten());
    }
 
    public HandStrength getCurrentHand() {
@@ -185,5 +198,9 @@ public class Player {
 
    public void setHoleCards(HoleCards holeCards) {
       this.holeCards = holeCards;
+   }
+
+   public void setMainApp(Main mainApp) {
+      this.mainApp = mainApp;
    }
 }

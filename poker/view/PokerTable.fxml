@@ -9,7 +9,7 @@
 <AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="1000.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="poker.controller.PokerTableController">
    <children>
       <Button fx:id="betButton" layoutX="149.0" layoutY="352.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="53.0" text="Bet" />
-      <Button fx:id="checkCallButton" layoutX="54.0" layoutY="352.0" mnemonicParsing="false" onAction="#callButtonClicked" text="Check/Call" />
+      <Button fx:id="checkCallButton" layoutX="54.0" layoutY="352.0" mnemonicParsing="false" text="Check/Call" />
       <Button fx:id="foldButton" layoutX="227.0" layoutY="352.0" mnemonicParsing="false" text="Fold" />
       <Button fx:id="potButton" disable="true" layoutX="182.0" layoutY="384.0" mnemonicParsing="false" text="Pot" />
       <Button fx:id="halfButton" disable="true" layoutX="111.0" layoutY="384.0" mnemonicParsing="false" text="Half Pot" />
