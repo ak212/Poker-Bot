@@ -51,14 +51,18 @@ public class Poker {
             players = dealer.determinePositions(players);
 
             for (Player player : players) {
+               if (player instanceof Bot) {
+                  mainApp.toggleDealerOne(player.isDealerButton());
+               }
+               else {
+                  mainApp.toggleDealerZero(player.isDealerButton());
+               }
                if (player.isDealerButton()) {
                   if (player instanceof Bot) {
                      System.out.println("Bot " + player.getId() + " dealer button");
-                     mainApp.toggleDealerOne();
                   }
                   else {
                      System.out.println("Player " + player.getId() + " dealer button");
-                     mainApp.toggleDealerZero();
                   }
                }
                if (player.isBigBlind()) {

@@ -125,20 +125,20 @@ public class Main extends Application {
       });
    }
 
-   public void toggleDealerZero() {
+   public void toggleDealerZero(boolean dealer) {
       Platform.runLater(new Runnable() {
          @Override
          public void run() {
-            tableController.toggleDealerZero();
+            tableController.toggleDealerZero(dealer);
          }
       });
    }
 
-   public void toggleDealerOne() {
+   public void toggleDealerOne(boolean dealer) {
       Platform.runLater(new Runnable() {
          @Override
          public void run() {
-            tableController.toggleDealerOne();
+            tableController.toggleDealerOne(dealer);
          }
       });
    }

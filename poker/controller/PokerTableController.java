@@ -72,22 +72,12 @@ public class PokerTableController {
       betAmountLabel1.setText(text);
    }
 
-   public void toggleDealerZero() {
-      if (dealerLabel0.isVisible()) {
-         dealerLabel0.setVisible(false);
-      }
-      else {
-         dealerLabel0.setVisible(true);
-      }
+   public void toggleDealerZero(boolean dealer) {
+      dealerLabel0.setVisible(dealer);
    }
 
-   public void toggleDealerOne() {
-      if (dealerLabel1.isVisible()) {
-         dealerLabel1.setVisible(false);
-      }
-      else {
-         dealerLabel1.setVisible(true);
-      }
+   public void toggleDealerOne(boolean dealer) {
+      dealerLabel1.setVisible(dealer);
    }
    /**
     * Is called by the main application to give a reference back to itself.
