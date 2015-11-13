@@ -73,12 +73,10 @@ public class Player {
 
       if (this instanceof Bot) {
          System.out.println("Bot " + this.getId() + (isBigBlind() ? " big blind" : " small blind"));
-         mainApp.updateConsole("Bot " + this.getId() + (isBigBlind() ? " big blind" : " small blind"));
          mainApp.updateBetAmountOne(Integer.toString(blind));
       }
       else {
          System.out.println("Player " + this.getId() + (isBigBlind() ? " big blind" : " small blind"));
-         mainApp.updateConsole("Player " + this.getId() + (isBigBlind() ? " big blind" : " small blind"));
          mainApp.updateBetAmountZero(Integer.toString(blind));
       }
    }

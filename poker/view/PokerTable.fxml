@@ -42,7 +42,9 @@
             <Font name="Arial" size="24.0" />
          </font>
       </Label>
-      <Label fx:id="betAmountLabel1" layoutX="784.0" layoutY="191.0" textFill="WHITE" />
+      <Label fx:id="betAmountLabel1" layoutX="756.0" layoutY="191.0" prefHeight="17.0" prefWidth="28.0" textFill="WHITE" />
       <Label fx:id="betAmountLabel0" layoutX="185.0" layoutY="191.0" prefHeight="17.0" prefWidth="39.0" textFill="WHITE" />
+      <Label fx:id="dealerLabel0" layoutX="149.0" layoutY="200.0" prefHeight="17.0" prefWidth="39.0" text="(D)" textFill="WHITE" visible="false" />
+      <Label fx:id="dealerLabel1" layoutX="826.0" layoutY="200.0" prefHeight="17.0" prefWidth="28.0" text="(D)" textFill="WHITE" visible="false" />
    </children>
 </AnchorPane>

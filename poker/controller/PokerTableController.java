@@ -18,7 +18,8 @@ public class PokerTableController {
    private TextField playerBetTextField;
 
    @FXML
-   private Label potValueLabel, currentBetValueLabel, stackLabel0, stackLabel1, betAmountLabel0, betAmountLabel1;
+   private Label potValueLabel, currentBetValueLabel, stackLabel0, stackLabel1, betAmountLabel0, betAmountLabel1,
+         dealerLabel0, dealerLabel1;
 
    @FXML
    private Button checkCallButton, betButton, minButton, halfButton, potButton, maxButton, confirmButton;
@@ -71,6 +72,23 @@ public class PokerTableController {
       betAmountLabel1.setText(text);
    }
 
+   public void toggleDealerZero() {
+      if (dealerLabel0.isVisible()) {
+         dealerLabel0.setVisible(false);
+      }
+      else {
+         dealerLabel0.setVisible(true);
+      }
+   }
+
+   public void toggleDealerOne() {
+      if (dealerLabel1.isVisible()) {
+         dealerLabel1.setVisible(false);
+      }
+      else {
+         dealerLabel1.setVisible(true);
+      }
+   }
    /**
     * Is called by the main application to give a reference back to itself.
     * 

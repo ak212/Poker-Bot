@@ -54,11 +54,11 @@ public class Poker {
                if (player.isDealerButton()) {
                   if (player instanceof Bot) {
                      System.out.println("Bot " + player.getId() + " dealer button");
-                     mainApp.updateConsole("Bot " + player.getId() + " dealer button");
+                     mainApp.toggleDealerOne();
                   }
                   else {
                      System.out.println("Player " + player.getId() + " dealer button");
-                     mainApp.updateConsole("Player " + player.getId() + " dealer button");
+                     mainApp.toggleDealerZero();
                   }
                }
                if (player.isBigBlind()) {

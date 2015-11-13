@@ -125,6 +125,24 @@ public class Main extends Application {
       });
    }
 
+   public void toggleDealerZero() {
+      Platform.runLater(new Runnable() {
+         @Override
+         public void run() {
+            tableController.toggleDealerZero();
+         }
+      });
+   }
+
+   public void toggleDealerOne() {
+      Platform.runLater(new Runnable() {
+         @Override
+         public void run() {
+            tableController.toggleDealerOne();
+         }
+      });
+   }
+
    public Stage getPrimaryStage() {
       return primaryStage;
    }
