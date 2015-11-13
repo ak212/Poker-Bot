@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.text.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.image.*?>
+<?import java.lang.*?>
+<?import javafx.scene.layout.*?>
+
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="1000.0" style="-fx-background-color: #000000;" stylesheets="@style.css" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="poker.controller.PokerTableController">
+   <children>
+      <Button fx:id="betButton" layoutX="118.0" layoutY="396.0" mnemonicParsing="false" onAction="#betButtonClicked" prefHeight="25.0" prefWidth="53.0" text="Bet" />
+      <Button fx:id="checkCallButton" layoutX="23.0" layoutY="396.0" mnemonicParsing="false" text="Check/Call" />
+      <Button fx:id="foldButton" layoutX="196.0" layoutY="396.0" mnemonicParsing="false" text="Fold" />
+      <Button fx:id="potButton" layoutX="151.0" layoutY="428.0" mnemonicParsing="false" text="Pot" visible="false" />
+      <Button fx:id="halfButton" layoutX="80.0" layoutY="428.0" mnemonicParsing="false" text="Half Pot" visible="false" />
+      <Button fx:id="minButton" layoutX="23.0" layoutY="428.0" mnemonicParsing="false" text="Min" visible="false" />
+      <Button fx:id="maxButton" layoutX="196.0" layoutY="428.0" mnemonicParsing="false" text="Max" visible="false" />
+      <Label layoutX="367.0" layoutY="8.0" prefHeight="17.0" prefWidth="66.0" text="Pot:" textAlignment="CENTER" textFill="WHITE">
+         <font>
+            <Font name="Arial" size="24.0" />
+         </font>
+      </Label>
+      <Label fx:id="currentBetValueLabel" layoutX="500.0" layoutY="273.0" prefHeight="27.0" prefWidth="141.0" text="Current bet" textAlignment="CENTER" textFill="WHITE">
+         <font>
+            <Font name="Arial" size="24.0" />
+         </font>
+      </Label>
+      <TextField fx:id="playerBetTextField" layoutX="37.0" layoutY="361.0" prefHeight="25.0" prefWidth="66.0" visible="false" />
+      <Button fx:id="confirmButton" layoutX="125.0" layoutY="361.0" mnemonicParsing="false" text="Confirm" visible="false" />
+      <Label fx:id="nameLabel0" layoutX="118.0" layoutY="182.0" text="Player 0" textFill="WHITE" />
+      <Label fx:id="playerStackLabel" layoutX="125.0" layoutY="204.0" text="Stack" textFill="WHITE" />
+      <Label fx:id="botStackLabel" layoutX="854.0" layoutY="196.0" text="Stack" textFill="WHITE" />
+      <Label fx:id="nameLabel1" layoutX="854.0" layoutY="174.0" text="Bot 1" textFill="WHITE" />
+      <TextArea fx:id="logTextArea" layoutY="467.0" prefHeight="134.0" prefWidth="516.0" />
+      <Label layoutX="366.0" layoutY="273.0" prefHeight="27.0" prefWidth="134.0" text="Current bet:" textAlignment="CENTER" textFill="WHITE">
+         <font>
+            <Font name="Arial" size="24.0" />
+         </font>
+      </Label>
+      <Label fx:id="potValueLabel" layoutX="450.0" layoutY="8.0" prefHeight="17.0" prefWidth="66.0" text="Pot" textAlignment="CENTER" textFill="WHITE">
+         <font>
+            <Font name="Arial" size="24.0" />
+         </font>
+      </Label>
+   </children>
+</AnchorPane>

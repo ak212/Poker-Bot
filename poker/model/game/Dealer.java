@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Scanner;
 
+import poker.Main;
 import poker.model.cards.Card;
 import poker.model.cards.DeckOfCards;
 import poker.model.cards.HoleCards;
@@ -12,7 +13,6 @@ import poker.model.hand.HandEvaluator;
 import poker.model.hand.HandStrength;
 import poker.model.player.Bot;
 import poker.model.player.Player;
-import poker.model.game.IdComparator;
 
 public class Dealer {
    DeckOfCards deckOfCards;
@@ -31,6 +31,7 @@ public class Dealer {
    private int totalBet;
    ArrayList<Integer> sidePots;
    private int playersInHand;
+   public Main mainApp;
 
    public Dealer() {
       this.dealerButtonPosition = 0;
@@ -123,6 +124,7 @@ public class Dealer {
          player.setInHand(false);
          this.setPlayersInHand(this.getPlayersInHand() - 1);
          System.out.println("Player " + player.getId() + " folds");
+         mainApp.updateConsole("Player " + player.getId() + " folds");
 
          player.stats.folds++;
          switch (this.betPeriod) {
@@ -169,7 +171,7 @@ public class Dealer {
          this.setPot(this.getPot() + b.getBotTurn().getBetAmount());
          break;
       case BET:
-    	 System.out.println("Total Bet: " + this.getTotalBet() + ", Bot bet: " + b.getTotalBet());
+         System.out.println("Total Bet: " + this.getTotalBet() + ", Bot bet: " + b.getTotalBet());
          int callAmount = this.getTotalBet() - b.getTotalBet();
          if (callAmount > 0) {
             b.call(callAmount);
@@ -185,6 +187,7 @@ public class Dealer {
          b.setInHand(false);
          this.setPlayersInHand(this.getPlayersInHand() - 1);
          System.out.println("Bot " + b.getId() + " folds");
+         mainApp.updateConsole("Bot " + b.getId() + " folds");
 
          b.stats.folds++;
          switch (this.betPeriod) {
@@ -336,13 +339,14 @@ public class Dealer {
          for (Player player : players) {
             if (player.isInHand() && !player.isPlayerActed()) {
                int curBet = this.getTotalBet();
-
                if (this.getBetPeriod().equals(BetPeriod.PREFLOP)) {
                   if (player instanceof Bot) {
-                     players.set(player.getPreFlopPosition() - 1,
-                           botInput(players.get(player.getPreFlopPosition() - 1), players));
-                  } else {
+                     players.set(player.getPreFlopPosition() - 1, botInput(players.get(player.getPreFlopPosition() - 1), players));
+                     mainApp.updateBotStack(Integer.toString(player.getStack()));
+                  } 
+                  else {
                      players.set(player.getPreFlopPosition() - 1, playerInput(players.get(player.getPreFlopPosition() - 1)));
+                     mainApp.updatePlayerStack(Integer.toString(player.getStack()));
                   }
                   if (this.getTotalBet() != curBet) {
                      resetPlayersActed(players, player.getPreFlopPosition());
@@ -351,8 +355,11 @@ public class Dealer {
                else {
                   if (player instanceof Bot) {
                      players.set(player.getPosition() - 1, botInput(players.get(player.getPosition() - 1), players));
-                  } else {
+                     mainApp.updateBotStack(Integer.toString(player.getStack()));
+                  }
+                  else {
                      players.set(player.getPosition() - 1, playerInput(players.get(player.getPosition() - 1)));
+                     mainApp.updatePlayerStack(Integer.toString(player.getStack()));
                   }
                   if (this.getCurrentBet() != curBet) {
                      this.resetPlayersActed(players, player.getPosition() - 1);
@@ -365,6 +372,9 @@ public class Dealer {
                   break;
                }
             }
+
+            mainApp.updateCurrentBet(Integer.toString(this.totalBet));
+            mainApp.updatePot(Integer.toString(this.pot));
          }
       }
 
@@ -401,6 +411,7 @@ public class Dealer {
       if (!playersToBeRemoved.isEmpty()) {
          for (Player player : playersToBeRemoved) {
             System.out.println("Player " + player.getId() + " eliminated");
+            mainApp.updateConsole("Player " + player.getId() + " eliminated");
             players.remove(player);
          }
       }
@@ -425,13 +436,16 @@ public class Dealer {
       }
    }
 
+
    public void printStackValues(ArrayList<Player> players) {
       for (Player player : players) {
          if (player instanceof Bot) {
             System.out.println("Bot " + player.getId() + " stack: " + player.getStack());
+            mainApp.updateConsole("Bot " + player.getId() + " stack: " + player.getStack());
          }
          else {
             System.out.println("Player " + player.getId() + " stack: " + player.getStack());
+            mainApp.updateConsole("Player " + player.getId() + " stack: " + player.getStack());
          }
       }
    }
@@ -449,9 +463,11 @@ public class Dealer {
             if (player.getId() == this.getWinner().getId()) {
                if (player instanceof Bot) {
                   System.out.println("Bot " + this.getWinner().getId() + " wins " + this.getPot());
+                  mainApp.updateConsole("Bot " + this.getWinner().getId() + " wins " + this.getPot());
                }
                else {
                   System.out.println("Player " + this.getWinner().getId() + " wins " + this.getPot());
+                  mainApp.updateConsole("Player " + this.getWinner().getId() + " wins " + this.getPot());
                }
 
                player.setStack(player.getStack() + this.getPot());
@@ -474,9 +490,11 @@ public class Dealer {
          for (Player p : playersTied) {
             if (p instanceof Bot) {
                System.out.println("Bot " + p.getId() + " wins " + split);
+               mainApp.updateConsole("Bot " + p.getId() + " wins " + split);
             }
             else {
                System.out.println("Player " + p.getId() + " wins " + split);
+               mainApp.updateConsole("Player " + p.getId() + " wins " + split);
             }
             for (Player player : players) {
                if (player.getId() == p.getId()) {
@@ -486,8 +504,8 @@ public class Dealer {
                   player.stats.setWinnings(split);
                   if (split > player.stats.biggestWin) {
                      player.stats.biggestWin = split;
-                  } 
-               }   
+                  }
+               }
                else {
                   player.stats.losses++;
                }
@@ -548,9 +566,14 @@ public class Dealer {
 
    public void printCommunityCards() {
       System.out.println("On the board:");
+      mainApp.updateConsole("On the board:");
+      String cards = "";
+
       for (Card card : this.communityCards) {
+         cards += card.shorten();
          System.out.print(card.shorten());
       }
+      mainApp.updateConsole(cards);
       System.out.println();
    }
 
@@ -624,5 +647,9 @@ public class Dealer {
 
    public void setTotalBet(int totalBet) {
       this.totalBet = totalBet;
+   }
+
+   public void setMainApp(Main mainApp) {
+      this.mainApp = mainApp;
    }
 }

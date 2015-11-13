@@ -3,6 +3,7 @@ package poker.model;
 import java.util.ArrayList;
 import java.util.Collections;
 
+import poker.Main;
 import poker.model.cards.Card;
 import poker.model.game.BetPeriod;
 import poker.model.game.Dealer;
@@ -13,9 +14,11 @@ import poker.model.player.Player;
 
 public class Poker {
    public static Dealer dealer;
+   public Main mainApp;
 
-   public static void main(String[] args) {
+   public void playPoker() {
       dealer = new Dealer();
+      dealer.setMainApp(mainApp);
 
       int gameState = 0;
       boolean playGame = true;
@@ -28,9 +31,16 @@ public class Poker {
       players.add(new Bot(playerId++, startingChips));
       players.add(new Bot(playerId++, startingChips));
 
+      for (Player player : players) {
+         player.setMainApp(mainApp);
+      }
+
       dealer.setBetPeriod(BetPeriod.getBetPeriod(gameState));
 
       while (playGame) {
+         mainApp.updateCurrentBet(Integer.toString(dealer.getTotalBet()));
+         mainApp.updatePot(Integer.toString(dealer.getPot()));
+
          switch (dealer.getBetPeriod()) {
          case PREFLOP:
             if (dealer.getPlayersToBeDealt(players) < 2) {
@@ -44,9 +54,11 @@ public class Poker {
                if (player.isDealerButton()) {
                   if (player instanceof Bot) {
                      System.out.println("Bot " + player.getId() + " dealer button");
+                     mainApp.updateConsole("Bot " + player.getId() + " dealer button");
                   }
                   else {
                      System.out.println("Player " + player.getId() + " dealer button");
+                     mainApp.updateConsole("Player " + player.getId() + " dealer button");
                   }
                }
                if (player.isBigBlind()) {
@@ -65,13 +77,17 @@ public class Poker {
             for (Player player : players) {
                if (player instanceof Bot) {
                   System.out.println("Bot " + player.getId());
+                  mainApp.updateConsole("Bot " + player.getId());
                   ((Bot) player).evalHoleCards();
+                  mainApp.updateBotStack(Integer.toString(player.getStack()));
                }
                else {
                   System.out.println("Player " + player.getId());
+                  mainApp.updateConsole("Player " + player.getId());
+                  mainApp.updatePlayerStack(Integer.toString(player.getStack()));
                }
 
-               player.getHoleCards().printHoleCards();
+               player.printHoleCards();
             }
 
             Collections.sort(players, new PreFlopComparator());
@@ -102,9 +118,11 @@ public class Poker {
                   if (player.isInHand()) {
                      if (player instanceof Bot) {
                         System.out.println("Bot " + player.getId() + " wins " + dealer.getPot());
+                        mainApp.updateConsole("Bot " + player.getId() + " wins " + dealer.getPot());
                      }
                      else {
                         System.out.println("Player " + player.getId() + " wins " + dealer.getPot());
+                        mainApp.updateConsole("Player " + player.getId() + " wins " + dealer.getPot());
                      }
                      player.setStack(player.getStack() + dealer.getPot());
                      player.stats.wins++;
@@ -116,10 +134,6 @@ public class Poker {
                }
             }
             else {
-               // TODO Determine winner with hand strengths
-               // TODO New class with Hand, card value of hand and arraylist of kickers to be used in case of tie
-               // TODO Hand comparisons i.e. pair of Js vs pair of Qs.
-               
                for (Player player : players) {
                   if (player.getCurrentHand().hand.getValue() > dealer.getWinner().getCurrentHand().hand.getValue()) {
                      dealer.setWinner(player);
@@ -138,8 +152,10 @@ public class Poker {
             players = dealer.removeEliminatedPlayers(players);
 
             System.out.println("\n\n");
+            mainApp.updateConsole("\n\n");
             dealer.setBetPeriod(BetPeriod.getBetPeriod(gameState = -1));
             dealer.newHand();
+            mainApp.updatePot("0");
 
             for (Player player : players) {
                player.nextHand();
@@ -157,9 +173,11 @@ public class Poker {
          }
 
          dealer.setCurrentBet(0);
+         mainApp.updateCurrentBet("0");
          dealer.setTotalBet(0);
          dealer.setBetPeriod(BetPeriod.getBetPeriod(++gameState));
          System.out.println("Current Pot: " + dealer.getPot());
+         mainApp.updateConsole("Current Pot: " + dealer.getPot());
 
          for (Player player : players) {
             player.setPlayerActed(false);
@@ -170,5 +188,9 @@ public class Poker {
             dealer.setBetPeriod(BetPeriod.EVAL);
          }
       }
+   }
+
+   public void setMainApp(Main mainApp) {
+      this.mainApp = mainApp;
    }
 }
