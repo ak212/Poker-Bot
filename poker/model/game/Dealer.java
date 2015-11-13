@@ -340,8 +340,11 @@ public class Dealer {
                if (this.getBetPeriod().equals(BetPeriod.PREFLOP)) {
                   if (player instanceof Bot) {
                      players.set(player.getPreFlopPosition() - 1, botInput(players.get(player.getPreFlopPosition() - 1)));
-                  } else {
+                     mainApp.updateBotStack(Integer.toString(player.getStack()));
+                  }
+                  else {
                      players.set(player.getPreFlopPosition() - 1, playerInput(players.get(player.getPreFlopPosition() - 1)));
+                     mainApp.updatePlayerStack(Integer.toString(player.getStack()));
                   }
                   if (this.getTotalBet() != curBet) {
                      resetPlayersActed(players, player.getPreFlopPosition());
@@ -350,8 +353,11 @@ public class Dealer {
                else {
                   if (player instanceof Bot) {
                      players.set(player.getPosition() - 1, botInput(players.get(player.getPosition() - 1)));
-                  } else {
+                     mainApp.updateBotStack(Integer.toString(player.getStack()));
+                  }
+                  else {
                      players.set(player.getPosition() - 1, playerInput(players.get(player.getPosition() - 1)));
+                     mainApp.updatePlayerStack(Integer.toString(player.getStack()));
                   }
                   if (this.getCurrentBet() != curBet) {
                      this.resetPlayersActed(players, player.getPosition() - 1);

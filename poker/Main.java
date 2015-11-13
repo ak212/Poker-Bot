@@ -26,7 +26,7 @@ public class Main extends Application {
       Poker poker = new Poker();
       poker.setMainApp(this);
 
-      Task task = new Task<Void>() {
+      Task<Void> task = new Task<Void>() {
          @Override
          public Void call() {
             poker.playPoker();
@@ -85,6 +85,24 @@ public class Main extends Application {
          @Override
          public void run() {
             tableController.updateCurrentBet(text);
+         }
+      });
+   }
+
+   public void updatePlayerStack(String text) {
+      Platform.runLater(new Runnable() {
+         @Override
+         public void run() {
+            tableController.updatePlayerStack(text);
+         }
+      });
+   }
+
+   public void updateBotStack(String text) {
+      Platform.runLater(new Runnable() {
+         @Override
+         public void run() {
+            tableController.updateBotStack(text);
          }
       });
    }

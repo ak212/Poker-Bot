@@ -38,6 +38,9 @@ public class Poker {
       dealer.setBetPeriod(BetPeriod.getBetPeriod(gameState));
 
       while (playGame) {
+         mainApp.updateCurrentBet(Integer.toString(dealer.getTotalBet()));
+         mainApp.updatePot(Integer.toString(dealer.getPot()));
+
          switch (dealer.getBetPeriod()) {
          case PREFLOP:
             if (dealer.getPlayersToBeDealt(players) < 2) {
@@ -76,10 +79,12 @@ public class Poker {
                   System.out.println("Bot " + player.getId());
                   mainApp.updateConsole("Bot " + player.getId());
                   ((Bot) player).evalHoleCards();
+                  mainApp.updateBotStack(Integer.toString(player.getStack()));
                }
                else {
                   System.out.println("Player " + player.getId());
                   mainApp.updateConsole("Player " + player.getId());
+                  mainApp.updatePlayerStack(Integer.toString(player.getStack()));
                }
 
                player.printHoleCards();
