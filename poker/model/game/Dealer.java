@@ -97,6 +97,7 @@ public class Dealer {
             this.setTotalBet(this.getTotalBet() + betAmount);
          }
 
+         mainApp.updateBetAmountZero(Integer.toString(this.getCurrentBet()));
          player.bet(this.getCurrentBet());
          this.setPot(this.getPot() + this.getCurrentBet());
          break;
@@ -117,6 +118,7 @@ public class Dealer {
             betAmount = this.getCurrentBet();
          }
 
+         mainApp.updateBetAmountZero(Integer.toString(betAmount));
          player.call(betAmount);
          this.setPot(this.getPot() + betAmount);
          break;
@@ -169,6 +171,9 @@ public class Dealer {
       case CHECKCALL:
          b.call(b.getBotTurn().getBetAmount());
          this.setPot(this.getPot() + b.getBotTurn().getBetAmount());
+
+         mainApp.updateBetAmountOne(Integer.toString(b.getBotTurn().getBetAmount()));
+
          break;
       case BET:
          System.out.println("Total Bet: " + this.getTotalBet() + ", Bot bet: " + b.getTotalBet());
@@ -182,12 +187,17 @@ public class Dealer {
          this.setCurrentBet(betAmount);
          this.setTotalBet(this.getTotalBet() + betAmount);
          this.setPot(this.getPot() + betAmount);
+
+         mainApp.updateBetAmountOne(Integer.toString(this.getTotalBet() + betAmount));
+
          break;
       case FOLD:
          b.setInHand(false);
          this.setPlayersInHand(this.getPlayersInHand() - 1);
          System.out.println("Bot " + b.getId() + " folds");
+
          mainApp.updateConsole("Bot " + b.getId() + " folds");
+         mainApp.updateBetAmountOne(null);
 
          b.stats.folds++;
          switch (this.betPeriod) {
@@ -342,11 +352,11 @@ public class Dealer {
                if (this.getBetPeriod().equals(BetPeriod.PREFLOP)) {
                   if (player instanceof Bot) {
                      players.set(player.getPreFlopPosition() - 1, botInput(players.get(player.getPreFlopPosition() - 1), players));
-                     mainApp.updateBotStack(Integer.toString(player.getStack()));
+                     mainApp.updateStackOne(Integer.toString(player.getStack()));
                   } 
                   else {
                      players.set(player.getPreFlopPosition() - 1, playerInput(players.get(player.getPreFlopPosition() - 1)));
-                     mainApp.updatePlayerStack(Integer.toString(player.getStack()));
+                     mainApp.updateStackZero(Integer.toString(player.getStack()));
                   }
                   if (this.getTotalBet() != curBet) {
                      resetPlayersActed(players, player.getPreFlopPosition());
@@ -354,12 +364,18 @@ public class Dealer {
                }
                else {
                   if (player instanceof Bot) {
+                     try {
+                        Thread.sleep(2000);
+                     }
+                     catch (InterruptedException e) {
+                        e.printStackTrace();
+                     }
                      players.set(player.getPosition() - 1, botInput(players.get(player.getPosition() - 1), players));
-                     mainApp.updateBotStack(Integer.toString(player.getStack()));
+                     mainApp.updateStackOne(Integer.toString(player.getStack()));
                   }
                   else {
                      players.set(player.getPosition() - 1, playerInput(players.get(player.getPosition() - 1)));
-                     mainApp.updatePlayerStack(Integer.toString(player.getStack()));
+                     mainApp.updateStackZero(Integer.toString(player.getStack()));
                   }
                   if (this.getCurrentBet() != curBet) {
                      this.resetPlayersActed(players, player.getPosition() - 1);
@@ -376,6 +392,13 @@ public class Dealer {
             mainApp.updateCurrentBet(Integer.toString(this.totalBet));
             mainApp.updatePot(Integer.toString(this.pot));
          }
+      }
+
+      try {
+         Thread.sleep(2000);
+      }
+      catch (InterruptedException e) {
+         e.printStackTrace();
       }
 
       return players;

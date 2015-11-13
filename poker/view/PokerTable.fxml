@@ -20,27 +20,29 @@
             <Font name="Arial" size="24.0" />
          </font>
       </Label>
-      <Label fx:id="currentBetValueLabel" layoutX="500.0" layoutY="273.0" prefHeight="27.0" prefWidth="141.0" text="Current bet" textAlignment="CENTER" textFill="WHITE">
+      <Label fx:id="currentBetValueLabel" layoutX="500.0" layoutY="273.0" prefHeight="27.0" prefWidth="141.0" textAlignment="CENTER" textFill="WHITE">
          <font>
             <Font name="Arial" size="24.0" />
          </font>
       </Label>
       <TextField fx:id="playerBetTextField" layoutX="37.0" layoutY="361.0" prefHeight="25.0" prefWidth="66.0" visible="false" />
       <Button fx:id="confirmButton" layoutX="125.0" layoutY="361.0" mnemonicParsing="false" text="Confirm" visible="false" />
-      <Label fx:id="nameLabel0" layoutX="118.0" layoutY="182.0" text="Player 0" textFill="WHITE" />
-      <Label fx:id="playerStackLabel" layoutX="125.0" layoutY="204.0" text="Stack" textFill="WHITE" />
-      <Label fx:id="botStackLabel" layoutX="854.0" layoutY="196.0" text="Stack" textFill="WHITE" />
-      <Label fx:id="nameLabel1" layoutX="854.0" layoutY="174.0" text="Bot 1" textFill="WHITE" />
+      <Label fx:id="nameLabel0" layoutX="82.0" layoutY="185.0" text="Player 0" textFill="WHITE" />
+      <Label fx:id="stackLabel0" layoutX="89.0" layoutY="207.0" text="Stack" textFill="WHITE" />
+      <Label fx:id="stackLabel1" layoutX="870.0" layoutY="205.0" text="Stack" textFill="WHITE" />
+      <Label fx:id="nameLabel1" layoutX="870.0" layoutY="183.0" text="Bot 1" textFill="WHITE" />
       <TextArea fx:id="logTextArea" layoutY="467.0" prefHeight="134.0" prefWidth="516.0" />
       <Label layoutX="366.0" layoutY="273.0" prefHeight="27.0" prefWidth="134.0" text="Current bet:" textAlignment="CENTER" textFill="WHITE">
          <font>
             <Font name="Arial" size="24.0" />
          </font>
       </Label>
-      <Label fx:id="potValueLabel" layoutX="450.0" layoutY="8.0" prefHeight="17.0" prefWidth="66.0" text="Pot" textAlignment="CENTER" textFill="WHITE">
+      <Label fx:id="potValueLabel" layoutX="450.0" layoutY="8.0" prefHeight="17.0" prefWidth="66.0" textAlignment="CENTER" textFill="WHITE">
          <font>
             <Font name="Arial" size="24.0" />
          </font>
       </Label>
+      <Label fx:id="betAmountLabel1" layoutX="784.0" layoutY="191.0" textFill="WHITE" />
+      <Label fx:id="betAmountLabel0" layoutX="185.0" layoutY="191.0" prefHeight="17.0" prefWidth="39.0" textFill="WHITE" />
    </children>
 </AnchorPane>

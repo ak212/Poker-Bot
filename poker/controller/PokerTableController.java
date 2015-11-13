@@ -18,7 +18,7 @@ public class PokerTableController {
    private TextField playerBetTextField;
 
    @FXML
-   private Label potValueLabel, currentBetValueLabel, playerStackLabel, botStackLabel;
+   private Label potValueLabel, currentBetValueLabel, stackLabel0, stackLabel1, betAmountLabel0, betAmountLabel1;
 
    @FXML
    private Button checkCallButton, betButton, minButton, halfButton, potButton, maxButton, confirmButton;
@@ -55,12 +55,20 @@ public class PokerTableController {
       currentBetValueLabel.setText(text);
    }
 
-   public void updatePlayerStack(String text) {
-      playerStackLabel.setText(text);
+   public void updateStackZero(String text) {
+      stackLabel0.setText(text);
    }
 
-   public void updateBotStack(String text) {
-      botStackLabel.setText(text);
+   public void updateStackOne(String text) {
+      stackLabel1.setText(text);
+   }
+
+   public void updateBetAmountZero(String text) {
+      betAmountLabel0.setText(text);
+   }
+
+   public void updateBetAmountOne(String text) {
+      betAmountLabel1.setText(text);
    }
 
    /**

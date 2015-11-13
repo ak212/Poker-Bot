@@ -29,7 +29,7 @@ public class Poker {
       ArrayList<Player> playersEliminated = new ArrayList<Player>();
       players.add(new Player(playerId++, startingChips));
       players.add(new Bot(playerId++, startingChips));
-      players.add(new Bot(playerId++, startingChips));
+      // players.add(new Bot(playerId++, startingChips));
 
       for (Player player : players) {
          player.setMainApp(mainApp);
@@ -79,12 +79,12 @@ public class Poker {
                   System.out.println("Bot " + player.getId());
                   mainApp.updateConsole("Bot " + player.getId());
                   ((Bot) player).evalHoleCards();
-                  mainApp.updateBotStack(Integer.toString(player.getStack()));
+                  mainApp.updateStackOne(Integer.toString(player.getStack()));
                }
                else {
                   System.out.println("Player " + player.getId());
                   mainApp.updateConsole("Player " + player.getId());
-                  mainApp.updatePlayerStack(Integer.toString(player.getStack()));
+                  mainApp.updateStackZero(Integer.toString(player.getStack()));
                }
 
                player.printHoleCards();
@@ -173,11 +173,14 @@ public class Poker {
          }
 
          dealer.setCurrentBet(0);
-         mainApp.updateCurrentBet("0");
          dealer.setTotalBet(0);
          dealer.setBetPeriod(BetPeriod.getBetPeriod(++gameState));
          System.out.println("Current Pot: " + dealer.getPot());
+
          mainApp.updateConsole("Current Pot: " + dealer.getPot());
+         mainApp.updateCurrentBet("0");
+         mainApp.updateBetAmountZero(null);
+         mainApp.updateBetAmountOne(null);
 
          for (Player player : players) {
             player.setPlayerActed(false);

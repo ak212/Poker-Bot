@@ -89,20 +89,38 @@ public class Main extends Application {
       });
    }
 
-   public void updatePlayerStack(String text) {
+   public void updateStackZero(String text) {
       Platform.runLater(new Runnable() {
          @Override
          public void run() {
-            tableController.updatePlayerStack(text);
+            tableController.updateStackZero(text);
          }
       });
    }
 
-   public void updateBotStack(String text) {
+   public void updateStackOne(String text) {
       Platform.runLater(new Runnable() {
          @Override
          public void run() {
-            tableController.updateBotStack(text);
+            tableController.updateStackOne(text);
+         }
+      });
+   }
+
+   public void updateBetAmountZero(String text) {
+      Platform.runLater(new Runnable() {
+         @Override
+         public void run() {
+            tableController.updateBetAmountZero(text);
+         }
+      });
+   }
+
+   public void updateBetAmountOne(String text) {
+      Platform.runLater(new Runnable() {
+         @Override
+         public void run() {
+            tableController.updateBetAmountOne(text);
          }
       });
    }
