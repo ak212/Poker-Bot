@@ -105,8 +105,14 @@ public class PokerTableController {
    }
 
    public Turn getPlayerInput() {
-      // FIXME Change this to use ScheduledService probably
-      while (!turnComplete);
+      while (!turnComplete) {
+         try {
+            Thread.sleep(100);
+         }
+         catch (InterruptedException e) {
+            e.printStackTrace();
+         }
+      }
       turnComplete = false;
       
       Action action;
