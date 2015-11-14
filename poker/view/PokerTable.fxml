@@ -11,28 +11,28 @@
       <Button fx:id="betButton" layoutX="118.0" layoutY="396.0" mnemonicParsing="false" onAction="#betButtonClicked" prefHeight="25.0" prefWidth="53.0" text="Bet" />
       <Button fx:id="checkCallButton" layoutX="23.0" layoutY="396.0" mnemonicParsing="false" text="Check/Call" />
       <Button fx:id="foldButton" layoutX="196.0" layoutY="396.0" mnemonicParsing="false" text="Fold" />
-      <Button fx:id="potButton" layoutX="151.0" layoutY="428.0" mnemonicParsing="false" text="Pot" visible="false" />
-      <Button fx:id="halfButton" layoutX="80.0" layoutY="428.0" mnemonicParsing="false" text="Half Pot" visible="false" />
-      <Button fx:id="minButton" layoutX="23.0" layoutY="428.0" mnemonicParsing="false" text="Min" visible="false" />
-      <Button fx:id="maxButton" layoutX="196.0" layoutY="428.0" mnemonicParsing="false" text="Max" visible="false" />
+      <Button fx:id="potButton" layoutX="151.0" layoutY="428.0" mnemonicParsing="false" onAction="#potButtonClicked" text="Pot" visible="false" />
+      <Button fx:id="halfButton" layoutX="80.0" layoutY="428.0" mnemonicParsing="false" onAction="#halfButtonClicked" text="Half Pot" visible="false" />
+      <Button fx:id="minButton" layoutX="23.0" layoutY="428.0" mnemonicParsing="false" onAction="#minButtonClicked" text="Min" visible="false" />
+      <Button fx:id="maxButton" layoutX="196.0" layoutY="428.0" mnemonicParsing="false" onAction="#maxButtonClicked" text="Max" visible="false" />
       <Label layoutX="367.0" layoutY="8.0" prefHeight="17.0" prefWidth="66.0" text="Pot:" textAlignment="CENTER" textFill="WHITE">
          <font>
             <Font name="Arial" size="24.0" />
          </font>
       </Label>
-      <Label fx:id="currentBetValueLabel" layoutX="500.0" layoutY="273.0" prefHeight="27.0" prefWidth="141.0" textAlignment="CENTER" textFill="WHITE">
+      <Label fx:id="currentBetValueLabel" layoutX="500.0" layoutY="273.0" prefHeight="27.0" prefWidth="141.0" textAlignment="CENTER" textFill="WHITE" visible="false">
          <font>
             <Font name="Arial" size="24.0" />
          </font>
       </Label>
       <TextField fx:id="playerBetTextField" layoutX="37.0" layoutY="361.0" prefHeight="25.0" prefWidth="66.0" visible="false" />
-      <Button fx:id="confirmButton" layoutX="125.0" layoutY="361.0" mnemonicParsing="false" text="Confirm" visible="false" />
+      <Button fx:id="confirmButton" disable="true" layoutX="125.0" layoutY="361.0" mnemonicParsing="false" text="Confirm" visible="false" />
       <Label fx:id="nameLabel0" layoutX="82.0" layoutY="185.0" text="Player 0" textFill="WHITE" />
       <Label fx:id="stackLabel0" layoutX="89.0" layoutY="207.0" text="Stack" textFill="WHITE" />
       <Label fx:id="stackLabel1" layoutX="870.0" layoutY="205.0" text="Stack" textFill="WHITE" />
       <Label fx:id="nameLabel1" layoutX="870.0" layoutY="183.0" text="Bot 1" textFill="WHITE" />
       <TextArea fx:id="logTextArea" layoutY="467.0" prefHeight="134.0" prefWidth="516.0" />
-      <Label layoutX="366.0" layoutY="273.0" prefHeight="27.0" prefWidth="134.0" text="Current bet:" textAlignment="CENTER" textFill="WHITE">
+      <Label layoutX="366.0" layoutY="273.0" prefHeight="27.0" prefWidth="134.0" text="Current bet:" textAlignment="CENTER" textFill="WHITE" visible="false">
          <font>
             <Font name="Arial" size="24.0" />
          </font>

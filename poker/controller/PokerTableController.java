@@ -40,6 +40,26 @@ public class PokerTableController {
    }
 
    @FXML
+   private void minButtonClicked(ActionEvent e) {
+      playerBetTextField.setText(Integer.toString(mainApp.poker.dealer.minBetAmount));
+   }
+
+   @FXML
+   private void halfButtonClicked(ActionEvent e) {
+      playerBetTextField.setText(Integer.toString(mainApp.poker.dealer.halfPotBetAmount));
+   }
+
+   @FXML
+   private void potButtonClicked(ActionEvent e) {
+      playerBetTextField.setText(Integer.toString(mainApp.poker.dealer.potBetAmount));
+   }
+
+   @FXML
+   private void maxButtonClicked(ActionEvent e) {
+      playerBetTextField.setText(Integer.toString(mainApp.poker.dealer.maxBetAmount));
+   }
+
+   @FXML
    private void confirmButtonClicked(ActionEvent e) {
 
    }
@@ -79,6 +99,11 @@ public class PokerTableController {
    public void toggleDealerOne(boolean dealer) {
       dealerLabel1.setVisible(dealer);
    }
+
+   public void enableConfirmButton() {
+      confirmButton.setDisable(false);
+   }
+
    /**
     * Is called by the main application to give a reference back to itself.
     * 

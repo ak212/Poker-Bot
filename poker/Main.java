@@ -17,13 +17,14 @@ public class Main extends Application {
    private Stage primaryStage;
    private AnchorPane rootLayout;
    private PokerTableController tableController;
+   public Poker poker;
 
    @Override
    public void start(Stage primaryStage) throws Exception {
       this.primaryStage = primaryStage;
       this.primaryStage.setTitle("Poker");
       showMainView();
-      Poker poker = new Poker();
+      poker = new Poker();
       poker.setMainApp(this);
 
       Task<Void> task = new Task<Void>() {
@@ -139,6 +140,15 @@ public class Main extends Application {
          @Override
          public void run() {
             tableController.toggleDealerOne(dealer);
+         }
+      });
+   }
+
+   public void enableConfirmButton() {
+      Platform.runLater(new Runnable() {
+         @Override
+         public void run() {
+            tableController.enableConfirmButton();
          }
       });
    }

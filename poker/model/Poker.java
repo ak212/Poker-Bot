@@ -97,6 +97,7 @@ public class Poker {
             Collections.sort(players, new PreFlopComparator());
             players = dealer.evaluateHandStrength(players, new ArrayList<Card>());
             dealer.printHandValues(players);
+            mainApp.updatePot(Integer.toString(dealer.getPot()));
             players = dealer.betPeriod(players);
             break;
 
@@ -181,7 +182,6 @@ public class Poker {
          dealer.setBetPeriod(BetPeriod.getBetPeriod(++gameState));
          System.out.println("Current Pot: " + dealer.getPot());
 
-         mainApp.updateConsole("Current Pot: " + dealer.getPot());
          mainApp.updateCurrentBet("0");
          mainApp.updateBetAmountZero(null);
          mainApp.updateBetAmountOne(null);

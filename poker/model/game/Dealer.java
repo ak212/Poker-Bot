@@ -33,6 +33,11 @@ public class Dealer {
    private int playersInHand;
    public Main mainApp;
 
+   public int minBetAmount;
+   public int halfPotBetAmount;
+   public int potBetAmount;
+   public int maxBetAmount;
+
    public Dealer() {
       this.dealerButtonPosition = 0;
       this.smallBlindPosition = 1;
@@ -97,9 +102,11 @@ public class Dealer {
             this.setTotalBet(this.getTotalBet() + betAmount);
          }
 
-         mainApp.updateBetAmountZero(Integer.toString(this.getCurrentBet()));
          player.bet(this.getCurrentBet());
          this.setPot(this.getPot() + this.getCurrentBet());
+
+         mainApp.updateBetAmountZero(Integer.toString(player.getTotalBet()));
+
          break;
       case "c":
          if (this.getBetPeriod().equals(BetPeriod.PREFLOP)) {
@@ -118,9 +125,11 @@ public class Dealer {
             betAmount = this.getCurrentBet();
          }
 
-         mainApp.updateBetAmountZero(Integer.toString(betAmount));
          player.call(betAmount);
          this.setPot(this.getPot() + betAmount);
+
+         mainApp.updateBetAmountZero(Integer.toString(player.getTotalBet()));
+
          break;
       case "f":
          player.setInHand(false);
@@ -172,7 +181,12 @@ public class Dealer {
          b.call(b.getBotTurn().getBetAmount());
          this.setPot(this.getPot() + b.getBotTurn().getBetAmount());
 
-         mainApp.updateBetAmountOne(Integer.toString(b.getBotTurn().getBetAmount()));
+         if (b.getTotalBet() == 0) {
+            mainApp.updateBetAmountOne(null);
+         }
+         else {
+            mainApp.updateBetAmountOne(Integer.toString(b.getTotalBet()));
+         }
 
          break;
       case BET:
@@ -188,7 +202,7 @@ public class Dealer {
          this.setTotalBet(this.getTotalBet() + betAmount);
          this.setPot(this.getPot() + betAmount);
 
-         mainApp.updateBetAmountOne(Integer.toString(this.getTotalBet() + betAmount));
+         mainApp.updateBetAmountOne(Integer.toString(b.getTotalBet()));
 
          break;
       case FOLD:
@@ -355,6 +369,8 @@ public class Dealer {
                      mainApp.updateStackOne(Integer.toString(player.getStack()));
                   } 
                   else {
+                     getBetAmounts(player);
+
                      players.set(player.getPreFlopPosition() - 1, playerInput(players.get(player.getPreFlopPosition() - 1)));
                      mainApp.updateStackZero(Integer.toString(player.getStack()));
                   }
@@ -374,6 +390,8 @@ public class Dealer {
                      mainApp.updateStackOne(Integer.toString(player.getStack()));
                   }
                   else {
+                     getBetAmounts(player);
+
                      players.set(player.getPosition() - 1, playerInput(players.get(player.getPosition() - 1)));
                      mainApp.updateStackZero(Integer.toString(player.getStack()));
                   }
@@ -564,6 +582,62 @@ public class Dealer {
       players = this.betPeriod(players);
 
       return players;
+   }
+
+   public int getMinBet(Player player) {
+      int betAmount = 0;
+
+      if (this.getBetPeriod().equals(BetPeriod.PREFLOP)) {
+         if (player.isBigBlind() && player.getTotalBet() == this.getBigBlindAmount()) {
+            if (this.getCurrentBet() == this.getBigBlindAmount()) {
+               betAmount = this.getBigBlindAmount();
+            }
+            else {
+               betAmount = this.getCurrentBet() * 2;
+            }
+         }
+         else if (player.isSmallBlind() && player.getTotalBet() == this.getSmallBlindAmount()) {
+            betAmount = this.getCurrentBet() * 2 - this.getSmallBlindAmount();
+            player.setCalledSB(true);
+         }
+         else {
+            betAmount = this.getCurrentBet();
+         }
+      }
+      else if (this.getCurrentBet() == 0) {
+         betAmount = this.getBigBlindAmount();
+      }
+      else {
+         betAmount = this.getCurrentBet();
+      }
+
+      return betAmount;
+   }
+
+   public int getHalfPotBet() {
+      int amount = (int) Math.ceil(this.getPot() / 2);
+
+      if (amount < minBetAmount) {
+         return minBetAmount;
+      }
+      else {
+         return amount;
+      }
+   }
+
+   public int getPotBet() {
+      return this.getPot();
+   }
+
+   public int getMaxBet(Player player) {
+      return player.getStack();
+   }
+
+   public void getBetAmounts(Player player) {
+      minBetAmount = getMinBet(player);
+      halfPotBetAmount = getHalfPotBet();
+      potBetAmount = getPotBet();
+      maxBetAmount = getMaxBet(player);
    }
 
    public void newHand() {
