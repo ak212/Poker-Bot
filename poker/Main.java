@@ -11,6 +11,7 @@ import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
 import poker.controller.PokerTableController;
 import poker.model.Poker;
+import poker.model.player.Turn;
 
 public class Main extends Application {
 
@@ -56,6 +57,7 @@ public class Main extends Application {
          // set controller and application information
          tableController = loader.getController();
          tableController.setMainApp(this);
+         tableController.addListener();
 
       }
       catch (IOException e) {
@@ -144,13 +146,8 @@ public class Main extends Application {
       });
    }
 
-   public void enableConfirmButton() {
-      Platform.runLater(new Runnable() {
-         @Override
-         public void run() {
-            tableController.enableConfirmButton();
-         }
-      });
+   public Turn getPlayerInput() {
+      return tableController.getPlayerInput();
    }
 
    public Stage getPrimaryStage() {

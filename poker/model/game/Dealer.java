@@ -2,7 +2,6 @@ package poker.model.game;
 
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Scanner;
 
 import poker.Main;
 import poker.model.cards.Card;
@@ -13,6 +12,7 @@ import poker.model.hand.HandEvaluator;
 import poker.model.hand.HandStrength;
 import poker.model.player.Bot;
 import poker.model.player.Player;
+import poker.model.player.Turn;
 
 public class Dealer {
    DeckOfCards deckOfCards;
@@ -37,6 +37,7 @@ public class Dealer {
    public int halfPotBetAmount;
    public int potBetAmount;
    public int maxBetAmount;
+   public int minAmount;
 
    public Dealer() {
       this.dealerButtonPosition = 0;
@@ -61,23 +62,25 @@ public class Dealer {
 
    public Player playerInput(Player p) {
       Player player = p;
-      @SuppressWarnings("resource")
-      Scanner scan = new Scanner(System.in);
-      String playerAction = scan.next();
+      // @SuppressWarnings("resource")
+      // Scanner scan = new Scanner(System.in);
+      // String playerAction = scan.next();
       int betAmount = 0;
 
-      switch (playerAction) {
-      case "b":
-         while (betAmount + player.getTotalBet() < this.getTotalBet() || betAmount == 0) {
-            betAmount = scan.nextInt();
-         }
+      Turn turn = mainApp.getPlayerInput();
 
+      switch (turn.getAction()) {
+      case BET:
+         // while (betAmount + player.getTotalBet() < this.getTotalBet() || betAmount == 0) {
+         // betAmount = scan.nextInt();
+         // }
+         betAmount = turn.getBetAmount();
          if (this.getBetPeriod().equals(BetPeriod.PREFLOP)) {
             if (player.isSmallBlind() && !player.isCalledSB()) {
                this.setCurrentBet(betAmount - this.getSmallBlindAmount());
                player.call(this.getBigBlindAmount() - this.getSmallBlindAmount());
                player.setCalledSB(true);
-               this.setPot(this.getPot() + (this.getBigBlindAmount() - this.getSmallBlindAmount()));
+               this.setPot(this.getPot() + betAmount);
                this.setTotalBet(this.getTotalBet() + this.getCurrentBet());
             }
             else {
@@ -108,30 +111,30 @@ public class Dealer {
          mainApp.updateBetAmountZero(Integer.toString(player.getTotalBet()));
 
          break;
-      case "c":
-         if (this.getBetPeriod().equals(BetPeriod.PREFLOP)) {
-            if (player.isBigBlind() && player.getTotalBet() == this.getBigBlindAmount()) {
-               betAmount = this.getCurrentBet() - this.getBigBlindAmount();
-            }
-            else if (player.isSmallBlind() && player.getTotalBet() == this.getSmallBlindAmount()) {
-               betAmount = this.getCurrentBet() - this.getSmallBlindAmount();
-               player.setCalledSB(true);
-            }
-            else {
-               betAmount = this.getCurrentBet();
-            }
-         }
-         else {
-            betAmount = this.getCurrentBet();
-         }
+      case CHECKCALL:
+         // if (this.getBetPeriod().equals(BetPeriod.PREFLOP)) {
+         // if (player.isBigBlind() && player.getTotalBet() == this.getBigBlindAmount()) {
+         // betAmount = this.getCurrentBet() - this.getBigBlindAmount();
+         // }
+         // else if (player.isSmallBlind() && player.getTotalBet() == this.getSmallBlindAmount()) {
+         // betAmount = this.getCurrentBet() - this.getSmallBlindAmount();
+         // player.setCalledSB(true);
+         // }
+         // else {
+         // betAmount = this.getCurrentBet();
+         // }
+         // }
+         // else {
+         // betAmount = this.getCurrentBet();
+         // }
 
-         player.call(betAmount);
-         this.setPot(this.getPot() + betAmount);
+         player.call(turn.getBetAmount());
+         this.setPot(this.getPot() + turn.getBetAmount());
 
          mainApp.updateBetAmountZero(Integer.toString(player.getTotalBet()));
 
          break;
-      case "f":
+      case FOLD:
          player.setInHand(false);
          this.setPlayersInHand(this.getPlayersInHand() - 1);
          System.out.println("Player " + player.getId() + " folds");
@@ -176,7 +179,7 @@ public class Dealer {
          b.determinePostFlopAction(this.getCurrentBet(), this.getTotalBet(), this);
       }
 
-      switch (b.getBotTurn().getBotAction()) {
+      switch (b.getBotTurn().getAction()) {
       case CHECKCALL:
          b.call(b.getBotTurn().getBetAmount());
          this.setPot(this.getPot() + b.getBotTurn().getBetAmount());
@@ -584,6 +587,27 @@ public class Dealer {
       return players;
    }
 
+   public int getMinAmount(Player player) {
+      int betAmount = 0;
+
+      if (this.getBetPeriod().equals(BetPeriod.PREFLOP)) {
+         if (player.isBigBlind() && player.getTotalBet() == this.getBigBlindAmount()) {
+            betAmount = this.getCurrentBet() - this.getBigBlindAmount();
+         }
+         else if (player.isSmallBlind() && player.getTotalBet() == this.getSmallBlindAmount()) {
+            betAmount = this.getCurrentBet() - this.getSmallBlindAmount();
+         }
+         else {
+            betAmount = this.getCurrentBet();
+         }
+      }
+      else {
+         betAmount = this.getCurrentBet();
+      }
+
+      return betAmount;
+   }
+
    public int getMinBet(Player player) {
       int betAmount = 0;
 
@@ -598,7 +622,6 @@ public class Dealer {
          }
          else if (player.isSmallBlind() && player.getTotalBet() == this.getSmallBlindAmount()) {
             betAmount = this.getCurrentBet() * 2 - this.getSmallBlindAmount();
-            player.setCalledSB(true);
          }
          else {
             betAmount = this.getCurrentBet();
@@ -608,7 +631,7 @@ public class Dealer {
          betAmount = this.getBigBlindAmount();
       }
       else {
-         betAmount = this.getCurrentBet();
+         betAmount = this.getCurrentBet() * 2;
       }
 
       return betAmount;
@@ -634,6 +657,7 @@ public class Dealer {
    }
 
    public void getBetAmounts(Player player) {
+      minAmount = getMinAmount(player);
       minBetAmount = getMinBet(player);
       halfPotBetAmount = getHalfPotBet();
       potBetAmount = getPotBet();

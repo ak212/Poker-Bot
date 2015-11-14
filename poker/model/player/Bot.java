@@ -7,7 +7,7 @@ import poker.model.game.Dealer;
 
 public class Bot extends Player {
    int holeCardsValue;
-   private BotTurn botTurn;
+   private Turn botTurn;
    private ArrayList<Integer> opponentStackSizes;
 
    // Unsuited: start with column
@@ -54,7 +54,7 @@ public class Bot extends Player {
    }
 
    public void action(int currentBet) {
-      this.setBotTurn(new BotTurn(Action.CHECKCALL, currentBet));
+      this.setBotTurn(new Turn(Action.CHECKCALL, currentBet));
    }
 
    public void determinePreFlopAction(int currentBet, int totalBet, int bbAmount) {
@@ -74,71 +74,71 @@ public class Bot extends Player {
       if (!raise) {
          if (this.isBigBlind()) {
             if (this.holeCardsValue <= 3) {
-               this.setBotTurn(new BotTurn(Action.BET, randomizeBet(currentBet * (7 / this.holeCardsValue))));
+               this.setBotTurn(new Turn(Action.BET, randomizeBet(currentBet * (7 / this.holeCardsValue))));
             }
             else {
-               this.setBotTurn(new BotTurn(Action.CHECKCALL, betAmount));
+               this.setBotTurn(new Turn(Action.CHECKCALL, betAmount));
             }
          }
          else if (this.isSmallBlind()) {
             if (this.holeCardsValue <= 2) {
-               this.setBotTurn(new BotTurn(Action.BET, randomizeBet(currentBet * (6 / this.holeCardsValue))));
+               this.setBotTurn(new Turn(Action.BET, randomizeBet(currentBet * (6 / this.holeCardsValue))));
                this.setCalledSB(true);
             }
             else if (this.holeCardsValue <= 7) {
-               this.setBotTurn(new BotTurn(Action.CHECKCALL, betAmount));
+               this.setBotTurn(new Turn(Action.CHECKCALL, betAmount));
                this.setCalledSB(true);
             }
             else {
-               this.setBotTurn(new BotTurn(Action.FOLD, currentBet));
+               this.setBotTurn(new Turn(Action.FOLD, currentBet));
             }
          }
          else {
             if (this.holeCardsValue <= 1) {
-               this.setBotTurn(new BotTurn(Action.BET, randomizeBet(currentBet * (3 / this.holeCardsValue))));
+               this.setBotTurn(new Turn(Action.BET, randomizeBet(currentBet * (3 / this.holeCardsValue))));
             }
             else if (this.holeCardsValue <= 5) {
-               this.setBotTurn(new BotTurn(Action.CHECKCALL, betAmount));
+               this.setBotTurn(new Turn(Action.CHECKCALL, betAmount));
             }
             else {
-               this.setBotTurn(new BotTurn(Action.FOLD, currentBet));
+               this.setBotTurn(new Turn(Action.FOLD, currentBet));
             }
          }
       }
       else {
          if (this.isBigBlind()) {
             if (this.holeCardsValue <= 1) {
-               this.setBotTurn(new BotTurn(Action.BET, randomizeBet(currentBet * (3 / this.holeCardsValue))));
+               this.setBotTurn(new Turn(Action.BET, randomizeBet(currentBet * (3 / this.holeCardsValue))));
             }
             else if (this.holeCardsValue <= 5) {
-               this.setBotTurn(new BotTurn(Action.CHECKCALL, betAmount));
+               this.setBotTurn(new Turn(Action.CHECKCALL, betAmount));
             }
             else {
-               this.setBotTurn(new BotTurn(Action.FOLD, currentBet));
+               this.setBotTurn(new Turn(Action.FOLD, currentBet));
             }
          }
          else if (this.isSmallBlind()) {
             if (this.holeCardsValue <= 1) {
-               this.setBotTurn(new BotTurn(Action.BET, randomizeBet(currentBet * (2 / this.holeCardsValue))));
+               this.setBotTurn(new Turn(Action.BET, randomizeBet(currentBet * (2 / this.holeCardsValue))));
                this.setCalledSB(true);
             }
             else if (this.holeCardsValue <= 4) {
-               this.setBotTurn(new BotTurn(Action.CHECKCALL, betAmount));
+               this.setBotTurn(new Turn(Action.CHECKCALL, betAmount));
                this.setCalledSB(true);
             }
             else {
-               this.setBotTurn(new BotTurn(Action.FOLD, currentBet));
+               this.setBotTurn(new Turn(Action.FOLD, currentBet));
             }
          }
          else {
             if (this.holeCardsValue <= 1) {
-               this.setBotTurn(new BotTurn(Action.BET, randomizeBet(currentBet * (2 / this.holeCardsValue))));
+               this.setBotTurn(new Turn(Action.BET, randomizeBet(currentBet * (2 / this.holeCardsValue))));
             }
             else if (this.holeCardsValue <= 3) {
-               this.setBotTurn(new BotTurn(Action.CHECKCALL, betAmount));
+               this.setBotTurn(new Turn(Action.CHECKCALL, betAmount));
             }
             else {
-               this.setBotTurn(new BotTurn(Action.FOLD, currentBet));
+               this.setBotTurn(new Turn(Action.FOLD, currentBet));
             }
          }
       }
@@ -190,14 +190,14 @@ public class Bot extends Player {
          }
       }*/
 
-      this.setBotTurn(new BotTurn(Action.CHECKCALL, betAmount));
+      this.setBotTurn(new Turn(Action.CHECKCALL, betAmount));
    }
 
-   public BotTurn getBotTurn() {
+   public Turn getBotTurn() {
       return botTurn;
    }
 
-   public void setBotTurn(BotTurn botTurn) {
+   public void setBotTurn(Turn botTurn) {
       this.botTurn = botTurn;
    }
 

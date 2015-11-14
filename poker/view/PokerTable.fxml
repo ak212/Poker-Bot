@@ -9,8 +9,8 @@
 <AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="1000.0" style="-fx-background-color: #000000;" stylesheets="@style.css" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="poker.controller.PokerTableController">
    <children>
       <Button fx:id="betButton" layoutX="118.0" layoutY="396.0" mnemonicParsing="false" onAction="#betButtonClicked" prefHeight="25.0" prefWidth="53.0" text="Bet" />
-      <Button fx:id="checkCallButton" layoutX="23.0" layoutY="396.0" mnemonicParsing="false" text="Check/Call" />
-      <Button fx:id="foldButton" layoutX="196.0" layoutY="396.0" mnemonicParsing="false" text="Fold" />
+      <Button fx:id="checkCallButton" layoutX="23.0" layoutY="396.0" mnemonicParsing="false" onAction="#checkCallButtonClicked" text="Check/Call" />
+      <Button fx:id="foldButton" layoutX="196.0" layoutY="396.0" mnemonicParsing="false" onAction="#foldButtonClicked" text="Fold" />
       <Button fx:id="potButton" layoutX="151.0" layoutY="428.0" mnemonicParsing="false" onAction="#potButtonClicked" text="Pot" visible="false" />
       <Button fx:id="halfButton" layoutX="80.0" layoutY="428.0" mnemonicParsing="false" onAction="#halfButtonClicked" text="Half Pot" visible="false" />
       <Button fx:id="minButton" layoutX="23.0" layoutY="428.0" mnemonicParsing="false" onAction="#minButtonClicked" text="Min" visible="false" />
@@ -26,7 +26,7 @@
          </font>
       </Label>
       <TextField fx:id="playerBetTextField" layoutX="37.0" layoutY="361.0" prefHeight="25.0" prefWidth="66.0" visible="false" />
-      <Button fx:id="confirmButton" disable="true" layoutX="125.0" layoutY="361.0" mnemonicParsing="false" text="Confirm" visible="false" />
+      <Button fx:id="confirmButton" disable="true" layoutX="125.0" layoutY="361.0" mnemonicParsing="false" onAction="#confirmButtonClicked" text="Confirm" visible="false" />
       <Label fx:id="nameLabel0" layoutX="82.0" layoutY="185.0" text="Player 0" textFill="WHITE" />
       <Label fx:id="stackLabel0" layoutX="89.0" layoutY="207.0" text="Stack" textFill="WHITE" />
       <Label fx:id="stackLabel1" layoutX="870.0" layoutY="205.0" text="Stack" textFill="WHITE" />
