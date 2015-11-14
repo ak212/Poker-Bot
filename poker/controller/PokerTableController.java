@@ -24,9 +24,21 @@ public class PokerTableController {
    @FXML
    private Button checkCallButton, betButton, minButton, halfButton, potButton, maxButton, confirmButton;
 
+   private int betValue = 0;
+
    @FXML
    private void intialize() {
-
+      // Handle Subject TextField text changes.
+      playerBetTextField.textProperty().addListener((observable, oldValue, newValue) -> {
+         if (newValue != null && !newValue.matches("[0-9]+")
+               || Integer.parseInt(newValue) > mainApp.poker.dealer.maxBetAmount) {
+            playerBetTextField.setText(oldValue);
+         }
+         else {
+            playerBetTextField.setText(newValue);
+            betValue = Integer.parseInt(newValue);
+         }
+      });
    }
 
    @FXML
