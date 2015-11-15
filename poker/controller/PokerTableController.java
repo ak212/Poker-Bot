@@ -6,6 +6,8 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
+import javafx.scene.image.ImageView;
+import javafx.scene.text.TextAlignment;
 import poker.Main;
 import poker.model.player.Action;
 import poker.model.player.Turn;
@@ -25,6 +27,9 @@ public class PokerTableController {
 
    @FXML
    private Button checkCallButton, betButton, minButton, halfButton, potButton, maxButton, confirmButton;
+
+   @FXML
+   private ImageView dealerImage0, dealerImage1, betChipImage0, betChipImage1;
 
    private int betValue = 0;
    private boolean visible = false;
@@ -170,10 +175,6 @@ public class PokerTableController {
       potValueLabel.setText(text);
    }
 
-   public void updateCurrentBet(String text) {
-      currentBetValueLabel.setText(text);
-   }
-
    public void updateStackZero(String text) {
       stackLabel0.setText(text);
    }
@@ -184,18 +185,24 @@ public class PokerTableController {
 
    public void updateBetAmountZero(String text) {
       betAmountLabel0.setText(text);
+      betAmountLabel0.setTextAlignment(TextAlignment.CENTER);
+      betChipImage0.setVisible(text != null && !text.equals(""));
+      betAmountLabel0.toFront();
    }
 
    public void updateBetAmountOne(String text) {
       betAmountLabel1.setText(text);
+      betAmountLabel1.setTextAlignment(TextAlignment.CENTER);
+      betChipImage1.setVisible(text != null && !text.equals(""));
+      betAmountLabel1.toFront();
    }
 
    public void toggleDealerZero(boolean dealer) {
-      dealerLabel0.setVisible(dealer);
+      dealerImage0.setVisible(dealer);
    }
 
    public void toggleDealerOne(boolean dealer) {
-      dealerLabel1.setVisible(dealer);
+      dealerImage1.setVisible(dealer);
    }
 
    /**

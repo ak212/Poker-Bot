@@ -83,15 +83,6 @@ public class Main extends Application {
       });
    }
 
-   public void updateCurrentBet(String text) {
-      Platform.runLater(new Runnable() {
-         @Override
-         public void run() {
-            tableController.updateCurrentBet(text);
-         }
-      });
-   }
-
    public void updateStackZero(String text) {
       Platform.runLater(new Runnable() {
          @Override
