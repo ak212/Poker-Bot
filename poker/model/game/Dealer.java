@@ -62,18 +62,11 @@ public class Dealer {
 
    public Player playerInput(Player p) {
       Player player = p;
-      // @SuppressWarnings("resource")
-      // Scanner scan = new Scanner(System.in);
-      // String playerAction = scan.next();
       int betAmount = 0;
-
       Turn turn = mainApp.getPlayerInput();
 
       switch (turn.getAction()) {
       case BET:
-         // while (betAmount + player.getTotalBet() < this.getTotalBet() || betAmount == 0) {
-         // betAmount = scan.nextInt();
-         // }
          betAmount = turn.getBetAmount();
          if (this.getBetPeriod().equals(BetPeriod.PREFLOP)) {
             if (player.isSmallBlind() && !player.isCalledSB()) {
@@ -112,22 +105,6 @@ public class Dealer {
 
          break;
       case CHECKCALL:
-         // if (this.getBetPeriod().equals(BetPeriod.PREFLOP)) {
-         // if (player.isBigBlind() && player.getTotalBet() == this.getBigBlindAmount()) {
-         // betAmount = this.getCurrentBet() - this.getBigBlindAmount();
-         // }
-         // else if (player.isSmallBlind() && player.getTotalBet() == this.getSmallBlindAmount()) {
-         // betAmount = this.getCurrentBet() - this.getSmallBlindAmount();
-         // player.setCalledSB(true);
-         // }
-         // else {
-         // betAmount = this.getCurrentBet();
-         // }
-         // }
-         // else {
-         // betAmount = this.getCurrentBet();
-         // }
-
          player.call(turn.getBetAmount());
          this.setPot(this.getPot() + turn.getBetAmount());
 
@@ -240,32 +217,10 @@ public class Dealer {
       return b;
    }
 
-   public int getPlayersToBeDealt(ArrayList<Player> players) {
-      int count = 0;
 
-      for (Player player : players) {
-         if (player.getStack() > 0) {
-            count++;
-         }
-      }
-
-      return count;
-   }
-
-   public int getPlayersInHand(ArrayList<Player> players) {
-      int count = 0;
-
-      for (Player player : players) {
-         if (player.isInHand()) {
-            count++;
-         }
-      }
-
-      return count;
-   }
 
    public ArrayList<Player> determinePositions(ArrayList<Player> players) {
-      this.setPlayersInHand(this.getPlayersToBeDealt(players));
+      this.setPlayersInHand(DealerUtils.getPlayersToBeDealt(players));
       Collections.sort(players, new IdComparator());
 
       players.get(this.dealerButtonPosition % this.getPlayersInHand()).setDealerButton(true);
@@ -292,19 +247,6 @@ public class Dealer {
       }
 
       return players;
-   }
-
-   public boolean betSettled(ArrayList<Player> players) {
-      int playersInHand = getPlayersInHand(players);
-      int playersActed = 0;
-
-      for (Player player : players) {
-         if (player.isInHand() && player.isPlayerActed()) {
-            playersActed++;
-         }
-      }
-
-      return playersInHand == playersActed || playersInHand == 1;
    }
 
    public ArrayList<Player> resetPlayersActed(ArrayList<Player> players, int exception) {
@@ -346,23 +288,10 @@ public class Dealer {
       return players;
    }
 
-   public ArrayList<Player> evaluateHandStrength(ArrayList<Player> players, ArrayList<Card> board) {
-      for (Player player : players) {
-         player.setCurrentHand(HandEvaluator.evaluateForHand(new ArrayList<Card>(board), player.getHoleCards()));
-
-         if (player.getCurrentHand().hand.compareTo(player.stats.bestHand) < 0) {
-            player.stats.bestHand = player.getCurrentHand().hand;
-         }
-      }
-
-      return players;
-   }
-
    public ArrayList<Player> betPeriod(ArrayList<Player> players) {
       this.setTotalBet(this.getCurrentBet());
 
-      // System.out.println("Current bet: " + this.totalBet);
-      while (!betSettled(players)) {
+      while (!DealerUtils.betSettled(players)) {
          for (Player player : players) {
             if (player.isInHand() && !player.isPlayerActed()) {
                int curBet = this.getTotalBet();
@@ -404,13 +333,12 @@ public class Dealer {
                }
             }
             if (!player.isInHand()) {
-               this.setPlayersInHand(getPlayersInHand(players));
+               this.setPlayersInHand(DealerUtils.getPlayersInHand(players));
                if (this.getPlayersInHand() == 1) {
                   break;
                }
             }
 
-            mainApp.updateCurrentBet(Integer.toString(this.totalBet));
             mainApp.updatePot(Integer.toString(this.pot));
          }
       }
@@ -423,75 +351,6 @@ public class Dealer {
       }
 
       return players;
-   }
-
-   public ArrayList<Player> updatePosition(ArrayList<Player> players) {
-      int i = 1;
-
-      for (Player player : players) {
-         if (player.isInHand()) {
-            player.setPosition(i++);
-         }
-      }
-
-      return players;
-   }
-
-   public ArrayList<Player> retrieveEliminatedPlayers(ArrayList<Player> players) {
-      ArrayList<Player> playersToBeRemoved = new ArrayList<Player>();
-
-      for (Player player : players) {
-         if (player.getStack() <= 0) {
-            playersToBeRemoved.add(player);
-         }
-      }
-
-      return playersToBeRemoved;
-   }
-
-   public ArrayList<Player> removeEliminatedPlayers(ArrayList<Player> players) {
-      ArrayList<Player> playersToBeRemoved = retrieveEliminatedPlayers(players);
-
-      if (!playersToBeRemoved.isEmpty()) {
-         for (Player player : playersToBeRemoved) {
-            System.out.println("Player " + player.getId() + " eliminated");
-            mainApp.updateConsole("Player " + player.getId() + " eliminated");
-            players.remove(player);
-         }
-      }
-
-      return players;
-   }
-
-   public void printHandValues(ArrayList<Player> players) {
-      for (Player player : players) {
-         if (player.isInHand()) {
-            if (player instanceof Bot) {
-               System.out.print("Bot " + player.getId() + " has hand " + player.getCurrentHand().hand.toString());
-            }
-            else {
-               System.out.print("Player " + player.getId() + " has hand " + player.getCurrentHand().hand.toString());
-            }
-            System.out.print(" Kickers: ");
-            for (Integer i : player.getCurrentHand().kickers)
-               System.out.print(i + ",");
-            System.out.println();
-         }
-      }
-   }
-
-
-   public void printStackValues(ArrayList<Player> players) {
-      for (Player player : players) {
-         if (player instanceof Bot) {
-            System.out.println("Bot " + player.getId() + " stack: " + player.getStack());
-            mainApp.updateConsole("Bot " + player.getId() + " stack: " + player.getStack());
-         }
-         else {
-            System.out.println("Player " + player.getId() + " stack: " + player.getStack());
-            mainApp.updateConsole("Player " + player.getId() + " stack: " + player.getStack());
-         }
-      }
    }
 
    public void compareHandStrength(Player p) {
@@ -579,9 +438,9 @@ public class Dealer {
 
    public ArrayList<Player> completeRound(ArrayList<Player> players) {
       this.printCommunityCards();
-      players = this.updatePosition(players);
-      players = this.evaluateHandStrength(players, this.communityCards);
-      this.printHandValues(players);
+      players = DealerUtils.updatePosition(players);
+      players = DealerUtils.evaluateHandStrength(players, this.communityCards);
+      DealerUtils.printHandValues(players);
       players = this.betPeriod(players);
 
       return players;

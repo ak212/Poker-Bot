@@ -7,6 +7,7 @@ import poker.Main;
 import poker.model.cards.Card;
 import poker.model.game.BetPeriod;
 import poker.model.game.Dealer;
+import poker.model.game.DealerUtils;
 import poker.model.game.PositionComparator;
 import poker.model.game.PreFlopComparator;
 import poker.model.player.Bot;
@@ -38,12 +39,11 @@ public class Poker {
       dealer.setBetPeriod(BetPeriod.getBetPeriod(gameState));
 
       while (playGame) {
-         mainApp.updateCurrentBet(Integer.toString(dealer.getTotalBet()));
          mainApp.updatePot(Integer.toString(dealer.getPot()));
 
          switch (dealer.getBetPeriod()) {
          case PREFLOP:
-            if (dealer.getPlayersToBeDealt(players) < 2) {
+            if (DealerUtils.getPlayersToBeDealt(players) < 2) {
                playGame = false;
                break;
             }
@@ -95,8 +95,8 @@ public class Poker {
             }
 
             Collections.sort(players, new PreFlopComparator());
-            players = dealer.evaluateHandStrength(players, new ArrayList<Card>());
-            dealer.printHandValues(players);
+            players = DealerUtils.evaluateHandStrength(players, new ArrayList<Card>());
+            DealerUtils.printHandValues(players);
             mainApp.updatePot(Integer.toString(dealer.getPot()));
             players = dealer.betPeriod(players);
             break;
@@ -152,9 +152,9 @@ public class Poker {
                players = dealer.determineWinner(players);
             }
 
-            dealer.printStackValues(players);
-            playersEliminated.addAll(dealer.retrieveEliminatedPlayers(players));
-            players = dealer.removeEliminatedPlayers(players);
+            DealerUtils.printStackValues(players);
+            playersEliminated.addAll(DealerUtils.retrieveEliminatedPlayers(players));
+            players = DealerUtils.removeEliminatedPlayers(players, mainApp);
 
             System.out.println("\n\n");
             mainApp.updateConsole("\n\n");
@@ -182,7 +182,6 @@ public class Poker {
          dealer.setBetPeriod(BetPeriod.getBetPeriod(++gameState));
          System.out.println("Current Pot: " + dealer.getPot());
 
-         mainApp.updateCurrentBet("0");
          mainApp.updateBetAmountZero(null);
          mainApp.updateBetAmountOne(null);
 
