@@ -26,7 +26,7 @@ public class PokerTableController {
          dealerLabel0, dealerLabel1;
 
    @FXML
-   private Button checkCallButton, betButton, minButton, halfButton, potButton, maxButton, confirmButton;
+   private Button checkCallButton, betButton, foldButton, minButton, halfButton, potButton, maxButton, confirmButton;
 
    @FXML
    private ImageView dealerImage0, dealerImage1, betChipImage0, betChipImage1;
@@ -184,16 +184,16 @@ public class PokerTableController {
    }
 
    public void updateBetAmountZero(String text) {
-      betAmountLabel0.setText(text);
+      betAmountLabel0.setText(text != null && !text.equals("0") ? text : "");
       betAmountLabel0.setTextAlignment(TextAlignment.CENTER);
-      betChipImage0.setVisible(text != null && !text.equals(""));
+      betChipImage0.setVisible(text != null && !text.equals("") && !text.equals("0"));
       betAmountLabel0.toFront();
    }
 
    public void updateBetAmountOne(String text) {
-      betAmountLabel1.setText(text);
+      betAmountLabel1.setText(text != null && !text.equals("0") ? text : "");
       betAmountLabel1.setTextAlignment(TextAlignment.CENTER);
-      betChipImage1.setVisible(text != null && !text.equals(""));
+      betChipImage1.setVisible(text != null && !text.equals("") && !text.equals("0"));
       betAmountLabel1.toFront();
    }
 
