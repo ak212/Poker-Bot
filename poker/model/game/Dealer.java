@@ -560,14 +560,14 @@ public class Dealer {
 
    public void printCommunityCards() {
       System.out.println("On the board:");
-      mainApp.updateConsole("On the board:");
+      // mainApp.updateConsole("On the board:");
       String cards = "";
 
       for (Card card : this.communityCards) {
          cards += card.shorten();
          System.out.print(card.shorten());
       }
-      mainApp.updateConsole(cards);
+      // mainApp.updateConsole(cards);
       System.out.println();
    }
 

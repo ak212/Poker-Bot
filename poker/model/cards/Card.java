@@ -9,6 +9,10 @@ public class Card {
    }
 
    public String shorten() {
+      return getRankString() + getSuitString();
+   }
+
+   public String getRankString() {
       String card = "";
 
       switch (this.getRank()) {
@@ -54,6 +58,12 @@ public class Card {
       default:
          break;
       }
+
+      return card;
+   }
+
+   public String getSuitString() {
+      String card = "";
 
       switch (this.getSuit()) {
       case SPADES:

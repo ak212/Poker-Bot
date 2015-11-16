@@ -1,16 +1,20 @@
 package poker;
 
 import java.io.IOException;
+import java.util.ArrayList;
 
 import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.concurrent.Task;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
+import javafx.scene.image.Image;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
 import poker.controller.PokerTableController;
 import poker.model.Poker;
+import poker.model.cards.Card;
+import poker.model.cards.HoleCards;
 import poker.model.player.Turn;
 
 public class Main extends Application {
@@ -135,6 +139,49 @@ public class Main extends Application {
             tableController.toggleDealerOne(dealer);
          }
       });
+   }
+
+   public void getHoleCards(HoleCards cards) {
+      Platform.runLater(new Runnable() {
+         @Override
+         public void run() {
+            tableController.updateHoleCards(cards);
+         }
+      });
+   }
+
+   public void getCommunityCards(ArrayList<Card> cards) {
+      Platform.runLater(new Runnable() {
+         @Override
+         public void run() {
+            tableController.updateCommunityCards(cards);
+         }
+      });
+   }
+
+   public String getSuit(Card card) {
+      String suit = "view/images/";
+
+      switch (card.getSuit()) {
+      case CLUBS:
+         suit += "Clubs.png";
+         break;
+      case DIAMONDS:
+         suit += "Diamonds.png";
+         break;
+      case HEARTS:
+         suit += "Hearts.png";
+         break;
+      case SPADES:
+         suit += "Spades.png";
+         break;
+      }
+
+      return suit;
+   }
+
+   public Image getImage(Card card) {
+      return new Image(Main.class.getResourceAsStream(getSuit(card)));
    }
 
    public Turn getPlayerInput() {

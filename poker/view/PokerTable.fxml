@@ -15,7 +15,7 @@
       <Button fx:id="halfButton" layoutX="80.0" layoutY="428.0" mnemonicParsing="false" onAction="#halfButtonClicked" text="Half Pot" visible="false" />
       <Button fx:id="minButton" layoutX="23.0" layoutY="428.0" mnemonicParsing="false" onAction="#minButtonClicked" text="Min" visible="false" />
       <Button fx:id="maxButton" layoutX="196.0" layoutY="428.0" mnemonicParsing="false" onAction="#maxButtonClicked" text="Max" visible="false" />
-      <Label layoutX="367.0" layoutY="8.0" prefHeight="17.0" prefWidth="66.0" text="Pot:" textAlignment="CENTER" textFill="WHITE">
+      <Label layoutX="367.0" layoutY="8.0" prefHeight="17.0" prefWidth="66.0" text="Pot:" textAlignment="CENTER" textFill="WHITE" visible="false">
          <font>
             <Font name="Arial" size="24.0" />
          </font>
@@ -27,9 +27,9 @@
       <Label fx:id="stackLabel1" layoutX="870.0" layoutY="205.0" text="Stack" textFill="WHITE" />
       <Label fx:id="nameLabel1" layoutX="870.0" layoutY="183.0" text="Bot 1" textFill="WHITE" />
       <TextArea fx:id="logTextArea" layoutY="467.0" prefHeight="134.0" prefWidth="516.0" />
-      <Label fx:id="potValueLabel" layoutX="450.0" layoutY="8.0" prefHeight="17.0" prefWidth="66.0" textAlignment="CENTER" textFill="WHITE">
+      <Label fx:id="potValueLabel" layoutX="474.0" layoutY="125.0" prefHeight="17.0" prefWidth="66.0" textAlignment="CENTER">
          <font>
-            <Font name="Arial" size="24.0" />
+            <Font name="Arial" size="18.0" />
          </font>
       </Label>
       <Label fx:id="betAmountLabel1" layoutX="770.0" layoutY="200.0" prefHeight="17.0" prefWidth="28.0" textAlignment="CENTER" textFill="WHITE">
@@ -60,5 +60,150 @@
             <Image url="@images/dealer.png" />
          </image>
       </ImageView>
+      <ImageView fx:id="potChipImage" fitHeight="76.0" fitWidth="80.0" layoutX="450.0" layoutY="100.0" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@images/Chip-white.png" />
+         </image>
+      </ImageView>
+      <ImageView fx:id="card0" fitHeight="118.0" fitWidth="66.0" layoutX="27.0" layoutY="85.0" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@images/card-shape.png" />
+         </image>
+      </ImageView>
+      <ImageView fx:id="card1" fitHeight="118.0" fitWidth="66.0" layoutX="96.0" layoutY="85.0" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@images/card-shape.png" />
+         </image>
+      </ImageView>
+      <ImageView fx:id="card2" fitHeight="118.0" fitWidth="66.0" layoutX="312.0" layoutY="194.0" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@images/card-shape.png" />
+         </image>
+      </ImageView>
+      <ImageView fx:id="card3" fitHeight="118.0" fitWidth="66.0" layoutX="384.0" layoutY="194.0" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@images/card-shape.png" />
+         </image>
+      </ImageView>
+      <ImageView fx:id="card4" fitHeight="118.0" fitWidth="66.0" layoutX="455.0" layoutY="194.0" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@images/card-shape.png" />
+         </image>
+      </ImageView>
+      <ImageView fx:id="card5" fitHeight="118.0" fitWidth="66.0" layoutX="526.0" layoutY="194.0" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@images/card-shape.png" />
+         </image>
+      </ImageView>
+      <ImageView fx:id="card6" fitHeight="118.0" fitWidth="66.0" layoutX="596.0" layoutY="194.0" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@images/card-shape.png" />
+         </image>
+      </ImageView>
+      <Label fx:id="cardRank0" layoutX="35.0" layoutY="90.0" text="A">
+         <font>
+            <Font name="Arial" size="18.0" />
+         </font>
+      </Label>
+      <Label fx:id="cardRank1" layoutX="103.0" layoutY="90.0" text="10">
+         <font>
+            <Font name="Arial" size="18.0" />
+         </font>
+      </Label>
+      <ImageView fx:id="cardSuitSmall0" fitHeight="15.0" fitWidth="15.0" layoutX="33.0" layoutY="110.0" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@images/Spades.png" />
+         </image>
+      </ImageView>
+      <ImageView fx:id="cardSuitSmall1" fitHeight="15.0" fitWidth="15.0" layoutX="105.0" layoutY="110.0" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@images/Hearts.png" />
+         </image>
+      </ImageView>
+      <ImageView fx:id="cardSuitBig0" fitHeight="50.0" fitWidth="50.0" layoutX="39.0" layoutY="119.0" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@images/Spades.png" />
+         </image>
+      </ImageView>
+      <ImageView fx:id="cardSuitBig1" fitHeight="50.0" fitWidth="50.0" layoutX="113.0" layoutY="119.0" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@images/Hearts.png" />
+         </image>
+      </ImageView>
+      <ImageView fx:id="cardSuitBig2" fitHeight="50.0" fitWidth="50.0" layoutX="324.0" layoutY="230.0" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@images/Spades.png" />
+         </image>
+      </ImageView>
+      <ImageView fx:id="cardSuitSmall2" fitHeight="15.0" fitWidth="15.0" layoutX="318.0" layoutY="220.0" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@images/Spades.png" />
+         </image>
+      </ImageView>
+      <Label fx:id="cardRank2" layoutX="320.0" layoutY="200.0" text="A">
+         <font>
+            <Font name="Arial" size="18.0" />
+         </font>
+      </Label>
+      <ImageView fx:id="cardSuitBig3" fitHeight="50.0" fitWidth="50.0" layoutX="396.0" layoutY="230.0" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@images/Spades.png" />
+         </image>
+      </ImageView>
+      <ImageView fx:id="cardSuitSmall3" fitHeight="15.0" fitWidth="15.0" layoutX="390.0" layoutY="220.0" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@images/Spades.png" />
+         </image>
+      </ImageView>
+      <Label fx:id="cardRank3" layoutX="392.0" layoutY="200.0" text="A">
+         <font>
+            <Font name="Arial" size="18.0" />
+         </font>
+      </Label>
+      <ImageView fx:id="cardSuitBig4" fitHeight="50.0" fitWidth="50.0" layoutX="468.0" layoutY="230.0" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@images/Spades.png" />
+         </image>
+      </ImageView>
+      <ImageView fx:id="cardSuitSmall4" fitHeight="15.0" fitWidth="15.0" layoutX="462.0" layoutY="220.0" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@images/Spades.png" />
+         </image>
+      </ImageView>
+      <Label fx:id="cardRank4" layoutX="464.0" layoutY="200.0" text="A">
+         <font>
+            <Font name="Arial" size="18.0" />
+         </font>
+      </Label>
+      <ImageView fx:id="cardSuitBig5" fitHeight="50.0" fitWidth="50.0" layoutX="535.0" layoutY="230.0" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@images/Spades.png" />
+         </image>
+      </ImageView>
+      <ImageView fx:id="cardSuitSmall5" fitHeight="15.0" fitWidth="15.0" layoutX="529.0" layoutY="220.0" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@images/Spades.png" />
+         </image>
+      </ImageView>
+      <Label fx:id="cardRank5" layoutX="531.0" layoutY="200.0" text="A">
+         <font>
+            <Font name="Arial" size="18.0" />
+         </font>
+      </Label>
+      <ImageView fx:id="cardSuitBig6" fitHeight="50.0" fitWidth="50.0" layoutX="608.0" layoutY="230.0" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@images/Spades.png" />
+         </image>
+      </ImageView>
+      <ImageView fx:id="cardSuitSmall6" fitHeight="15.0" fitWidth="15.0" layoutX="602.0" layoutY="220.0" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@images/Spades.png" />
+         </image>
+      </ImageView>
+      <Label fx:id="cardRank6" layoutX="604.0" layoutY="200.0" text="A">
+         <font>
+            <Font name="Arial" size="18.0" />
+         </font>
+      </Label>
    </children>
 </AnchorPane>

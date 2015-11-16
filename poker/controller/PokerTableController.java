@@ -1,5 +1,7 @@
 package poker.controller;
 
+import java.util.ArrayList;
+
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
@@ -9,6 +11,8 @@ import javafx.scene.control.TextField;
 import javafx.scene.image.ImageView;
 import javafx.scene.text.TextAlignment;
 import poker.Main;
+import poker.model.cards.Card;
+import poker.model.cards.HoleCards;
 import poker.model.player.Action;
 import poker.model.player.Turn;
 
@@ -22,14 +26,26 @@ public class PokerTableController {
    private TextField playerBetTextField;
 
    @FXML
-   private Label potValueLabel, currentBetValueLabel, stackLabel0, stackLabel1, betAmountLabel0, betAmountLabel1,
-         dealerLabel0, dealerLabel1;
+   private Label potValueLabel, currentBetValueLabel;
+   @FXML
+   private Label stackLabel0, stackLabel1;
+   @FXML
+   private Label betAmountLabel0, betAmountLabel1;
+   @FXML
+   private Label cardRank0, cardRank1, cardRank2, cardRank3, cardRank4, cardRank5, cardRank6;
 
    @FXML
    private Button checkCallButton, betButton, foldButton, minButton, halfButton, potButton, maxButton, confirmButton;
 
    @FXML
-   private ImageView dealerImage0, dealerImage1, betChipImage0, betChipImage1;
+   private ImageView dealerImage0, dealerImage1;
+   @FXML
+   private ImageView betChipImage0, betChipImage1;
+   @FXML
+   private ImageView cardSuitSmall0, cardSuitSmall1, cardSuitSmall2, cardSuitSmall3, cardSuitSmall4, cardSuitSmall5,
+         cardSuitSmall6;
+   @FXML
+   private ImageView cardSuitBig0, cardSuitBig1, cardSuitBig2, cardSuitBig3, cardSuitBig4, cardSuitBig5, cardSuitBig6;
 
    private int betValue = 0;
    private boolean visible = false;
@@ -173,6 +189,7 @@ public class PokerTableController {
 
    public void updatePot(String text) {
       potValueLabel.setText(text);
+      potValueLabel.toFront();
    }
 
    public void updateStackZero(String text) {
@@ -203,6 +220,118 @@ public class PokerTableController {
 
    public void toggleDealerOne(boolean dealer) {
       dealerImage1.setVisible(dealer);
+   }
+
+   public String getSuit(Card card) {
+      String suit = "images/";
+      
+      switch (card.getSuit()) {
+      case CLUBS:
+         suit += "Clubs.png";
+         break;
+      case DIAMONDS:
+         suit += "Diamonds.png";
+         break;
+      case HEARTS:
+         suit += "Hearts.png";
+         break;
+      case SPADES:
+         suit += "Spades.png";
+         break;
+      }
+      
+      return suit;
+   }
+
+   public void updateHoleCards(HoleCards cards) {
+      cardRank0.setText(cards.getCard1().getRankString());
+      cardSuitSmall0.setImage(mainApp.getImage(cards.getCard1()));
+      cardSuitBig0.setImage(mainApp.getImage(cards.getCard1()));
+      
+      cardRank1.setText(cards.getCard2().getRankString());
+      cardSuitSmall1.setImage(mainApp.getImage(cards.getCard2()));
+      cardSuitBig1.setImage(mainApp.getImage(cards.getCard2()));
+   }
+
+   public void updateCommunityCards(ArrayList<Card> cards) {
+      switch (cards.size()) {
+      case 0:
+         cardRank2.setText("");
+         cardSuitSmall2.setImage(null);
+         cardSuitBig2.setImage(null);
+
+         cardRank3.setText("");
+         cardSuitSmall3.setImage(null);
+         cardSuitBig3.setImage(null);
+
+         cardRank4.setText("");
+         cardSuitSmall4.setImage(null);
+         cardSuitBig4.setImage(null);
+
+         cardRank5.setText("");
+         cardSuitSmall5.setImage(null);
+         cardSuitBig5.setImage(null);
+
+         cardRank6.setText("");
+         cardSuitSmall6.setImage(null);
+         cardSuitBig6.setImage(null);
+
+         break;
+      case 3:
+         cardRank2.setText(cards.get(0).getRankString());
+         cardSuitSmall2.setImage(mainApp.getImage(cards.get(0)));
+         cardSuitBig2.setImage(mainApp.getImage(cards.get(0)));
+
+         cardRank3.setText(cards.get(1).getRankString());
+         cardSuitSmall3.setImage(mainApp.getImage(cards.get(1)));
+         cardSuitBig3.setImage(mainApp.getImage(cards.get(1)));
+
+         cardRank4.setText(cards.get(2).getRankString());
+         cardSuitSmall4.setImage(mainApp.getImage(cards.get(2)));
+         cardSuitBig4.setImage(mainApp.getImage(cards.get(2)));
+
+         break;
+      case 4:
+         cardRank2.setText(cards.get(0).getRankString());
+         cardSuitSmall2.setImage(mainApp.getImage(cards.get(0)));
+         cardSuitBig2.setImage(mainApp.getImage(cards.get(0)));
+
+         cardRank3.setText(cards.get(1).getRankString());
+         cardSuitSmall3.setImage(mainApp.getImage(cards.get(1)));
+         cardSuitBig3.setImage(mainApp.getImage(cards.get(1)));
+
+         cardRank4.setText(cards.get(2).getRankString());
+         cardSuitSmall4.setImage(mainApp.getImage(cards.get(2)));
+         cardSuitBig4.setImage(mainApp.getImage(cards.get(2)));
+
+         cardRank5.setText(cards.get(3).getRankString());
+         cardSuitSmall5.setImage(mainApp.getImage(cards.get(3)));
+         cardSuitBig5.setImage(mainApp.getImage(cards.get(3)));
+
+         break;
+
+      case 5:
+         cardRank2.setText(cards.get(0).getRankString());
+         cardSuitSmall2.setImage(mainApp.getImage(cards.get(0)));
+         cardSuitBig2.setImage(mainApp.getImage(cards.get(0)));
+
+         cardRank3.setText(cards.get(1).getRankString());
+         cardSuitSmall3.setImage(mainApp.getImage(cards.get(1)));
+         cardSuitBig3.setImage(mainApp.getImage(cards.get(1)));
+
+         cardRank4.setText(cards.get(2).getRankString());
+         cardSuitSmall4.setImage(mainApp.getImage(cards.get(2)));
+         cardSuitBig4.setImage(mainApp.getImage(cards.get(2)));
+
+         cardRank5.setText(cards.get(3).getRankString());
+         cardSuitSmall5.setImage(mainApp.getImage(cards.get(3)));
+         cardSuitBig5.setImage(mainApp.getImage(cards.get(3)));
+
+         cardRank6.setText(cards.get(4).getRankString());
+         cardSuitSmall6.setImage(mainApp.getImage(cards.get(4)));
+         cardSuitBig6.setImage(mainApp.getImage(cards.get(4)));
+         break;
+      }
    }
 
    /**

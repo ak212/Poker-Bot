@@ -93,7 +93,7 @@ public class Player {
 
    public void printHoleCards() {
       System.out.println(this.holeCards.getCard1().shorten() + this.holeCards.getCard2().shorten());
-      mainApp.updateConsole(this.holeCards.getCard1().shorten() + this.holeCards.getCard2().shorten());
+      // mainApp.updateConsole(this.holeCards.getCard1().shorten() + this.holeCards.getCard2().shorten());
    }
 
    public HandStrength getCurrentHand() {

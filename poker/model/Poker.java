@@ -43,6 +43,8 @@ public class Poker {
 
          switch (dealer.getBetPeriod()) {
          case PREFLOP:
+            mainApp.getCommunityCards(dealer.getCommunityCards());
+
             if (DealerUtils.getPlayersToBeDealt(players) < 2) {
                playGame = false;
                break;
@@ -81,14 +83,15 @@ public class Poker {
             for (Player player : players) {
                if (player instanceof Bot) {
                   System.out.println("Bot " + player.getId());
-                  mainApp.updateConsole("Bot " + player.getId());
+                  // mainApp.updateConsole("Bot " + player.getId());
                   ((Bot) player).evalHoleCards();
                   mainApp.updateStackOne(Integer.toString(player.getStack()));
                }
                else {
                   System.out.println("Player " + player.getId());
-                  mainApp.updateConsole("Player " + player.getId());
+                  // mainApp.updateConsole("Player " + player.getId());
                   mainApp.updateStackZero(Integer.toString(player.getStack()));
+                  mainApp.getHoleCards(player.getHoleCards());
                }
 
                player.printHoleCards();
@@ -103,17 +106,20 @@ public class Poker {
 
          case FLOP:
             dealer.flop();
+            mainApp.getCommunityCards(dealer.getCommunityCards());
             Collections.sort(players, new PositionComparator());
             players = dealer.completeRound(players);
             break;
 
          case TURN:
             dealer.turn();
+            mainApp.getCommunityCards(dealer.getCommunityCards());
             players = dealer.completeRound(players);
             break;
 
          case RIVER:
             dealer.river();
+            mainApp.getCommunityCards(dealer.getCommunityCards());
             players = dealer.completeRound(players);
             break;
 
@@ -164,7 +170,7 @@ public class Poker {
             players = DealerUtils.removeEliminatedPlayers(players, mainApp);
 
             System.out.println("\n\n");
-            mainApp.updateConsole("\n\n");
+            // mainApp.updateConsole("\n\n");
             dealer.setBetPeriod(BetPeriod.getBetPeriod(gameState = -1));
             dealer.newHand();
             mainApp.updatePot("0");
