@@ -291,12 +291,19 @@ public class Dealer {
    public ArrayList<Player> betPeriod(ArrayList<Player> players) {
       this.setTotalBet(this.getCurrentBet());
 
+
       while (!DealerUtils.betSettled(players)) {
          for (Player player : players) {
             if (player.isInHand() && !player.isPlayerActed()) {
                int curBet = this.getTotalBet();
                if (this.getBetPeriod().equals(BetPeriod.PREFLOP)) {
                   if (player instanceof Bot) {
+                     try {
+                        Thread.sleep(2000);
+                     }
+                     catch (InterruptedException e) {
+                        e.printStackTrace();
+                     }
                      players.set(player.getPreFlopPosition() - 1, botInput(players.get(player.getPreFlopPosition() - 1), players));
                      mainApp.updateStackOne(Integer.toString(player.getStack()));
                   } 
@@ -382,6 +389,13 @@ public class Dealer {
             }
             else {
                player.stats.losses--;
+            }
+
+            if (player instanceof Bot) {
+               mainApp.updateStackOne(Integer.toString(player.getStack()));
+            }
+            else {
+               mainApp.updateStackZero(Integer.toString(player.getStack()));
             }
          }
       }

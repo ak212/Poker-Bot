@@ -6,7 +6,6 @@
 * Splash screen for configuration?
 * Player cards
 * Community cards
-* Stack update more often
 
 ### Game
 * know when someone is all in - create side pot if two or more other players in the hand

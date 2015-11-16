@@ -136,6 +136,13 @@ public class Poker {
                         player.stats.biggestWin = dealer.getPot();
                      }
                   }
+
+                  if (player instanceof Bot) {
+                     mainApp.updateStackOne(Integer.toString(player.getStack()));
+                  }
+                  else {
+                     mainApp.updateStackZero(Integer.toString(player.getStack()));
+                  }
                }
             }
             else {
