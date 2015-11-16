@@ -26,7 +26,7 @@
       <Label fx:id="stackLabel0" layoutX="89.0" layoutY="207.0" text="Stack" textFill="WHITE" />
       <Label fx:id="stackLabel1" layoutX="870.0" layoutY="205.0" text="Stack" textFill="WHITE" />
       <Label fx:id="nameLabel1" layoutX="870.0" layoutY="183.0" text="Bot 1" textFill="WHITE" />
-      <TextArea fx:id="logTextArea" layoutY="467.0" prefHeight="134.0" prefWidth="516.0" />
+      <TextArea fx:id="logTextArea" editable="false" layoutY="467.0" prefHeight="134.0" prefWidth="516.0" />
       <Label fx:id="potValueLabel" layoutX="474.0" layoutY="125.0" prefHeight="17.0" prefWidth="66.0" textAlignment="CENTER">
          <font>
             <Font name="Arial" size="18.0" />

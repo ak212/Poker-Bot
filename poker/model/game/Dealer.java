@@ -373,12 +373,16 @@ public class Dealer {
          for (Player player : players) {
             if (player.getId() == this.getWinner().getId()) {
                if (player instanceof Bot) {
-                  System.out.println("Bot " + this.getWinner().getId() + " wins " + this.getPot());
-                  mainApp.updateConsole("Bot " + this.getWinner().getId() + " wins " + this.getPot());
+                  System.out.println("Bot " + this.getWinner().getId() + " wins " + this.getPot() + " with "
+                        + this.winner.getCurrentHand().hand.toString());
+                  mainApp.updateConsole("Bot " + this.getWinner().getId() + " wins " + this.getPot() + " with "
+                        + this.winner.getCurrentHand().hand.toString());
                }
                else {
-                  System.out.println("Player " + this.getWinner().getId() + " wins " + this.getPot());
-                  mainApp.updateConsole("Player " + this.getWinner().getId() + " wins " + this.getPot());
+                  System.out.println("Player " + this.getWinner().getId() + " wins " + this.getPot() + " with "
+                        + this.winner.getCurrentHand().hand.toString());
+                  mainApp.updateConsole("Player " + this.getWinner().getId() + " wins " + this.getPot() + " with "
+                        + this.winner.getCurrentHand().hand.toString());
                }
 
                player.setStack(player.getStack() + this.getPot());
@@ -407,12 +411,16 @@ public class Dealer {
          int split = this.pot / this.playersTied.size();
          for (Player p : playersTied) {
             if (p instanceof Bot) {
-               System.out.println("Bot " + p.getId() + " wins " + split);
-               mainApp.updateConsole("Bot " + p.getId() + " wins " + split);
+               System.out
+                     .println("Bot " + p.getId() + " wins " + split + " with " + p.getCurrentHand().hand.toString());
+               mainApp.updateConsole(
+                     "Bot " + p.getId() + " wins " + split + " with " + p.getCurrentHand().hand.toString());
             }
             else {
-               System.out.println("Player " + p.getId() + " wins " + split);
-               mainApp.updateConsole("Player " + p.getId() + " wins " + split);
+               System.out
+                     .println("Player " + p.getId() + " wins " + split + " with " + p.getCurrentHand().hand.toString());
+               mainApp.updateConsole(
+                     "Player " + p.getId() + " wins " + split + " with " + p.getCurrentHand().hand.toString());
             }
             for (Player player : players) {
                if (player.getId() == p.getId()) {
