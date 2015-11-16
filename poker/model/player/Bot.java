@@ -51,6 +51,7 @@ public class Bot extends Player {
       // modify this value to change bot profile
       // i.e: if value > 1, value - 1 to simulate an aggressive player (add profile characteristic to bot)
       this.holeCardsValue = holeCardValues[idx1][idx2];
+      //this.holeCardsValue = 1;
    }
 
    public void action(int currentBet) {
@@ -74,7 +75,7 @@ public class Bot extends Player {
       if (!raise) {
          if (this.isBigBlind()) {
             if (this.holeCardsValue <= 3) {
-               this.setBotTurn(new Turn(Action.BET, randomizeBet(currentBet * (7 / this.holeCardsValue))));
+               this.setBotTurn(new Turn(Action.BET, randomizeBet(currentBet, 7 / this.holeCardsValue)));
             }
             else {
                this.setBotTurn(new Turn(Action.CHECKCALL, betAmount));
@@ -82,7 +83,7 @@ public class Bot extends Player {
          }
          else if (this.isSmallBlind()) {
             if (this.holeCardsValue <= 2) {
-               this.setBotTurn(new Turn(Action.BET, randomizeBet(currentBet * (6 / this.holeCardsValue))));
+               this.setBotTurn(new Turn(Action.BET, randomizeBet(currentBet, 6 / this.holeCardsValue)));
                this.setCalledSB(true);
             }
             else if (this.holeCardsValue <= 7) {
@@ -95,7 +96,7 @@ public class Bot extends Player {
          }
          else {
             if (this.holeCardsValue <= 1) {
-               this.setBotTurn(new Turn(Action.BET, randomizeBet(currentBet * (3 / this.holeCardsValue))));
+               this.setBotTurn(new Turn(Action.BET, randomizeBet(currentBet, 3 / this.holeCardsValue)));
             }
             else if (this.holeCardsValue <= 5) {
                this.setBotTurn(new Turn(Action.CHECKCALL, betAmount));
@@ -108,7 +109,7 @@ public class Bot extends Player {
       else {
          if (this.isBigBlind()) {
             if (this.holeCardsValue <= 1) {
-               this.setBotTurn(new Turn(Action.BET, randomizeBet(currentBet * (3 / this.holeCardsValue))));
+               this.setBotTurn(new Turn(Action.BET, randomizeBet(currentBet, 3 / this.holeCardsValue)));
             }
             else if (this.holeCardsValue <= 5) {
                this.setBotTurn(new Turn(Action.CHECKCALL, betAmount));
@@ -119,7 +120,7 @@ public class Bot extends Player {
          }
          else if (this.isSmallBlind()) {
             if (this.holeCardsValue <= 1) {
-               this.setBotTurn(new Turn(Action.BET, randomizeBet(currentBet * (2 / this.holeCardsValue))));
+               this.setBotTurn(new Turn(Action.BET, randomizeBet(currentBet, 2 / this.holeCardsValue)));
                this.setCalledSB(true);
             }
             else if (this.holeCardsValue <= 4) {
@@ -132,7 +133,7 @@ public class Bot extends Player {
          }
          else {
             if (this.holeCardsValue <= 1) {
-               this.setBotTurn(new Turn(Action.BET, randomizeBet(currentBet * (2 / this.holeCardsValue))));
+               this.setBotTurn(new Turn(Action.BET, randomizeBet(currentBet, 2 / this.holeCardsValue)));
             }
             else if (this.holeCardsValue <= 3) {
                this.setBotTurn(new Turn(Action.CHECKCALL, betAmount));
@@ -209,14 +210,13 @@ public class Bot extends Player {
       }
    }
    
-   public int randomizeBet(int bet) {
-	  int max = (int)(bet * 1.5);
-	  int min = (int)(bet * 0.5);
+   public int randomizeBet(int bet, int multiplier) {
+	  int max = (int)(bet * multiplier * 1.5);
+	  int min = (int)(bet * multiplier * 0.5);
 	  Random rand = new Random();
 	  
 	  int newBet = rand.nextInt((max - min) + 1) + min;
-	  System.out.println("oldBet: " + bet + ", newBet: " + newBet);
-	  
-      return newBet;
+	
+     return (int)Math.ceil(newBet / (double)bet) * bet;
    }
 }

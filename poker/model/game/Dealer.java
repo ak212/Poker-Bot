@@ -177,6 +177,7 @@ public class Dealer {
             b.call(callAmount);
             this.setPot(this.getPot() + callAmount);
          }
+         System.out.println("Bot bet amount: " + b.getBotTurn().getBetAmount());
          int betAmount = b.getBotTurn().getBetAmount() - callAmount;
          b.bet(betAmount);
          this.setCurrentBet(betAmount);

@@ -21,10 +21,12 @@ public class HandEvaluator {
       ArrayList<Integer> kickers = new ArrayList<Integer>();
       ArrayList<Integer> t_kickers = new ArrayList<Integer>();
       ArrayList<Integer> c_kickers;
+
       boolean flushDraw = false, gutshotStraightDraw = false, openendedStraightDraw = false;
       boolean straightChecks[] = new boolean[2];
-      int startIdx = 0, overCards = 0;
+      int startIdx = 0;
       int flushCheck[] = new int[4];
+      
       
       // Check for a pocket pair if there is no board
       if (board.isEmpty()) {
@@ -81,8 +83,6 @@ public class HandEvaluator {
          
          // Card and Rank tallies
          int rank[] = new int[15], suit[] = new int[4];
-         
-         overCards = 0;
          
          ArrayList<Card> sortedHand;
          
@@ -266,7 +266,7 @@ public class HandEvaluator {
       
       // Return the best hand strength
       return new HandStrength(highestHand, kickers, flushDraw, gutshotStraightDraw, 
-         openendedStraightDraw, overCards, board.size());
+         openendedStraightDraw, board.size());
    }
    
    private static ArrayList<ArrayList<Card>> getSubsets(ArrayList<Card> superSet, int k) {
@@ -354,7 +354,7 @@ public class HandEvaluator {
    }
    
    public static boolean[] checkForStraightDraws(ArrayList<Card> cards, int startIdx) {
-	  boolean results[] = new boolean[] {false, false};
+	   boolean results[] = new boolean[] {false, false};
 	  
       for (int i = startIdx; i > 2; i--) {
          if (cards.get(i).getRank().getValue() != cards.get(i - 1).getRank().getValue() &&
