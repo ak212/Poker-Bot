@@ -126,6 +126,10 @@ public class PokerTableController {
    }
 
    public Turn getPlayerInput() {
+      checkCallButton.setDisable(false);
+      betButton.setDisable(false);
+      foldButton.setDisable(false);
+
       while (!turnComplete) {
          try {
             Thread.sleep(100);
@@ -156,6 +160,12 @@ public class PokerTableController {
       playerBetTextField.setText(null);
 
       return new Turn(action, betAmount);
+   }
+
+   public void disablePlayerInput() {
+      checkCallButton.setDisable(true);
+      betButton.setDisable(true);
+      foldButton.setDisable(true);
    }
 
    @FXML
@@ -220,27 +230,6 @@ public class PokerTableController {
 
    public void toggleDealerOne(boolean dealer) {
       dealerImage1.setVisible(dealer);
-   }
-
-   public String getSuit(Card card) {
-      String suit = "images/";
-      
-      switch (card.getSuit()) {
-      case CLUBS:
-         suit += "Clubs.png";
-         break;
-      case DIAMONDS:
-         suit += "Diamonds.png";
-         break;
-      case HEARTS:
-         suit += "Hearts.png";
-         break;
-      case SPADES:
-         suit += "Spades.png";
-         break;
-      }
-      
-      return suit;
    }
 
    public void updateHoleCards(HoleCards cards) {

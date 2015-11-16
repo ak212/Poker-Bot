@@ -64,6 +64,7 @@ public class Dealer {
       Player player = p;
       int betAmount = 0;
       Turn turn = mainApp.getPlayerInput();
+      mainApp.disablePlayerInput();
 
       switch (turn.getAction()) {
       case BET:

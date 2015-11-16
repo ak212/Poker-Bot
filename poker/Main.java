@@ -188,6 +188,10 @@ public class Main extends Application {
       return tableController.getPlayerInput();
    }
 
+   public void disablePlayerInput() {
+      tableController.disablePlayerInput();
+   }
+
    public Stage getPrimaryStage() {
       return primaryStage;
    }
