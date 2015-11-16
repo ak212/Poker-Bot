@@ -656,4 +656,8 @@ public class Dealer {
    public void setMainApp(Main mainApp) {
       this.mainApp = mainApp;
    }
+
+   public ArrayList<Card> getDeck() {
+      return this.deckOfCards.getDeck();
+   }
 }

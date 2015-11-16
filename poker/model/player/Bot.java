@@ -153,8 +153,9 @@ public class Bot extends Player {
       int playersBehind = numPlayers - this.getPosition();
       int playersInFront = numPlayers - playersBehind - 1;
       int potSize = dealer.getPot();
+      int numCardsLeft = dealer.getDeck().size();
+      System.out.println("Num Cards Left: " + numCardsLeft);
       
-
       /* factors to consider:
        - if there is a raise and how large it is relative to size of pot
        - position of the Bot
@@ -162,29 +163,28 @@ public class Bot extends Player {
        - what type of hand the bot has:
           - if the bot has a hand, how strong is it relative to the board (using HandEvaluator)
              - if the pair is on the board or in hand, number of relevant overcards, draws (straight, flush) -> (4 cards needed)
-
-
-       - this.determineHand(dealer.getCommunityCards());
       */
 
+      double betPercentageOfPot = betAmount / (double)(potSize - betAmount);
+      System.out.println("bet %: " + betPercentageOfPot);
+      
       /*if (!raise) {
          if (playersInFront == 0) {   // Under the Gun
-            this.setBotTurn(new BotTurn(Action.BET, currentBet * (7 / this.holeCardsValue)));
+
          }
          else if (playersBehind == 0) {   // On the Button
-            this.setBotTurn(new BotTurn(Action.BET, currentBet * (3 / this.holeCardsValue)));
+
          }
          else {
             //use playersInfront and playersbehind
          }
       }
       else {
-         double betPercentageOfPot = betAmount / (double)(potSize - betAmount);
          if (playersInFront == 0) {   // Under the Gun
-            this.setBotTurn(new BotTurn(Action.BET, currentBet * (7 / this.holeCardsValue)));
+
          }
          else if (playersBehind == 0) {   // On the Button
-            this.setBotTurn(new BotTurn(Action.BET, currentBet * (3 / this.holeCardsValue)));
+
          }
          else {
             //use playersinfront and playersbehind
