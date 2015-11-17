@@ -150,6 +150,15 @@ public class Main extends Application {
       });
    }
 
+   public void showBotHoleCards(HoleCards cards) {
+      Platform.runLater(new Runnable() {
+         @Override
+         public void run() {
+            tableController.showBotHoleCards(cards);
+         }
+      });
+   }
+
    public void getCommunityCards(ArrayList<Card> cards) {
       Platform.runLater(new Runnable() {
          @Override

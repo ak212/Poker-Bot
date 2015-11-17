@@ -397,6 +397,7 @@ public class Dealer {
             }
 
             if (player instanceof Bot) {
+               mainApp.showBotHoleCards(player.getHoleCards());
                mainApp.updateStackOne(Integer.toString(player.getStack()));
             }
             else {
