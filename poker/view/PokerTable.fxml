@@ -261,5 +261,6 @@
             <Font name="Arial" size="18.0" />
          </font>
       </Label>
+      <ComboBox fx:id="profileBox" layoutX="835.0" layoutY="242.0" onAction="#botProfileSet" prefHeight="26.0" prefWidth="130.0" />
    </children>
 </AnchorPane>

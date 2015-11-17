@@ -2,9 +2,12 @@ package poker.controller;
 
 import java.util.ArrayList;
 
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
+import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
@@ -14,6 +17,7 @@ import poker.Main;
 import poker.model.cards.Card;
 import poker.model.cards.HoleCards;
 import poker.model.player.Action;
+import poker.model.player.Profile;
 import poker.model.player.Turn;
 
 public class PokerTableController {
@@ -47,6 +51,9 @@ public class PokerTableController {
    @FXML
    private ImageView cardSuitBig0, cardSuitBig1, cardSuitBig2, cardSuitBig3, cardSuitBig4, cardSuitBig5, cardSuitBig6,
          cardSuitBig7, cardSuitBig8;
+   
+   @FXML
+   private ComboBox<Profile> profileBox;
 
    private int betValue = 0;
    private boolean visible = false;
@@ -54,7 +61,7 @@ public class PokerTableController {
 
    @FXML
    private void intialize() {
-
+      profileBox.getItems().setAll(Profile.values());
    }
 
    @FXML
@@ -323,6 +330,14 @@ public class PokerTableController {
          updateFiveCards(cards);
          break;
       }
+   }
+   
+   @FXML
+   private void botProfileSet(ActionEvent e) {
+      // Set bot to different profile
+      // THIS DOES NOTHING CURRENTLY
+      profileBox.getSelectionModel().getSelectedItem();
+      System.out.println("Testing profile box");
    }
 
    /**
