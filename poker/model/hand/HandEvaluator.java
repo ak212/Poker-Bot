@@ -21,10 +21,12 @@ public class HandEvaluator {
       ArrayList<Integer> kickers = new ArrayList<Integer>();
       ArrayList<Integer> t_kickers = new ArrayList<Integer>();
       ArrayList<Integer> c_kickers;
+
       boolean flushDraw = false, gutshotStraightDraw = false, openendedStraightDraw = false;
-      boolean straightChecks[] = new boolean[2];
-      int startIdx = 0, overCards = 0;
+      int straightChecks[] = new int[3];
+      int startIdx = 0, openendedStraightDrawHighCard = 0;
       int flushCheck[] = new int[4];
+      
       
       // Check for a pocket pair if there is no board
       if (board.isEmpty()) {
@@ -60,8 +62,9 @@ public class HandEvaluator {
       if (sortedAvailableCards.size() < 7) {
          startIdx = (sortedAvailableCards.size() == 5) ? 4 : 5;
          straightChecks = checkForStraightDraws(sortedAvailableCards, startIdx);
-         gutshotStraightDraw = straightChecks[0];
-         openendedStraightDraw = straightChecks[1];
+         gutshotStraightDraw = straightChecks[0] == 0 ? false : true;
+         openendedStraightDraw = straightChecks[1] == 0 ? false : true;
+         openendedStraightDrawHighCard = straightChecks[2];
          
          for (Card card : sortedAvailableCards) {
             flushCheck[card.getSuit().getValue()] += 1;
@@ -81,8 +84,6 @@ public class HandEvaluator {
          
          // Card and Rank tallies
          int rank[] = new int[15], suit[] = new int[4];
-         
-         overCards = 0;
          
          ArrayList<Card> sortedHand;
          
@@ -266,7 +267,7 @@ public class HandEvaluator {
       
       // Return the best hand strength
       return new HandStrength(highestHand, kickers, flushDraw, gutshotStraightDraw, 
-         openendedStraightDraw, overCards, board.size());
+         openendedStraightDraw, board.size(), openendedStraightDrawHighCard);
    }
    
    private static ArrayList<ArrayList<Card>> getSubsets(ArrayList<Card> superSet, int k) {
@@ -353,17 +354,18 @@ public class HandEvaluator {
       return new ArrayList<Integer>(kickers);
    }
    
-   public static boolean[] checkForStraightDraws(ArrayList<Card> cards, int startIdx) {
-	  boolean results[] = new boolean[] {false, false};
+   public static int[] checkForStraightDraws(ArrayList<Card> cards, int startIdx) {
+	   int results[] = new int[] {0, 0, 0};
 	  
       for (int i = startIdx; i > 2; i--) {
          if (cards.get(i).getRank().getValue() != cards.get(i - 1).getRank().getValue() &&
             cards.get(i - 1).getRank().getValue() != cards.get(i - 2).getRank().getValue() &&
             cards.get(i - 2).getRank().getValue() != cards.get(i - 3).getRank().getValue()) {
         	if (cards.get(i - 3).getRank().getValue() - cards.get(i).getRank().getValue() == 4)
-        	   results[0] = true;   //gutshot
+        	   results[0] = 1;   //gutshot
         	if (cards.get(i - 3).getRank().getValue() - cards.get(i).getRank().getValue() == 3)
-        	   results[1] = true;   //openended
+        	   results[1] = 1;   //openended
+            results[2] = cards.get(i - 3).getRank().getValue();
          }
       }
       return results;
