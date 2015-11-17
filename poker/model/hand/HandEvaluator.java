@@ -38,7 +38,7 @@ public class HandEvaluator {
          }
       }
       
-      ArrayList<Card> boardAndHoleCards = board;
+      ArrayList<Card> boardAndHoleCards = new ArrayList<Card>(board);
       boardAndHoleCards.add(holeCards.getCard1());
       boardAndHoleCards.add(holeCards.getCard2());
       
@@ -50,14 +50,15 @@ public class HandEvaluator {
       ArrayList<Card> sortedAvailableCards;
       Collections.sort(boardAndHoleCards, new Comparator<Card>() {
           public int compare(Card left, Card right) {
-             return left.getRank().getValue() - right.getRank().getValue();             
+             return right.getRank().getValue() - left.getRank().getValue();             
           }
       });
-      sortedAvailableCards = boardAndHoleCards;
-      
-      for (Card card : sortedAvailableCards) {
-          flushCheck[card.getSuit().getValue()] += 1;
+      sortedAvailableCards = new ArrayList<Card>(boardAndHoleCards);
+
+      /*for (Card c : sortedAvailableCards) {
+         System.out.print(c.getRank().getValue() + ",");
       }
+      System.out.println();*/
       
       if (sortedAvailableCards.size() < 7) {
          startIdx = (sortedAvailableCards.size() == 5) ? 4 : 5;
@@ -226,9 +227,6 @@ public class HandEvaluator {
                   highestHand = Hand.Flush;
                }
             }
-            if (count == 4) {
-               flushDraw = true;
-            }
          }
          
          // Test for Straight Flush
@@ -267,7 +265,7 @@ public class HandEvaluator {
       
       // Return the best hand strength
       return new HandStrength(highestHand, kickers, flushDraw, gutshotStraightDraw, 
-         openendedStraightDraw, board.size(), openendedStraightDrawHighCard);
+         openendedStraightDraw, openendedStraightDrawHighCard, new ArrayList<Card>(board));
    }
    
    private static ArrayList<ArrayList<Card>> getSubsets(ArrayList<Card> superSet, int k) {
@@ -361,11 +359,13 @@ public class HandEvaluator {
          if (cards.get(i).getRank().getValue() != cards.get(i - 1).getRank().getValue() &&
             cards.get(i - 1).getRank().getValue() != cards.get(i - 2).getRank().getValue() &&
             cards.get(i - 2).getRank().getValue() != cards.get(i - 3).getRank().getValue()) {
-        	if (cards.get(i - 3).getRank().getValue() - cards.get(i).getRank().getValue() == 4)
-        	   results[0] = 1;   //gutshot
-        	if (cards.get(i - 3).getRank().getValue() - cards.get(i).getRank().getValue() == 3)
-        	   results[1] = 1;   //openended
-            results[2] = cards.get(i - 3).getRank().getValue();
+        	      if (cards.get(i - 3).getRank().getValue() - cards.get(i).getRank().getValue() == 4) {
+        	         results[0] = 1;   //gutshot
+               }
+        	      if (cards.get(i - 3).getRank().getValue() - cards.get(i).getRank().getValue() == 3) {
+        	         results[1] = 1;   //openended
+                  results[2] = cards.get(i - 3).getRank().getValue();
+               }
          }
       }
       return results;
