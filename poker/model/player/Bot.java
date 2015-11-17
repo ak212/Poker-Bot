@@ -157,6 +157,7 @@ public class Bot extends Player {
       int potSize = dealer.getPot();
       int numCardsLeft = dealer.getDeck().size();
       System.out.println("Num Cards Left: " + numCardsLeft);
+      // this.opponentStackSizes is available
       
       /* factors to consider:
        - if there is a raise and how large it is relative to size of pot
@@ -168,8 +169,14 @@ public class Bot extends Player {
       */
 
       double betPercentageOfPot = betAmount / (double)(potSize - betAmount);
-      System.out.println("bet %: " + betPercentageOfPot);
-      
+
+      /*System.out.println("bet %: " + betPercentageOfPot);
+      System.out.println("flushDraw?: " + this.getCurrentHand().flushDraw);
+      System.out.println("gutshot?: " + this.getCurrentHand().gutshotStraightDraw);
+      System.out.println("openended?: " + this.getCurrentHand().openendedStraightDraw);
+      System.out.println("openendedhighcard: " + this.getCurrentHand().openendedStraightDrawHighCard);
+      System.out.println("numcardsonboard?: " + this.getCurrentHand().currentBoard.size());*/
+
       /*if (!raise) {
          if (playersInFront == 0) {   // Under the Gun
 
@@ -189,7 +196,7 @@ public class Bot extends Player {
 
          }
          else {
-            //use playersinfront and playersbehind
+            //use playersinfront and players behind
          }
       }*/
 
