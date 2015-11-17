@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.geometry.*?>
 <?import javafx.scene.text.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.image.*?>
@@ -22,10 +23,25 @@
       </Label>
       <TextField fx:id="playerBetTextField" layoutX="37.0" layoutY="361.0" prefHeight="25.0" prefWidth="66.0" visible="false" />
       <Button fx:id="confirmButton" disable="true" layoutX="125.0" layoutY="361.0" mnemonicParsing="false" onAction="#confirmButtonClicked" text="Confirm" visible="false" />
-      <Label fx:id="nameLabel0" layoutX="82.0" layoutY="185.0" text="Player 0" textFill="WHITE" />
-      <Label fx:id="stackLabel0" layoutX="89.0" layoutY="207.0" text="Stack" textFill="WHITE" />
-      <Label fx:id="stackLabel1" layoutX="870.0" layoutY="205.0" text="Stack" textFill="WHITE" />
-      <Label fx:id="nameLabel1" layoutX="870.0" layoutY="183.0" text="Bot 1" textFill="WHITE" />
+      <VBox fx:id="playerBox" layoutX="82.0" layoutY="185.0">
+         <children>
+            <Label fx:id="nameLabel0" layoutX="82.0" layoutY="185.0" text="Player 0" textFill="WHITE" />
+            <Label fx:id="stackLabel0" text="Stack" textFill="WHITE">
+               <opaqueInsets>
+                  <Insets />
+               </opaqueInsets>
+               <padding>
+                  <Insets left="5.0" />
+               </padding>
+            </Label>
+         </children>
+      </VBox>
+      <VBox fx:id="botBox" layoutX="870.0" layoutY="183.0">
+         <children>
+            <Label fx:id="nameLabel1" layoutX="870.0" layoutY="183.0" text="Bot 1" textFill="WHITE" />
+            <Label fx:id="stackLabel1" text="Stack" textFill="WHITE" />
+         </children>
+      </VBox>
       <TextArea fx:id="logTextArea" editable="false" layoutY="467.0" prefHeight="134.0" prefWidth="516.0" />
       <Label fx:id="potValueLabel" layoutX="474.0" layoutY="125.0" prefHeight="17.0" prefWidth="66.0" textAlignment="CENTER">
          <font>
