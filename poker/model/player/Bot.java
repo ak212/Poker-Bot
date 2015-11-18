@@ -2,6 +2,9 @@ package poker.model.player;
 
 import java.util.ArrayList;
 import java.util.Random;
+import poker.model.cards.Card;
+import poker.model.cards.Suit;
+import poker.model.cards.Rank;
 
 import poker.model.game.Dealer;
 
@@ -157,11 +160,11 @@ public class Bot extends Player {
       int playersBehind = numPlayers - this.getPosition();
       int playersInFront = numPlayers - playersBehind - 1;
       int numRemainingCards = dealer.getDeck().size();
+      int minBet = dealer.getBigBlindAmount();
+      int checkPairs[] = new int[2];
 
       int cardsThatWillMakeHand = (this.getCurrentHand().flushDraw == true) ? 9 : 0;
       cardsThatWillMakeHand += getStraightCards();
-
-      int minBet = dealer.getBigBlindAmount();
 
       double odds = cardsThatWillMakeHand / numRemainingCards, divisor = 0, numBigBlinds = 0;
       double basebet = 0;
@@ -191,6 +194,8 @@ public class Bot extends Player {
 
       System.out.println("raise: " + raise + ", betAmount: " + betAmount + ", currentBet: " + currentBet);
       System.out.println("players in front: " + playersInFront + ", players behind: " + playersBehind);
+
+      checkPairs = checkPairs(this.getCurrentHand().currentBoard);
 
       if (raise) {
          System.out.println("Raise");
@@ -312,6 +317,7 @@ public class Bot extends Player {
                   }
                }
                else if (odds != 0) {
+                  
                   if (this.getCurrentHand().hand.getValue() == 2) {
                      basebet = (potSize / minBet < 3) ? 2 * minBet : potSize / 2.6;
                      this.setBotTurn(new Turn(Action.BET, randomizeBet(basebet * 2.5 / 1.5, minBet)));
@@ -412,12 +418,6 @@ public class Bot extends Player {
      return (int)(Math.ceil(newBet / (double)minBet) * minBet);
    }
 
-   public int checkOverCards() {
-      int overCards = 0;
-      
-      return overCards;
-   }
-
    public int getStraightCards() {
 
       if (this.getCurrentHand().gutshotStraightDraw == true) {
@@ -432,6 +432,43 @@ public class Bot extends Player {
       }
       return 0;
    } 
+
+   // figure out how many hands are on the board, and the number of overcards
+   public int[] checkPairs(ArrayList<Card> board) {
+      
+      int pairStats[] = new int[] {0, 0, 0};    //pairs on board, overCards to 1st pair, overCards to 2nd pair
+      int tallies[] = new int[15];
+      int handValue = this.getCurrentHand().hand.getValue();
+      ArrayList<Integer> kickers = this.getCurrentHand().getKickers();
+
+      for (Card c : board) {
+         int val = c.getRank().getValue();
+         if (tallies[val] == 1) {
+            pairStats[0] += 1;
+         }
+         else {
+            if (handValue == 2) {
+               if (val > kickers.get(0)) {
+                  pairStats[2] += 1;
+                  pairStats[1] += 1;
+               }
+               else {
+                  if (val > kickers.get(1) && val != kickers.get(0)) {
+                     pairStats[1] += 1;
+                  }
+               }
+            }
+            else  {
+               if (val > kickers.get(0)) {
+                  pairStats[1] += 1;
+               }
+            }
+         }
+         tallies[val] += 1;
+      }
+      
+      return pairStats;
+   }
    
    public void changeProfile(Profile profile) {
       this.profile = profile;

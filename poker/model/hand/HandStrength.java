@@ -1,9 +1,10 @@
 package poker.model.hand;
-
 import java.util.ArrayList;
 import poker.model.cards.Card;
 import poker.model.cards.Suit;
 import poker.model.cards.Rank;
+import java.util.Collections;
+import java.util.Comparator;
 
 public class HandStrength {
    public Hand hand;
@@ -33,6 +34,16 @@ public class HandStrength {
       this.gutshotStraightDraw = gutshotStraightDraw;
       this.openendedStraightDraw = openendedStraightDraw;
       this.openendedStraightDrawHighCard = openendedStraightDrawHighCard;
+
+      Collections.sort(currentBoard, new Comparator<Card>() {
+          public int compare(Card left, Card right) {
+             return left.getRank().getValue() - right.getRank().getValue();             
+          }
+      });
       this.currentBoard = currentBoard;
+   }
+
+   public ArrayList<Integer> getKickers() {
+      return this.kickers;
    }
 }
