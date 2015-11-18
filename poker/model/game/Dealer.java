@@ -29,6 +29,8 @@ public class Dealer {
    private int pot;
    private int currentBet;
    private int totalBet;
+   private boolean allInSituation;
+
    ArrayList<Integer> sidePots;
    private int playersInHand;
    public Main mainApp;
@@ -74,7 +76,6 @@ public class Dealer {
                this.setCurrentBet(betAmount - this.getSmallBlindAmount());
                player.call(this.getBigBlindAmount() - this.getSmallBlindAmount());
                player.setCalledSB(true);
-               this.setPot(this.getPot() + betAmount);
                this.setTotalBet(this.getTotalBet() + this.getCurrentBet());
             }
             else {
@@ -293,8 +294,17 @@ public class Dealer {
    public ArrayList<Player> betPeriod(ArrayList<Player> players) {
       this.setTotalBet(this.getCurrentBet());
 
+      this.setAllInSituation(DealerUtils.isAllInSituation(players));
 
-      while (!DealerUtils.betSettled(players)) {
+      if (this.isAllInSituation()) {
+         for (Player player : players) {
+            if (player instanceof Bot) {
+               mainApp.showBotHoleCards(player.getHoleCards());
+            }
+         }
+      }
+
+      while (!DealerUtils.betSettled(players) && !this.isAllInSituation()) {
          for (Player player : players) {
             if (player.isInHand() && !player.isPlayerActed()) {
                int curBet = this.getTotalBet();
@@ -472,6 +482,7 @@ public class Dealer {
       players = DealerUtils.updatePosition(players);
       players = DealerUtils.evaluateHandStrength(players, this.communityCards);
       DealerUtils.printHandValues(players);
+
       players = this.betPeriod(players);
 
       return players;
@@ -568,6 +579,7 @@ public class Dealer {
       this.deckOfCards = new DeckOfCards();
       this.getPlayersTied().clear();
       this.setWinner(new Player (-1, 0));
+      this.setAllInSituation(false);
       this.getWinner().setCurrentHand(new HandStrength(Hand.NoHand, new ArrayList<Integer>()));
    }
 
@@ -658,6 +670,14 @@ public class Dealer {
 
    public void setTotalBet(int totalBet) {
       this.totalBet = totalBet;
+   }
+
+   public boolean isAllInSituation() {
+      return allInSituation;
+   }
+
+   public void setAllInSituation(boolean allInSituation) {
+      this.allInSituation = allInSituation;
    }
 
    public void setMainApp(Main mainApp) {

@@ -15,6 +15,7 @@ public class Player {
    private int totalBet;
    private boolean playerActed;
    private boolean inHand;
+   private boolean allIn;
    private boolean dealerButton;
    private boolean bigBlind;
    private boolean smallBlind;
@@ -29,16 +30,18 @@ public class Player {
    }
 
    public void bet(int bet) {
-      // TODO need to handle case where bet exceeds stack, exception? shouldn't
-      // be problem when we have a gui
-
       if (bet > this.getStack()) {
          bet = this.getStack();
       }
+
       this.setStack(this.getStack() - bet);
       this.potCommitment += bet;
       this.setTotalBet(this.getTotalBet() + bet);
       this.setPlayerActed(true);
+
+      if (this.getStack() == 0) {
+         this.setAllIn(true);
+      }
 
       if (this instanceof Bot) {
          System.out.println("Bot " + this.getId() + (bet == 0 ? " checks" : " bets " + bet));
@@ -89,6 +92,15 @@ public class Player {
       this.setDealerButton(false);
       this.setSmallBlind(false);
       this.setCalledSB(false);
+      this.setAllIn(false);
+   }
+
+   public boolean isAllIn() {
+      return allIn;
+   }
+
+   public void setAllIn(boolean allIn) {
+      this.allIn = allIn;
    }
 
    public void printHoleCards() {
