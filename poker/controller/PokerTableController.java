@@ -2,8 +2,6 @@ package poker.controller;
 
 import java.util.ArrayList;
 
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
@@ -61,7 +59,7 @@ public class PokerTableController {
 
    @FXML
    private void intialize() {
-      profileBox.getItems().setAll(Profile.values());
+
    }
 
    @FXML
@@ -199,6 +197,8 @@ public class PokerTableController {
             confirmButton.setDisable(true);
          }
       });
+
+      profileBox.getItems().setAll(Profile.values());
    }
 
    public void addText(String text) {

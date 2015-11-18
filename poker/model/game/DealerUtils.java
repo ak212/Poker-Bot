@@ -45,6 +45,24 @@ public class DealerUtils {
       return players;
    }
 
+   public static boolean isAllInSituation(ArrayList<Player> players) {
+      int playersInHand = getPlayersInHand(players);
+      int playersAllIn = 0;
+      boolean allInSituation = false;
+
+      for (Player player : players) {
+         if (player.isAllIn()) {
+            playersAllIn++;
+         }
+      }
+
+      if (playersAllIn + 1 >= playersInHand) {
+         allInSituation = true;
+      }
+
+      return allInSituation;
+   }
+
    public static boolean betSettled(ArrayList<Player> players) {
       int playersInHand = getPlayersInHand(players);
       int playersActed = 0;
