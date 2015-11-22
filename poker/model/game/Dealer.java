@@ -162,6 +162,7 @@ public class Dealer {
       case CHECKCALL:
          b.call(b.getBotTurn().getBetAmount());
          this.setPot(this.getPot() + b.getBotTurn().getBetAmount());
+         this.setCurrentBet(b.getTotalBet());
 
          if (b.getTotalBet() == 0) {
             mainApp.updateBetAmountOne(null);
