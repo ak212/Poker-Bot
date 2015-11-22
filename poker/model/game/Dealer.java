@@ -347,7 +347,7 @@ public class Dealer {
                      players.set(player.getPosition() - 1, playerInput(players.get(player.getPosition() - 1)));
                      mainApp.updateStackZero(Integer.toString(player.getStack()));
                   }
-                  if (this.getCurrentBet() != curBet) {
+                  if (this.getTotalBet() != curBet) {
                      this.resetPlayersActed(players, player.getPosition() - 1);
                   }
                }
