@@ -3,12 +3,9 @@
 ## To Do:
 
 ### GUI
-* Splash screen for configuration?
-* Player cards
-* Community cards
+* Splash screen for game configuration
 
 ### Game
-* know when someone is all in - create side pot if two or more other players in the hand
 
 ### Bot
 * actions based on pot odds
