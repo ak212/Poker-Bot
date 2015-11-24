@@ -35,7 +35,7 @@ public class Poker {
       boolean playGame = true;
       int playerId = 0;
 
-      int startingChips = 10000;
+      int startingChips = 2500;
       ArrayList<Player> players = new ArrayList<Player>();
       ArrayList<Player> playersEliminated = new ArrayList<Player>();
       players.add(new Player(playerId++, startingChips));
