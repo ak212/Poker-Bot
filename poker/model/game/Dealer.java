@@ -194,6 +194,7 @@ public class Dealer {
       case CHECKCALL:
          b.call(b.getBotTurn().getBetAmount());
          this.setPot(this.getPot() + b.getBotTurn().getBetAmount());
+         this.setCurrentBet(b.getTotalBet());
 
          if (b.getTotalBet() == 0) {
             mainApp.updateBetAmountOne(null);
@@ -406,7 +407,7 @@ public class Dealer {
                      players.set(player.getPosition() - 1, playerInput(players.get(player.getPosition() - 1)));
                      mainApp.updateStackZero(Integer.toString(player.getStack()));
                   }
-                  if (this.getCurrentBet() != curBet) {
+                  if (this.getTotalBet() != curBet) {
                      this.resetPlayersActed(players, player.getPosition() - 1);
                   }
                }
