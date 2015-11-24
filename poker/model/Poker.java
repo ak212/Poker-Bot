@@ -13,10 +13,20 @@ import poker.model.game.PreFlopComparator;
 import poker.model.player.Bot;
 import poker.model.player.Player;
 
+/**
+ * Class to run the main poker function.
+ * 
+ * @author Aaron Koeppel
+ *
+ */
+
 public class Poker {
    public static Dealer dealer;
    public Main mainApp;
 
+   /**
+    * Function that controls the poker game. Handles all aspects of the game.
+    */
    public void playPoker() {
       dealer = new Dealer();
       dealer.setMainApp(mainApp);
@@ -209,6 +219,13 @@ public class Poker {
       }
    }
 
+   /**
+    * Is called by the main application to give a reference back to itself. Used to hand off control to the main
+    * application to load the appropriate content.
+    * 
+    * @param mainApp
+    *           Representation of the main application for reference to hand off control.
+    */
    public void setMainApp(Main mainApp) {
       this.mainApp = mainApp;
    }

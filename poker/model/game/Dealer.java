@@ -14,6 +14,12 @@ import poker.model.player.Bot;
 import poker.model.player.Player;
 import poker.model.player.Turn;
 
+/**
+ * Class to act as the poker game expert, keeping track of all information needed by the game.
+ * 
+ * @author Aaron Koeppel
+ *
+ */
 public class Dealer {
    DeckOfCards deckOfCards;
    ArrayList<Card> communityCards;
@@ -41,6 +47,9 @@ public class Dealer {
    public int maxBetAmount;
    public int minAmount;
 
+   /**
+    * Construct the dealer, setting member variables to their default values.
+    */
    public Dealer() {
       this.dealerButtonPosition = 0;
       this.smallBlindPosition = 1;
@@ -58,10 +67,23 @@ public class Dealer {
       this.sidePots = new ArrayList<Integer>();
    }
 
+   /**
+    * Remove card from the deck and return it.
+    * 
+    * @return card from the deck
+    */
    public Card drawCard() {
       return this.deckOfCards.getDeck().remove(0);
    }
 
+   /**
+    * Get the input from the player. The input is the action the player wants to perform (check/call, bet, fold) and the
+    * amount of chips they are putting in the pot.
+    * 
+    * @param p
+    *           the player acting
+    * @return the updated player with their action performed
+    */
    public Player playerInput(Player p) {
       Player player = p;
       int betAmount = 0;
@@ -146,6 +168,16 @@ public class Dealer {
       return player;
    }
 
+   /**
+    * Get the input from the bot. The input is the action the bot wants to perform (check/call, bet, fold) and the
+    * amount of chips they are putting in the pot.
+    * 
+    * @param p
+    *           the bot acting
+    * @param players
+    *           the players in the hand
+    * @return the updated bot with their action performed
+    */
    public Player botInput(Player p, ArrayList<Player> players) {
       Bot b = (Bot) p;
 
@@ -220,8 +252,13 @@ public class Dealer {
       return b;
    }
 
-
-
+   /**
+    * Function to determine the preflop and postflop positions for players in the hand.
+    * 
+    * @param players
+    *           the players in the hand
+    * @return the players in the hand with their positions for the hand set
+    */
    public ArrayList<Player> determinePositions(ArrayList<Player> players) {
       this.setPlayersInHand(DealerUtils.getPlayersToBeDealt(players));
       Collections.sort(players, new IdComparator());
@@ -252,6 +289,15 @@ public class Dealer {
       return players;
    }
 
+   /**
+    * Function to reset the players acted field for players except the player whose position is that of the exception.
+    * 
+    * @param players
+    *           the players in the hand
+    * @param exception
+    *           the position of the player to not reset
+    * @return
+    */
    public ArrayList<Player> resetPlayersActed(ArrayList<Player> players, int exception) {
       for (Player player : players) {
          if (this.getBetPeriod().equals(BetPeriod.PREFLOP)) {
@@ -269,6 +315,13 @@ public class Dealer {
       return players;
    }
 
+   /**
+    * Deal hole cards to the players in the hand
+    * 
+    * @param players
+    *           the players in the hand
+    * @return the players in the ahnd with their hole cards
+    */
    public ArrayList<Player> dealHoleCards(ArrayList<Player> players) {
       Card[] cardsDealt = new Card[players.size() * 2 + 1];
       for (int i = 1; i < players.size() * 2 + 1; i++) {
@@ -291,6 +344,13 @@ public class Dealer {
       return players;
    }
 
+   /**
+    * The period in which the players make bets.
+    * 
+    * @param players
+    *           the players in the hand
+    * @return the players still in the hand after they have made bets or folded
+    */
    public ArrayList<Player> betPeriod(ArrayList<Player> players) {
       this.setTotalBet(this.getCurrentBet());
 
@@ -379,6 +439,13 @@ public class Dealer {
       getPlayersTied().add(p);
    }
 
+   /**
+    * Function to figure who won the hand.
+    * 
+    * @param players
+    *           the players in the hand
+    * @return the players in the hand with the winner(s) stack updated
+    */
    public ArrayList<Player> determineWinner(ArrayList<Player> players) {
       if (this.getPlayersTied().isEmpty()) { //no tie
          for (Player player : players) {
@@ -460,6 +527,9 @@ public class Dealer {
       return players;
    }
 
+   /**
+    * Function to perform the flop, burning one card, adding three to the community cards.
+    */
    public void flop() {
       this.burnCards.add(drawCard());
       this.communityCards.add(drawCard());
@@ -467,16 +537,29 @@ public class Dealer {
       this.communityCards.add(drawCard());
    }
 
+   /**
+    * Function to perform the turn, burning one card, adding one to the community cards.
+    */
    public void turn() {
       this.burnCards.add(drawCard());
       this.communityCards.add(drawCard());
    }
 
+   /**
+    * Function to perform the river, burning one card, adding one to the community cards.
+    */
    public void river() {
       this.burnCards.add(drawCard());
       this.communityCards.add(drawCard());
    }
 
+   /**
+    * Function to perform actions that are performed for each bet period.
+    * 
+    * @param players
+    *           the players in the hand
+    * @return the players after the bet period
+    */
    public ArrayList<Player> completeRound(ArrayList<Player> players) {
       this.printCommunityCards();
       players = DealerUtils.updatePosition(players);
@@ -488,6 +571,13 @@ public class Dealer {
       return players;
    }
 
+   /**
+    * Function to get the minimum amount the player can put in the pot to stay in the hand
+    * 
+    * @param player
+    *           the player who would be making the bet
+    * @return the amount of the bet
+    */
    public int getMinAmount(Player player) {
       int betAmount = 0;
 
@@ -509,6 +599,13 @@ public class Dealer {
       return betAmount;
    }
 
+   /**
+    * Function to get the minimum bet for the player
+    * 
+    * @param player
+    *           the player who would be making the bet
+    * @return the amount of the bet
+    */
    public int getMinBet(Player player) {
       int betAmount = 0;
 
@@ -538,6 +635,13 @@ public class Dealer {
       return betAmount;
    }
 
+   /**
+    * Function to get the amount of half of the pot
+    * 
+    * @param player
+    *           the player who would be making the bet
+    * @return the amount of the bet
+    */
    public int getHalfPotBet() {
       int amount = (int) Math.ceil(this.getPot() / 2);
 
@@ -549,14 +653,34 @@ public class Dealer {
       }
    }
 
+   /**
+    * Function to get the amount of the pot
+    * 
+    * @param player
+    *           the player who would be making the bet
+    * @return the amount of the bet
+    */
    public int getPotBet() {
       return this.getPot();
    }
 
+   /**
+    * Function to get the maximum bet for the player
+    * 
+    * @param player
+    *           the player who would be making the bet
+    * @return the amount of the bet
+    */
    public int getMaxBet(Player player) {
       return player.getStack();
    }
 
+   /**
+    * Function to get the bet amounts
+    * 
+    * @param player
+    *           the player who would be making the bet
+    */
    public void getBetAmounts(Player player) {
       minAmount = getMinAmount(player);
       minBetAmount = getMinBet(player);
@@ -565,6 +689,9 @@ public class Dealer {
       maxBetAmount = getMaxBet(player);
    }
 
+   /**
+    * Set the dealer member values for the next hand
+    */
    public void newHand() {
       this.dealerButtonPosition++;
       this.smallBlindPosition++;
@@ -583,6 +710,11 @@ public class Dealer {
       this.getWinner().setCurrentHand(new HandStrength(Hand.NoHand, new ArrayList<Integer>()));
    }
 
+   /**
+    * Get the community cards.
+    * 
+    * @return the community cards
+    */
    public ArrayList<Card> getCommunityCards() {
       return this.communityCards;
    }
@@ -600,90 +732,196 @@ public class Dealer {
       System.out.println();
    }
 
+   /**
+    * Get the numbers of players in the hand.
+    * 
+    * @return the numbers of players
+    */
    public int getPlayersInHand() {
       return playersInHand;
    }
 
+   /**
+    * Set the number of players in the hand.
+    */
    public void setPlayersInHand(int playersInHand) {
       this.playersInHand = playersInHand;
    }
 
+   /**
+    * Get the big blind amount.
+    * 
+    * @return the big blind amount
+    */
    public int getBigBlindAmount() {
       return bigBlindAmount;
    }
 
+   /**
+    * Set the big blind amount.
+    */
    public void setBigBlindAmount(int bigBlindAmount) {
       this.bigBlindAmount = bigBlindAmount;
    }
 
+   /**
+    * Get the small blind amount.
+    * 
+    * @return the big blind amount
+    */
    public int getSmallBlindAmount() {
       return smallBlindAmount;
    }
 
+   /**
+    * Set the small blind amount.
+    */
    public void setSmallBlindAmount(int smallBlindAmount) {
       this.smallBlindAmount = smallBlindAmount;
    }
 
+   /**
+    * Get the bet period.
+    * 
+    * @return the bet period
+    */
    public BetPeriod getBetPeriod() {
       return betPeriod;
    }
 
+   /**
+    * Set the bet period.
+    * 
+    * @param betPeriod
+    */
    public void setBetPeriod(BetPeriod betPeriod) {
       this.betPeriod = betPeriod;
    }
 
+   /**
+    * Get the current bet.
+    * 
+    * @return the current bet
+    */
    public int getCurrentBet() {
       return currentBet;
    }
 
+   /**
+    * Set the current bet.
+    * 
+    * @param currentBet
+    */
    public void setCurrentBet(int currentBet) {
       this.currentBet = currentBet;
    }
 
+   /**
+    * Get the pot amount.
+    * 
+    * @return the pot amount
+    */
    public int getPot() {
       return pot;
    }
 
+   /**
+    * Set the pot amount.
+    * 
+    * @param pot
+    */
    public void setPot(int pot) {
       this.pot = pot;
    }
 
+   /**
+    * Get the current winner of the hand.
+    * 
+    * @return the winner
+    */
    public Player getWinner() {
       return winner;
    }
 
+   /**
+    * Set the current winner of the hand.
+    * 
+    * @param winner
+    */
    public void setWinner(Player winner) {
       this.winner = winner;
    }
 
+   /**
+    * Get the players tied for winning.
+    * 
+    * @return the players tied
+    */
    public ArrayList<Player> getPlayersTied() {
       return playersTied;
    }
 
+   /**
+    * Set the players tied.
+    * 
+    * @param playersTied
+    */
    public void setPlayersTied(ArrayList<Player> playersTied) {
       this.playersTied = playersTied;
    }
 
+   /**
+    * Get the total bet.
+    * 
+    * @return the total bet
+    */
    public int getTotalBet() {
       return totalBet;
    }
 
+   /**
+    * Set the total bet.
+    * 
+    * @param totalBet
+    */
    public void setTotalBet(int totalBet) {
       this.totalBet = totalBet;
    }
 
+   /**
+    * Get if it is an all in situation.
+    * 
+    * @return if it is an all in situation
+    */
    public boolean isAllInSituation() {
       return allInSituation;
    }
 
+   /**
+    * Set if it is an all in situation
+    * 
+    * @param allInSituation
+    */
    public void setAllInSituation(boolean allInSituation) {
       this.allInSituation = allInSituation;
    }
 
+   /**
+    * Is called by the main application to give a reference back to itself. Used to hand off control to the main
+    * application to load the appropriate content.
+    * 
+    * @param mainApp
+    *           Representation of the main application for reference to hand off control.
+    */
    public void setMainApp(Main mainApp) {
       this.mainApp = mainApp;
    }
 
+   /**
+    * Get the deck of cards.
+    * 
+    * @return the deck of cards
+    */
    public ArrayList<Card> getDeck() {
       return this.deckOfCards.getDeck();
    }
