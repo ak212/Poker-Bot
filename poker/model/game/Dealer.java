@@ -190,10 +190,13 @@ public class Dealer {
          b.determinePostFlopAction(this.getCurrentBet(), this.getTotalBet(), this);
       }
 
+      int betAmount = b.getBotTurn().getBetAmount() > this.maxBetAmount ? this.maxBetAmount
+            : b.getBotTurn().getBetAmount();
+
       switch (b.getBotTurn().getAction()) {
       case CHECKCALL:
-         b.call(b.getBotTurn().getBetAmount());
-         this.setPot(this.getPot() + b.getBotTurn().getBetAmount());
+         b.call(betAmount);
+         this.setPot(this.getPot() + betAmount);
          this.setCurrentBet(b.getTotalBet());
 
          if (b.getTotalBet() == 0) {
@@ -212,7 +215,7 @@ public class Dealer {
             this.setPot(this.getPot() + callAmount);
          }
          System.out.println("Bot bet amount: " + b.getBotTurn().getBetAmount());
-         int betAmount = b.getBotTurn().getBetAmount() - callAmount;
+         betAmount -= callAmount;
          b.bet(betAmount);
          this.setCurrentBet(betAmount);
          this.setTotalBet(this.getTotalBet() + betAmount);
@@ -368,7 +371,9 @@ public class Dealer {
       while (!DealerUtils.betSettled(players) && !this.isAllInSituation()) {
          for (Player player : players) {
             if (player.isInHand() && !player.isPlayerActed()) {
+               this.getBetAmounts(player, players);
                int curBet = this.getTotalBet();
+
                if (this.getBetPeriod().equals(BetPeriod.PREFLOP)) {
                   if (player instanceof Bot) {
                      try {
@@ -381,8 +386,6 @@ public class Dealer {
                      mainApp.updateStackOne(Integer.toString(player.getStack()));
                   } 
                   else {
-                     getBetAmounts(player);
-
                      players.set(player.getPreFlopPosition() - 1, playerInput(players.get(player.getPreFlopPosition() - 1)));
                      mainApp.updateStackZero(Integer.toString(player.getStack()));
                   }
@@ -402,8 +405,6 @@ public class Dealer {
                      mainApp.updateStackOne(Integer.toString(player.getStack()));
                   }
                   else {
-                     getBetAmounts(player);
-
                      players.set(player.getPosition() - 1, playerInput(players.get(player.getPosition() - 1)));
                      mainApp.updateStackZero(Integer.toString(player.getStack()));
                   }
@@ -607,7 +608,7 @@ public class Dealer {
     *           the player who would be making the bet
     * @return the amount of the bet
     */
-   public int getMinBet(Player player) {
+   public int getMinBet(Player player, ArrayList<Player> players) {
       int betAmount = 0;
 
       if (this.getBetPeriod().equals(BetPeriod.PREFLOP)) {
@@ -633,7 +634,7 @@ public class Dealer {
          betAmount = this.getCurrentBet() * 2;
       }
 
-      return betAmount;
+      return validateBetAmount(betAmount, player, players);
    }
 
    /**
@@ -643,15 +644,11 @@ public class Dealer {
     *           the player who would be making the bet
     * @return the amount of the bet
     */
-   public int getHalfPotBet() {
+   public int getHalfPotBet(Player player, ArrayList<Player> players) {
       int amount = (int) Math.ceil(this.getPot() / 2);
+      amount = amount < minBetAmount ? minBetAmount : amount;
 
-      if (amount < minBetAmount) {
-         return minBetAmount;
-      }
-      else {
-         return amount;
-      }
+      return validateBetAmount(amount, player, players);
    }
 
    /**
@@ -661,8 +658,8 @@ public class Dealer {
     *           the player who would be making the bet
     * @return the amount of the bet
     */
-   public int getPotBet() {
-      return this.getPot();
+   public int getPotBet(Player player, ArrayList<Player> players) {
+      return validateBetAmount(this.getPot(), player, players);
    }
 
    /**
@@ -672,8 +669,28 @@ public class Dealer {
     *           the player who would be making the bet
     * @return the amount of the bet
     */
-   public int getMaxBet(Player player) {
-      return player.getStack();
+   public int getMaxBet(Player player, ArrayList<Player> players) {
+      return validateBetAmount(player.getStack(), player, players);
+   }
+
+   /**
+    * Function to make sure that the bet being made is not greater than the stack size of anyone still in the hand
+    * 
+    * @param amount
+    *           the amount of chips being bet
+    * @param players
+    *           the players still in the game
+    * @return the legal amount of chips for the bet
+    */
+   public int validateBetAmount(int amount, Player player, ArrayList<Player> players) {
+      for (Player p : players) {
+         if (p.isInHand()) {
+            amount = amount > p.getStack() + p.getTotalBet() - player.getTotalBet()
+                  ? p.getStack() + p.getTotalBet() - player.getTotalBet() : amount;
+         }
+      }
+
+      return amount;
    }
 
    /**
@@ -682,12 +699,12 @@ public class Dealer {
     * @param player
     *           the player who would be making the bet
     */
-   public void getBetAmounts(Player player) {
+   public void getBetAmounts(Player player, ArrayList<Player> players) {
       minAmount = getMinAmount(player);
-      minBetAmount = getMinBet(player);
-      halfPotBetAmount = getHalfPotBet();
-      potBetAmount = getPotBet();
-      maxBetAmount = getMaxBet(player);
+      minBetAmount = getMinBet(player, players);
+      halfPotBetAmount = getHalfPotBet(player, players);
+      potBetAmount = getPotBet(player, players);
+      maxBetAmount = getMaxBet(player, players);
    }
 
    /**

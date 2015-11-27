@@ -59,6 +59,10 @@ public class Player {
       this.setTotalBet(this.getTotalBet() + call);
       this.setPlayerActed(true);
 
+      if (this.getStack() == 0) {
+         this.setAllIn(true);
+      }
+
       if (this instanceof Bot) {
          System.out.println("Bot " + this.getId() + (call == 0 ? " checks " : (" calls " + call)));
          mainApp.updateConsole("Bot " + this.getId() + (call == 0 ? " checks " : (" calls " + call)));
