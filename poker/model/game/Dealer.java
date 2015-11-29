@@ -104,7 +104,7 @@ public class Dealer {
                player.call(this.getBigBlindAmount() - this.getSmallBlindAmount());
                player.setCalledSB(true);
                this.setTotalBet(this.getTotalBet() + this.getCurrentBet());
-               player.stats.shortTermAggression[this.numHandsPlayed % 10] += betAmount / this.getSmallBlindAmount();
+               player.stats.shortTermAggression[this.numHandsPlayed % 10] += betAmount / this.getBigBlindAmount();
             }
             else {
                int callAmount = this.getTotalBet() - p.getTotalBet();
