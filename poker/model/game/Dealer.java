@@ -46,6 +46,7 @@ public class Dealer {
    public int potBetAmount;
    public int maxBetAmount;
    public int minAmount;
+   public int numHandsPlayed;
 
    /**
     * Construct the dealer, setting member variables to their default values.
@@ -65,6 +66,7 @@ public class Dealer {
       this.burnCards = new ArrayList<Card>();
       this.deckOfCards = new DeckOfCards();
       this.sidePots = new ArrayList<Integer>();
+      this.numHandsPlayed = 0;
    }
 
    /**
@@ -90,6 +92,9 @@ public class Dealer {
       Turn turn = mainApp.getPlayerInput();
       mainApp.disablePlayerInput();
 
+      player.stats.overallDecisions += 1;
+      player.stats.shortTermDecisions[this.numHandsPlayed % 10] += 1;
+
       switch (turn.getAction()) {
       case BET:
          betAmount = turn.getBetAmount();
@@ -99,12 +104,17 @@ public class Dealer {
                player.call(this.getBigBlindAmount() - this.getSmallBlindAmount());
                player.setCalledSB(true);
                this.setTotalBet(this.getTotalBet() + this.getCurrentBet());
+               player.stats.shortTermAggression[this.numHandsPlayed % 10] += betAmount / this.getSmallBlindAmount();
             }
             else {
                int callAmount = this.getTotalBet() - p.getTotalBet();
                if (callAmount > 0) {
                   player.call(callAmount);
                   this.setPot(this.getPot() + callAmount);
+                  player.stats.shortTermAggression[this.numHandsPlayed % 10] += betAmount / callAmount;
+               }
+               else {
+                  player.stats.shortTermAggression[this.numHandsPlayed % 10] += 1;
                }
                betAmount = betAmount - callAmount;
                this.setCurrentBet(betAmount);
@@ -116,6 +126,10 @@ public class Dealer {
             if (callAmount > 0) {
                player.call(callAmount);
                this.setPot(this.getPot() + callAmount);
+               player.stats.shortTermAggression[this.numHandsPlayed % 10] += betAmount / callAmount;
+            }
+            else {
+               player.stats.shortTermAggression[this.numHandsPlayed % 10] += 1;
             }
             betAmount = betAmount - callAmount;
             this.setCurrentBet(betAmount);
@@ -129,6 +143,7 @@ public class Dealer {
 
          break;
       case CHECKCALL:
+         player.stats.shortTermAggression[this.numHandsPlayed % 10] += 1;
          player.call(turn.getBetAmount());
          this.setPot(this.getPot() + turn.getBetAmount());
 
@@ -181,7 +196,7 @@ public class Dealer {
    public Player botInput(Player p, ArrayList<Player> players) {
       Bot b = (Bot) p;
 
-      b.getOpponentStackSizes(players);
+      b.getOpponentData(players);
 
       if (this.getBetPeriod().equals(BetPeriod.PREFLOP)) {
          b.determinePreFlopAction(this.getCurrentBet(), this.getTotalBet(), this.getBigBlindAmount());
@@ -193,8 +208,12 @@ public class Dealer {
       int betAmount = b.getBotTurn().getBetAmount() > this.maxBetAmount ? this.maxBetAmount
             : b.getBotTurn().getBetAmount();
 
+      b.stats.overallDecisions += 1;
+      b.stats.shortTermDecisions[this.numHandsPlayed % 10] += 1;
+
       switch (b.getBotTurn().getAction()) {
       case CHECKCALL:
+         b.stats.shortTermAggression[this.numHandsPlayed % 10] += 1;
          b.call(betAmount);
          this.setPot(this.getPot() + betAmount);
          this.setCurrentBet(b.getTotalBet());
@@ -213,7 +232,12 @@ public class Dealer {
          if (callAmount > 0) {
             b.call(callAmount);
             this.setPot(this.getPot() + callAmount);
+            b.stats.shortTermAggression[this.numHandsPlayed % 10] += b.getBotTurn().getBetAmount() / callAmount;
          }
+         else {
+            b.stats.shortTermAggression[this.numHandsPlayed % 10] += 1;
+         }
+
          System.out.println("Bot bet amount: " + b.getBotTurn().getBetAmount());
          betAmount -= callAmount;
          b.bet(betAmount);
@@ -726,6 +750,13 @@ public class Dealer {
       this.setWinner(new Player (-1, 0));
       this.setAllInSituation(false);
       this.getWinner().setCurrentHand(new HandStrength(Hand.NoHand, new ArrayList<Integer>()));
+      this.numHandsPlayed += 1;
+
+      // increases the blinds every 6 hands
+      if (this.numHandsPlayed % 6 == 0) {
+         this.setBigBlindAmount(this.getBigBlindAmount() * 2);
+         this.setSmallBlindAmount(this.getSmallBlindAmount() * 2);
+      }
    }
 
    /**

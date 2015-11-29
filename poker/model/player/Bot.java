@@ -11,8 +11,10 @@ import poker.model.game.Dealer;
 public class Bot extends Player {
    int holeCardsValue;
    private Turn botTurn;
-   private ArrayList<Integer> opponentStackSizes;
+   private int opponentStackSize;
    private Profile profile;
+   private double opponentOverallAggression;
+   private double opponentShortTermAggression;
 
    // Unsuited: start with column
    // Suited: start with row
@@ -35,10 +37,45 @@ public class Bot extends Player {
    };
         // 0, 1, 2, 3, 4, 5, 6, 7, 8, 9,10, J, Q, K, A
 
+   // values somewhat correspond to Action
+   // 0 = CheckCall, 1 = Bet/CheckCall, 2 = CheckCall/Fold
+
+   // only used with a Hand of one pair
+   int[][] checkPairValuesRaiseOnePair = new int[][] {    
+         { 1, 1, 0, 2, 2, 2 },  // 0   number of pairs on board
+         { 0, 0, 0, 2,-1,-1 },  // 1   -1 indicates invalid
+   };
+        // 0, 1, 2, 3, 4, 5   number of overcards to hand
+
+   // only used with a Hand of one pair
+   int[][] checkPairValuesNoRaiseOnePair = new int[][] {    
+         { 1, 1, 1, 0, 0, 0 },  // 0   number of pairs on board
+         { 1, 0, 0, 0,-1,-1 },  // 1   -1 indicates invalid
+   };
+        // 0, 1, 2, 3, 4, 5   number of overcards to hand
+
+   // only used with a Hand of two pair
+   int[][] checkPairValuesRaiseTwoPair = new int[][] {    
+         { 1, 1, 1, 1 },  // 0      number of pairs on the board
+         { 1, 1, 0, 2 },  // 1      -1 indicates invalid
+         { 0, 0,-1,-1 }   // 2    
+   };
+        // 0, 1, 2, 3     number of overcards to hand
+
+   // only used with a Hand of two pair
+   int[][] checkPairValuesNoRaiseTwoPair = new int[][] {    
+         { 1, 1, 1, 1 },  // 0      number of pairs on board
+         { 1, 1, 1, 0 },  // 1      -1 indicates invalid
+         { 1, 0,-1,-1 }   // 2    
+   };
+        // 0, 1, 2, 3     number of overcards to hand
+
    public Bot(int position, int stack) {
       super(position, stack);
-      this.opponentStackSizes = new ArrayList<Integer>();
+      this.opponentStackSize = 0;
       this.profile = Profile.NORMAL;
+      this.opponentOverallAggression = 0.0;
+      this.opponentShortTermAggression = 0.0;
    }
 
    public void evalHoleCards() {
@@ -80,7 +117,7 @@ public class Bot extends Player {
       if (!raise) {
          if (this.isBigBlind()) {
             if (this.holeCardsValue <= 3) {
-               this.setBotTurn(new Turn(Action.BET, randomizeBet(currentBet * 7 / this.holeCardsValue, bbAmount)));
+               this.setBotTurn(new Turn(Action.BET, randomizeBet(currentBet * 5.5 / this.holeCardsValue, bbAmount)));
             }
             else {
                this.setBotTurn(new Turn(Action.CHECKCALL, betAmount));
@@ -88,7 +125,7 @@ public class Bot extends Player {
          }
          else if (this.isSmallBlind()) {
             if (this.holeCardsValue <= 2) {
-               this.setBotTurn(new Turn(Action.BET, randomizeBet(currentBet * 6 / this.holeCardsValue, bbAmount)));
+               this.setBotTurn(new Turn(Action.BET, randomizeBet(currentBet * 4 / this.holeCardsValue, bbAmount)));
                this.setCalledSB(true);
             }
             else if (this.holeCardsValue <= 7) {
@@ -153,243 +190,317 @@ public class Bot extends Player {
    public void determinePostFlopAction(int currentBet, int totalBet, Dealer dealer) {
 
       boolean raise = totalBet > this.getTotalBet();
+      boolean isDealer = this.isDealerButton();
+
       int betAmount = totalBet - this.getTotalBet();
       int potSize = dealer.getPot();
-
-      int numPlayers = dealer.getPlayersInHand();
-      int playersBehind = numPlayers - this.getPosition();
-      int playersInFront = numPlayers - playersBehind - 1;
       int numRemainingCards = dealer.getDeck().size();
       int minBet = dealer.getBigBlindAmount();
-      int checkPairs[] = new int[2];
+      int pairData[] = new int[1];
 
       int cardsThatWillMakeHand = (this.getCurrentHand().flushDraw == true) ? 9 : 0;
       cardsThatWillMakeHand += getStraightCards();
 
-      double odds = cardsThatWillMakeHand / numRemainingCards, divisor = 0, numBigBlinds = 0;
+      System.out.println("Cards needed to make hand: " + cardsThatWillMakeHand);
+
+      double odds = cardsThatWillMakeHand / (numRemainingCards - cardsThatWillMakeHand), divisor = 0, numBigBlinds = 0;
       double basebet = 0;
+      double betPercentageOfPot = betAmount / (double)(potSize - betAmount);
+      double overallThresh = 0.0, shortTermThresh = 0.0, percentageThresh = 0.0;
+      double raiseIfOdds = 0.0, raiseIfNoOdds = 0.0;
 
       Random rand = new Random();
-      
-      // this.opponentStackSizes is available
-      
-      /* factors to consider:
-       - if there is a raise and how large it is relative to size of pot
-       - position of the Bot
-       - stack size of the Bot relative to other players
-       - what type of hand the bot has:
-          - if the bot has a hand, how strong is it relative to the board (using HandEvaluator)
-             - if the pair is on the board or in hand, number of relevant overcards, draws (straight, flush) -> (4 cards needed)
-      */
 
-      double betPercentageOfPot = betAmount / (double)(potSize - betAmount);
-      System.out.println("bet percentage: " + betPercentageOfPot);
-
-      /*System.out.println("bet %: " + betPercentageOfPot);
-      System.out.println("flushDraw?: " + this.getCurrentHand().flushDraw);
-      System.out.println("gutshot?: " + this.getCurrentHand().gutshotStraightDraw);
-      System.out.println("openended?: " + this.getCurrentHand().openendedStraightDraw);
-      System.out.println("openendedhighcard: " + this.getCurrentHand().openendedStraightDrawHighCard);
-      System.out.println("numcardsonboard?: " + this.getCurrentHand().currentBoard.size());*/
-
+      System.out.println("bet percentage of Pot: " + betPercentageOfPot);
       System.out.println("raise: " + raise + ", betAmount: " + betAmount + ", currentBet: " + currentBet);
-      System.out.println("players in front: " + playersInFront + ", players behind: " + playersBehind);
-
-      checkPairs = checkPairs(this.getCurrentHand().currentBoard);
 
       if (raise) {
          System.out.println("Raise");
-         if (playersInFront == 0) {   // Under the Gun
-            if (this.getCurrentHand().hand.getValue() > 3) {
-               if (rand.nextInt() % 4 == 0) {
+         if (this.getCurrentHand().hand.getValue() > 3) {
+            if (!isDealer) {
+               if (this.opponentOverallAggression < 1 || this.opponentShortTermAggression < 1.5) {
                   this.setBotTurn(new Turn(Action.CHECKCALL, betAmount));  
                }
                else {
-                  divisor = (betPercentageOfPot < 0.3) ? 1.75 : 1.25;
+                  divisor = (betPercentageOfPot < 0.6) ? 1.75 : 1.25;
                   this.setBotTurn(new Turn(Action.BET, randomizeBet(betAmount * this.getCurrentHand().hand.getValue() / divisor, minBet)));
                }
             }
-            else if (this.getCurrentHand().hand.getValue() > 0) {
-               if (this.getCurrentHand().hand.getValue() == 3) {
-                  if (odds > 0.0 && betPercentageOfPot < 0.4) {
-                     this.setBotTurn(new Turn(Action.BET, randomizeBet(betAmount * 3 / 1.75, minBet))); 
-                  }
-                  else {
-                     this.setBotTurn(new Turn(Action.CHECKCALL, betAmount)); 
-                  }
-               }
-               else if (odds != 0) {
-                  if (betPercentageOfPot < 0.6) {
-                     this.setBotTurn(new Turn(Action.CHECKCALL, betAmount));
-                  }
-                  else {
-                     this.setBotTurn(new Turn(Action.FOLD, 0));
-                  }
-               }
-               else {
-                  if (betPercentageOfPot < 0.3) {
-                     this.setBotTurn(new Turn(Action.CHECKCALL, betAmount));
-                  }
-                  else {
-                     this.setBotTurn(new Turn(Action.FOLD, 0));
-                  }
-               }
-            }
             else {
-               if (betPercentageOfPot < 0.2 && odds > 0.15) {
+               if (this.opponentOverallAggression < 0.5 || this.opponentShortTermAggression < 0.8) {
                   this.setBotTurn(new Turn(Action.CHECKCALL, betAmount));  
                }
                else {
-                  this.setBotTurn(new Turn(Action.FOLD, 0));
-               }
-            }
-         }
-         else if (playersBehind == 0) {   // On the Button
-            if (this.getCurrentHand().hand.getValue() > 3) {
-               if (rand.nextInt() % 10 == 0) {
-                  this.setBotTurn(new Turn(Action.CHECKCALL, betAmount));  
-               }
-               else {
-                  divisor = (betPercentageOfPot < 0.3) ? 1.25 : 1.05;
+                  divisor = (betPercentageOfPot < 0.5) ? 1.25 : 1.05;
                   this.setBotTurn(new Turn(Action.BET, randomizeBet(betAmount * this.getCurrentHand().hand.getValue() / divisor, minBet)));
-               }
-            }
-            else if (this.getCurrentHand().hand.getValue() > 0) {
-               if (this.getCurrentHand().hand.getValue() == 3) {
-                  if (odds > 0.0 && betPercentageOfPot < 0.75) {
-                     this.setBotTurn(new Turn(Action.BET, randomizeBet(betAmount * 3 / 1.5, minBet))); 
-                  }
-                  else {
-                     this.setBotTurn(new Turn(Action.CHECKCALL, betAmount)); 
-                  }
-               }
-               else if (odds != 0) {
-                  if (betPercentageOfPot < 0.8) {
-                     this.setBotTurn(new Turn(Action.CHECKCALL, betAmount));
-                  }
-                  else {
-                     this.setBotTurn(new Turn(Action.FOLD, 0));
-                  }
-               }
-               else {
-                  if (betPercentageOfPot < 0.6) {
-                     this.setBotTurn(new Turn(Action.CHECKCALL, betAmount));
-                  }
-                  else {
-                     this.setBotTurn(new Turn(Action.FOLD, 0));
-                  }
-               }
-            }
-            else {
-               if (betPercentageOfPot < 0.4 && odds > 0.10) {
-                  this.setBotTurn(new Turn(Action.CHECKCALL, betAmount));  
-               }
-               else {
-                  this.setBotTurn(new Turn(Action.FOLD, 0));
                }
             }
          }
          else {
-            //use playersInfront and playersbehind
+            if (this.getCurrentHand().hand.getValue() == 3) {
+               if(!isDealer) {
+                  if (this.opponentOverallAggression < 0.75 || this.opponentShortTermAggression < 1 || odds == 0.0) {
+                     this.setBotTurn(new Turn(Action.CHECKCALL, betAmount)); 
+                  }
+                  else {
+                     divisor = (odds > 0.0) ? 1.75 : 1.5;
+                     this.setBotTurn(new Turn(Action.BET, randomizeBet(betAmount * 3 / divisor, minBet))); 
+                  }
+               }
+               else {
+                  if (this.opponentOverallAggression < 0.8 || this.opponentShortTermAggression < 1.2) {
+                     this.setBotTurn(new Turn(Action.CHECKCALL, betAmount));  
+                  }
+                  else {
+                     divisor = (odds > 0) ? 1.5 : 1.8;
+                     this.setBotTurn(new Turn(Action.BET, randomizeBet(betAmount * 3 / divisor, minBet))); 
+                  }
+               }
+            }
+            else {
+               pairData = checkPairs(this.getCurrentHand().currentBoard);
+               if (this.getCurrentHand().hand.getValue() == 2) {
+                  switch (checkPairValuesRaiseTwoPair[pairData[0]][pairData[1]]) {
+                  case 0:
+                     overallThresh    = (!isDealer) ? 0.55 : 0.45;     //under the gun, on the button
+                     shortTermThresh  = (!isDealer) ? 0.70 : 0.60;
+                     percentageThresh = (!isDealer) ? 0.80 : 0.90;
+
+                     if ((this.opponentOverallAggression > overallThresh || this.opponentShortTermAggression > shortTermThresh)) {
+                        if (betPercentageOfPot < odds || (odds == 0.0 && betPercentageOfPot < percentageThresh)) {
+                           this.setBotTurn(new Turn(Action.CHECKCALL, betAmount));  
+                        }
+                        else {
+                           this.setBotTurn(new Turn(Action.FOLD, 0));
+                        }   
+                     }
+                     else {
+                        this.setBotTurn(new Turn(Action.FOLD, 0));
+                     }   
+                     break;                     
+                  case 1:
+                     overallThresh    = (!isDealer) ? 0.75 : 0.65;     //under the gun, on the button
+                     shortTermThresh  = (!isDealer) ? 0.65 : 0.60;
+                     raiseIfOdds      = (!isDealer) ? 1.20 : 1.10;   
+                     raiseIfNoOdds    = (!isDealer) ? 1.60 : 1.50;   
+
+                     if ((this.opponentOverallAggression < overallThresh || this.opponentShortTermAggression < shortTermThresh)) {
+                        this.setBotTurn(new Turn(Action.CHECKCALL, betAmount));  
+                     }
+                     else {
+                        divisor = (odds > 0.0) ? raiseIfOdds : raiseIfNoOdds;
+                        this.setBotTurn(new Turn(Action.BET, randomizeBet(betAmount * 3.5 / divisor, minBet))); 
+                     }                   
+                     break;
+                  case 2:
+                     if (betPercentageOfPot < odds) {
+                        this.setBotTurn(new Turn(Action.CHECKCALL, betAmount));  
+                     }
+                     else {
+                        this.setBotTurn(new Turn(Action.FOLD, 0));
+                     }   
+                     break;                          
+                  default:
+                     break;
+                  }
+               }
+               else if (this.getCurrentHand().hand.getValue() == 1) {
+                  switch (checkPairValuesRaiseOnePair[pairData[0]][pairData[1]]) {
+                  case 0:
+                     overallThresh    = (!isDealer) ? 0.75 : 0.65;     //under the gun, on the button
+                     shortTermThresh  = (!isDealer) ? 0.60 : 0.55;
+                     percentageThresh = (!isDealer) ? 0.60 : 0.750;
+
+                     if (this.opponentOverallAggression > overallThresh || this.opponentShortTermAggression > shortTermThresh) {
+                        if (betPercentageOfPot < odds || (odds == 0.0 && betPercentageOfPot < percentageThresh)) {
+                           this.setBotTurn(new Turn(Action.CHECKCALL, betAmount));  
+                        }
+                        else {
+                           this.setBotTurn(new Turn(Action.FOLD, 0));
+                        }   
+                     }
+                     else {
+                        this.setBotTurn(new Turn(Action.FOLD, 0));
+                     }   
+                     break;                     
+                  case 1:
+                     overallThresh    = (!isDealer) ? 0.55 : 0.45;     //under the gun, on the button
+                     shortTermThresh  = (!isDealer) ? 0.75 : 0.60;
+                     raiseIfOdds      = (!isDealer) ? 1.20 : 1.05;   
+                     raiseIfNoOdds    = (!isDealer) ? 1.50 : 1.40;   
+
+                     if (this.opponentOverallAggression < overallThresh || this.opponentShortTermAggression < shortTermThresh) {
+                        this.setBotTurn(new Turn(Action.CHECKCALL, betAmount));  
+                     }
+                     else {
+                        divisor = (odds > 0.0) ? raiseIfOdds : raiseIfNoOdds;
+                        this.setBotTurn(new Turn(Action.BET, randomizeBet(betAmount * 3 / divisor, minBet))); 
+                     }                   
+                     break;
+                  case 2:
+                     if (betPercentageOfPot < odds) {
+                        this.setBotTurn(new Turn(Action.CHECKCALL, betAmount));  
+                     }
+                     else {
+                        this.setBotTurn(new Turn(Action.FOLD, 0));
+                     }   
+                     break;                          
+                  default:
+                     break;
+                  }
+               }
+               else {
+                  if (betPercentageOfPot < odds) {
+                     this.setBotTurn(new Turn(Action.CHECKCALL, betAmount));  
+                  }
+                  else {
+                     this.setBotTurn(new Turn(Action.FOLD, 0));
+                  }
+               }
+            }
          }
       }
-      else {
-         if (playersInFront == 0) {   // Under the Gun
-            if (this.getCurrentHand().hand.getValue() > 3) {
-               if (rand.nextInt() % 5 == 0) {
+      else {   // no raise
+         if (this.getCurrentHand().hand.getValue() > 3) {
+            if (!isDealer) {
+               if (this.opponentOverallAggression > 1.25 || this.opponentShortTermAggression > 1.5) {
                   this.setBotTurn(new Turn(Action.CHECKCALL, betAmount));  
                }
                else {
                   divisor = (this.getCurrentHand().hand.getValue() > 4) ? 1.9 : 1.5;
-                  basebet = (potSize / minBet < 3) ? 2 * minBet: potSize / 1.8;
+                  basebet = (potSize / minBet < 3) ? 2 * minBet: potSize / 3;
                   this.setBotTurn(new Turn(Action.BET, randomizeBet(basebet * this.getCurrentHand().hand.getValue() / divisor, minBet)));
                }
             }
-            else if (this.getCurrentHand().hand.getValue() > 0) {
-               if (this.getCurrentHand().hand.getValue() == 3) {
-                  if (odds > 0.0) {
-                     divisor = (odds > 0.2) ? 1.5 : 1.75;
-                     basebet = (potSize / minBet < 3) ? 2 * minBet: potSize / 2.1;
-                     this.setBotTurn(new Turn(Action.BET, randomizeBet(basebet * 3 / divisor, minBet))); 
-                  }
-                  else {
-                     this.setBotTurn(new Turn(Action.CHECKCALL, betAmount)); 
-                  }
-               }
-               else if (odds != 0) {
-                  
-                  if (this.getCurrentHand().hand.getValue() == 2) {
-                     basebet = (potSize / minBet < 3) ? 2 * minBet : potSize / 2.6;
-                     this.setBotTurn(new Turn(Action.BET, randomizeBet(basebet * 2.5 / 1.5, minBet)));
-                  }
-                  else if (this.getCurrentHand().hand.getValue() == 1) {
-                     basebet = (potSize / minBet < 3) ? 2 * minBet : potSize / 2.9;
-                     this.setBotTurn(new Turn(Action.BET, randomizeBet(basebet * 2.5 / 1.7, minBet)));
-                  }
-                  else {
-                     this.setBotTurn(new Turn(Action.CHECKCALL, betAmount)); 
-                  }
-               }
-               else {
-                  if (this.getCurrentHand().hand.getValue() == 2) {
-                     basebet = (potSize / minBet < 3) ? 2 * minBet : potSize / 3;
-                     this.setBotTurn(new Turn(Action.BET, randomizeBet(basebet * 2.5 / 2.0, minBet)));
-                  }
-                  else if (this.getCurrentHand().hand.getValue() == 1){
-                     basebet = (potSize / minBet < 3) ? 2 * minBet : potSize / 3.5;
-                     this.setBotTurn(new Turn(Action.BET, randomizeBet(basebet * 2.5 / 2.2, minBet)));
-                  }
-                  else {
-                     this.setBotTurn(new Turn(Action.CHECKCALL, betAmount)); 
-                  }
-               }
-            }
             else {
-               this.setBotTurn(new Turn(Action.CHECKCALL, betAmount));  
-            }
-         }
-         else if (playersBehind == 0) {   // On the Button
-            if (this.getCurrentHand().hand.getValue() > 3) {
-               if (rand.nextInt() % 7 == 0) {
+               if (this.opponentOverallAggression > 2 || this.opponentShortTermAggression > 3) {
                   this.setBotTurn(new Turn(Action.CHECKCALL, betAmount));  
                }
                else {
-                  divisor = (odds < 0.4) ? 1.15 : 1.00;
+                  divisor = (this.getCurrentHand().hand.getValue() > 4) ? 1.15 : 1.00;
                   basebet = (potSize / minBet < 3) ? 2 * minBet : potSize / 1.9;
                   this.setBotTurn(new Turn(Action.BET, randomizeBet(basebet * this.getCurrentHand().hand.getValue() / divisor, minBet)));
-               }
+               } 
             }
-            else if (this.getCurrentHand().hand.getValue() > 0) {
-               if (this.getCurrentHand().hand.getValue() == 3) {
-                  if (odds > 0.0) {
-                     basebet = (potSize / minBet < 3) ? 2 * minBet : potSize / 2.2;
-                     this.setBotTurn(new Turn(Action.BET, randomizeBet(basebet * 3 / 1.3, minBet))); 
+         }
+         else {
+            if (this.getCurrentHand().hand.getValue() == 3) {
+
+               if(!isDealer) {
+                  if (this.opponentOverallAggression < 0.70 || this.opponentShortTermAggression < 0.6) {
+                     divisor = (odds > 0.0) ? 1.3 : 1.6;
+                     basebet = (potSize / minBet < 3) ? 2 * minBet: potSize / 2.4;
+                     this.setBotTurn(new Turn(Action.BET, randomizeBet(basebet * 2.7 / divisor, minBet))); 
                   }
                   else {
-                     this.setBotTurn(new Turn(Action.CHECKCALL, betAmount)); 
+                     divisor = (odds > 0.0) ? 1.5 : 1.75;
+                     basebet = (potSize / minBet < 3) ? 2 * minBet: potSize / 3;
+                     this.setBotTurn(new Turn(Action.BET, randomizeBet(basebet * 3 / divisor, minBet)));  
                   }
                }
                else {
-                  if (this.getCurrentHand().hand.getValue() == 2) {
-                     basebet = (potSize / minBet < 3) ? 2 * minBet : potSize / 2.8;
-                     this.setBotTurn(new Turn(Action.BET, randomizeBet(basebet * 2.5 / 1.3, minBet)));
+                  if (this.opponentOverallAggression < 0.50 || this.opponentShortTermAggression < 0.60) {
+                     divisor = (odds > 0.0) ? 1.1 : 1.4;
+                     basebet = (potSize / minBet < 3) ? 2 * minBet : potSize / 2.6;
+                     this.setBotTurn(new Turn(Action.BET, randomizeBet(basebet * 3 / divisor, minBet))); 
                   }
                   else {
-                     basebet = (potSize / minBet < 3) ? 2 * minBet : potSize / 3.3;
-                     this.setBotTurn(new Turn(Action.BET, randomizeBet(basebet * 2.5 / 1.7, minBet)));
+                     divisor = (odds > 0.0) ? 1.4 : 1.7;
+                     basebet = (potSize / minBet < 3) ? 2 * minBet : potSize / 3;
+                     this.setBotTurn(new Turn(Action.BET, randomizeBet(basebet * 2.8 / divisor, minBet))); 
                   }
                }
             }
             else {
-               this.setBotTurn(new Turn(Action.CHECKCALL, betAmount));  
-            }
-         }
-         else {
-            //use playersinfront and players behind
+               pairData = checkPairs(this.getCurrentHand().currentBoard);
+               if (this.getCurrentHand().hand.getValue() == 2) {
+                  switch (checkPairValuesNoRaiseTwoPair[pairData[0]][pairData[1]]) {
+                  case 0:
+                     overallThresh    = (!isDealer) ? 0.55 : 0.45;     //under the gun, on the button
+                     shortTermThresh  = (!isDealer) ? 0.70 : 0.60;
+                     percentageThresh = (!isDealer) ? 0.80 : 0.90;
+
+                     if ((this.opponentOverallAggression > overallThresh || this.opponentShortTermAggression > shortTermThresh)) {
+                        if (betPercentageOfPot < odds || (odds == 0.0 && betPercentageOfPot < percentageThresh)) {
+                           this.setBotTurn(new Turn(Action.CHECKCALL, betAmount));  
+                        }
+                        else {
+                           this.setBotTurn(new Turn(Action.FOLD, 0));
+                        }   
+                     }
+                     else {
+                        this.setBotTurn(new Turn(Action.FOLD, 0));
+                     }   
+                     break;                     
+                  case 1:
+                     overallThresh    = (!isDealer) ? 0.75 : 0.65;     //under the gun, on the button
+                     shortTermThresh  = (!isDealer) ? 0.65 : 0.60;
+                     raiseIfOdds      = (!isDealer) ? 1.20 : 1.10;   
+                     raiseIfNoOdds    = (!isDealer) ? 1.60 : 1.50;   
+
+                     if ((this.opponentOverallAggression < overallThresh || this.opponentShortTermAggression < shortTermThresh)) {
+                        this.setBotTurn(new Turn(Action.CHECKCALL, betAmount));  
+                     }
+                     else {
+                        divisor = (odds > 0.0) ? raiseIfOdds : raiseIfNoOdds;
+                        basebet = (potSize / minBet < 3) ? 2 * minBet : potSize / 4;
+                        this.setBotTurn(new Turn(Action.BET, randomizeBet(betAmount * 3.5 / divisor, minBet))); 
+                     }                   
+                     break;                          
+                  default:
+                     break;
+                  }
+               }
+               else if (this.getCurrentHand().hand.getValue() == 1) {
+                  switch (checkPairValuesNoRaiseOnePair[pairData[0]][pairData[1]]) {
+                  case 0:
+                     overallThresh    = (!isDealer) ? 0.75 : 0.65;     //under the gun, on the button
+                     shortTermThresh  = (!isDealer) ? 0.60 : 0.55;
+                     percentageThresh = (!isDealer) ? 0.60 : 0.750;
+
+                     if (this.opponentOverallAggression > overallThresh || this.opponentShortTermAggression > shortTermThresh) {
+                        if (betPercentageOfPot < odds || (odds == 0.0 && betPercentageOfPot < percentageThresh)) {
+                           this.setBotTurn(new Turn(Action.CHECKCALL, betAmount));  
+                        }
+                        else {
+                           this.setBotTurn(new Turn(Action.FOLD, 0));
+                        }   
+                     }
+                     else {
+                        this.setBotTurn(new Turn(Action.FOLD, 0));
+                     }   
+                     break;                     
+                  case 1:
+                     overallThresh    = (!isDealer) ? 0.55 : 0.45;     //under the gun, on the button
+                     shortTermThresh  = (!isDealer) ? 0.75 : 0.60;
+                     raiseIfOdds      = (!isDealer) ? 1.20 : 1.05;   
+                     raiseIfNoOdds    = (!isDealer) ? 1.50 : 1.40;   
+
+                     if (this.opponentOverallAggression < overallThresh || this.opponentShortTermAggression < shortTermThresh) {
+                        this.setBotTurn(new Turn(Action.CHECKCALL, betAmount));  
+                     }
+                     else {
+                        divisor = (odds > 0.0) ? raiseIfOdds : raiseIfNoOdds;
+                        basebet = (potSize / minBet < 3) ? 2 * minBet : potSize / 4;
+                        this.setBotTurn(new Turn(Action.BET, randomizeBet(basebet * 3 / divisor, minBet))); 
+                     }                   
+                     break;                         
+                  default:
+                     break;
+                  }
+               }
+               else {
+                  if (pairData[0] == 0 && isDealer) {
+                     basebet = (potSize / minBet < 3) ? 2 * minBet : potSize / 3;
+                     this.setBotTurn(new Turn(Action.BET, randomizeBet(basebet, minBet))); 
+                  }
+                  else {
+                     this.setBotTurn(new Turn(Action.CHECKCALL, betAmount));
+                  }
+               }
+            }  
          }
       }
-
-      //this.setBotTurn(new Turn(Action.CHECKCALL, betAmount));
    }
 
    public Turn getBotTurn() {
@@ -400,22 +511,39 @@ public class Bot extends Player {
       this.botTurn = botTurn;
    }
 
-   public void getOpponentStackSizes(ArrayList<Player> players) {
+   public void getOpponentData(ArrayList<Player> players) {
+      double aggression = 0.0;     
+      int decisions = 0;    
+      
       for (Player player : players) {
-         if (player.isInHand()) {
-            opponentStackSizes.add(player.getStack());
+         if (player instanceof Bot == false) {
+            this.opponentStackSize = player.getStack();
+            if (player.stats.overallDecisions > 0) {
+               this.opponentOverallAggression = player.stats.overallAggression / player.stats.overallDecisions;
+            }
+            
+            for (int i = 0; i < 10; i++) {
+               aggression += player.stats.shortTermAggression[i];
+               decisions += player.stats.shortTermDecisions[i];
+            }
+            this.opponentShortTermAggression = aggression / decisions;
          }
       }
+
+      System.out.println("Oppo. stack = " + this.opponentStackSize + ", overall agg. = " + this.opponentOverallAggression + 
+         ", short term agg.  = " + this.opponentShortTermAggression);
    }
+
    
    public int randomizeBet(double bet, int minBet) {
+	  Random rand = new Random();
 	  int max = (int)(bet * 1.5);
 	  int min = (int)(bet * 0.5);
-	  Random rand = new Random();
 	  
-	  int newBet = rand.nextInt((max - min) + 1) + min;
-	
-     return (int)(Math.ceil(newBet / (double)minBet) * minBet);
+	  int randBet = rand.nextInt((max - min) + 1) + min;
+     int newBet = (int)(Math.ceil(randBet / (double)minBet) * minBet);
+
+     return (newBet > this.getStack()) ? this.getStack() : newBet;
    }
 
    public int getStraightCards() {
@@ -436,36 +564,34 @@ public class Bot extends Player {
    // figure out how many hands are on the board, and the number of overcards
    public int[] checkPairs(ArrayList<Card> board) {
       
-      int pairStats[] = new int[] {0, 0, 0};    //pairs on board, overCards to 1st pair, overCards to 2nd pair
+      int pairStats[] = new int[] {0, 0};    //pairs on board, overCards to 1st pair, overCards to 2nd pair
       int tallies[] = new int[15];
       int handValue = this.getCurrentHand().hand.getValue();
       ArrayList<Integer> kickers = this.getCurrentHand().getKickers();
 
       for (Card c : board) {
          int val = c.getRank().getValue();
-         if (tallies[val] == 1) {
+         if (tallies[val] == 1 || (handValue == 0 && val == kickers.get(0))) {
             pairStats[0] += 1;
          }
          else {
-            if (handValue == 2) {
-               if (val > kickers.get(0)) {
-                  pairStats[2] += 1;
-                  pairStats[1] += 1;
-               }
-               else {
-                  if (val > kickers.get(1) && val != kickers.get(0)) {
-                     pairStats[1] += 1;
-                  }
-               }
-            }
-            else  {
-               if (val > kickers.get(0)) {
-                  pairStats[1] += 1;
-               }
+            if (handValue == 2 && (val > kickers.get(0) || (val > kickers.get(1) && val != kickers.get(0)))) {  
+               pairStats[1] += 1;
+            }   
+            else if (handValue < 2 && val > kickers.get(0)) {
+               pairStats[1] += 1;
             }
          }
          tallies[val] += 1;
       }
+      System.out.print("Pair Stats: ");
+      if (handValue == 0) {
+         System.out.print("High Card is on Board: ");
+      }
+      else {
+         System.out.print("Number of pairs on Board: ");
+      }
+      System.out.println("" + pairStats[0] + ", overcards to current Hand: " + pairStats[1]);     
       
       return pairStats;
    }

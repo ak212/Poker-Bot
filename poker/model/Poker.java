@@ -182,6 +182,21 @@ public class Poker {
             System.out.println("\n\n");
             // mainApp.updateConsole("\n\n");
             dealer.setBetPeriod(BetPeriod.getBetPeriod(gameState = -1));
+
+            for (Player player : players) {
+               player.stats.overallAggression += player.stats.shortTermAggression[dealer.numHandsPlayed % 10];
+
+               if (player instanceof Bot) {
+                  System.out.println("Bot overall playstyle: " + player.stats.overallAggression / player.stats.overallDecisions);
+               }
+               else {
+                  System.out.println("Player overall playstyle: " + player.stats.overallAggression / player.stats.overallDecisions);
+               }
+
+               player.stats.shortTermDecisions[(dealer.numHandsPlayed + 1) % 10] = 0;
+               player.stats.shortTermAggression[(dealer.numHandsPlayed + 1) % 10] = 0;
+            }
+
             dealer.newHand();
             mainApp.updatePot("0");
 

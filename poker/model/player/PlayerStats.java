@@ -16,6 +16,10 @@ public class PlayerStats {
    public int winnings;
    public Hand bestHand;
    public int biggestWin;
+   public int overallDecisions;
+   public double overallAggression;
+   public int[] shortTermDecisions;
+   public double[] shortTermAggression;
 
    public PlayerStats() {
       this.hands = 0;
@@ -31,6 +35,10 @@ public class PlayerStats {
       this.winnings = 0;
       this.bestHand = Hand.NoHand;
       this.biggestWin = 0;
+      this.overallDecisions = 0;
+      this.overallAggression = 1.0;
+      this.shortTermDecisions = new int[10];
+      this.shortTermAggression = new double[10];
    }
 
    public void setWinnings(int num) {
