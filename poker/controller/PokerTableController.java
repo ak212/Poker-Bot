@@ -190,7 +190,7 @@ public class PokerTableController {
             playerBetTextField.setText(oldValue);
          }
          
-         if (betValue >= mainApp.poker.dealer.minAmount) {
+         if (betValue >= mainApp.poker.dealer.minBetAmount) {
             confirmButton.setDisable(false);
          }
          else {
