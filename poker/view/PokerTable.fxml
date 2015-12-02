@@ -16,11 +16,6 @@
       <Button fx:id="halfButton" layoutX="80.0" layoutY="428.0" mnemonicParsing="false" onAction="#halfButtonClicked" text="Half Pot" visible="false" />
       <Button fx:id="minButton" layoutX="23.0" layoutY="428.0" mnemonicParsing="false" onAction="#minButtonClicked" text="Min" visible="false" />
       <Button fx:id="maxButton" layoutX="196.0" layoutY="428.0" mnemonicParsing="false" onAction="#maxButtonClicked" text="Max" visible="false" />
-      <Label layoutX="367.0" layoutY="8.0" prefHeight="17.0" prefWidth="66.0" text="Pot:" textAlignment="CENTER" textFill="WHITE" visible="false">
-         <font>
-            <Font name="Arial" size="24.0" />
-         </font>
-      </Label>
       <TextField fx:id="playerBetTextField" layoutX="37.0" layoutY="361.0" prefHeight="25.0" prefWidth="66.0" visible="false" />
       <Button fx:id="confirmButton" disable="true" layoutX="125.0" layoutY="361.0" mnemonicParsing="false" onAction="#confirmButtonClicked" text="Confirm" visible="false" />
       <VBox fx:id="playerBox" layoutX="82.0" layoutY="185.0">
@@ -43,16 +38,16 @@
          </children>
       </VBox>
       <TextArea fx:id="logTextArea" editable="false" layoutY="467.0" prefHeight="134.0" prefWidth="516.0" />
-      <Label fx:id="potValueLabel" layoutX="474.0" layoutY="125.0" prefHeight="17.0" prefWidth="66.0" textAlignment="CENTER">
+      <Label fx:id="potValueLabel" alignment="CENTER" contentDisplay="CENTER" layoutX="467.0" layoutY="125.0" prefHeight="21.0" prefWidth="42.0" textAlignment="CENTER">
          <font>
             <Font name="Arial" size="18.0" />
          </font>
       </Label>
-      <Label fx:id="betAmountLabel1" layoutX="770.0" layoutY="200.0" prefHeight="17.0" prefWidth="28.0" textAlignment="CENTER" textFill="WHITE">
+      <Label fx:id="betAmountLabel1" alignment="CENTER" contentDisplay="CENTER" layoutX="767.0" layoutY="200.0" prefHeight="17.0" prefWidth="28.0" textAlignment="CENTER" textFill="WHITE">
          <font>
             <Font size="11.0" />
          </font></Label>
-      <Label fx:id="betAmountLabel0" layoutX="195.0" layoutY="200.0" prefHeight="17.0" prefWidth="28.0" textAlignment="CENTER" textFill="WHITE">
+      <Label fx:id="betAmountLabel0" alignment="CENTER" contentDisplay="CENTER" layoutX="192.0" layoutY="200.0" prefHeight="17.0" prefWidth="28.0" textAlignment="CENTER" textFill="WHITE">
          <font>
             <Font size="11.0" />
          </font></Label>

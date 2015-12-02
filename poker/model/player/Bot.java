@@ -2,10 +2,8 @@ package poker.model.player;
 
 import java.util.ArrayList;
 import java.util.Random;
-import poker.model.cards.Card;
-import poker.model.cards.Suit;
-import poker.model.cards.Rank;
 
+import poker.model.cards.Card;
 import poker.model.game.Dealer;
 
 public class Bot extends Player {
@@ -93,7 +91,7 @@ public class Bot extends Player {
       // modify this value to change bot profile
       // i.e: if value > 1, value - 1 to simulate an aggressive player (add profile characteristic to bot)
       this.holeCardsValue = holeCardValues[idx1][idx2];
-      //this.holeCardsValue = 1;
+      // this.holeCardsValue = 1;
    }
 
    public void action(int currentBet) {

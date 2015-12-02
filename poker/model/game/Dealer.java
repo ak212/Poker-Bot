@@ -97,6 +97,7 @@ public class Dealer {
 
       switch (turn.getAction()) {
       case BET:
+         int prevTotalBet = p.getTotalBet();
          betAmount = turn.getBetAmount();
          int callAmount = this.getTotalBet() - p.getTotalBet();
 
@@ -137,12 +138,16 @@ public class Dealer {
          }
 
          player.bet(this.getCurrentBet());
-         this.setPot(this.getPot() + this.getTotalBet() - callAmount);
+         this.setPot(this.getPot() + this.getTotalBet() - callAmount - prevTotalBet);
 
          mainApp.updateBetAmountZero(Integer.toString(player.getTotalBet()));
 
          break;
       case CHECKCALL:
+         if (this.getBetPeriod().equals(BetPeriod.PREFLOP) && player.isSmallBlind() && !player.isCalledSB()) {
+            player.setCalledSB(true);
+         }
+
          player.stats.shortTermAggression[this.numHandsPlayed % 10] += 1;
          player.call(turn.getBetAmount());
          this.setPot(this.getPot() + turn.getBetAmount());
