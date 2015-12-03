@@ -22,6 +22,7 @@ import poker.model.player.Player;
 
 public class Poker {
    public static Dealer dealer;
+   public static Bot bot;
    public Main mainApp;
 
    /**
@@ -44,7 +45,11 @@ public class Poker {
 
       for (Player player : players) {
          player.setMainApp(mainApp);
+         if (player instanceof Bot) {
+            bot = (Bot)player;
+         }
       }
+      
 
       dealer.setBetPeriod(BetPeriod.getBetPeriod(gameState));
 

@@ -212,6 +212,7 @@ public class PokerTableController {
       });
 
       profileBox.getItems().setAll(Profile.values());
+      profileBox.setValue(Profile.NORMAL);
    }
 
    public void addText(String text) {
@@ -348,9 +349,8 @@ public class PokerTableController {
    @FXML
    private void botProfileSet(ActionEvent e) {
       // Set bot to different profile
-      // THIS DOES NOTHING CURRENTLY
-      profileBox.getSelectionModel().getSelectedItem();
-      System.out.println("Testing profile box");
+      Profile profile = profileBox.getSelectionModel().getSelectedItem();
+      //this.mainApp.poker.bot.changeProfile(profile);
    }
 
    /**

@@ -257,5 +257,7 @@
          </font>
       </Label>
       <ComboBox fx:id="profileBox" layoutX="835.0" layoutY="242.0" onAction="#botProfileSet" prefHeight="26.0" prefWidth="130.0" visible="false" />
+      <Label fx:id="stackLabel11" layoutX="758.0" layoutY="260.0" prefHeight="16.0" prefWidth="48.0" text="Profile: " textFill="WHITE" />
+      <ComboBox fx:id="profileBox" layoutX="814.0" layoutY="255.0" onAction="#botProfileSet" prefWidth="150.0" />
    </children>
 </AnchorPane>
