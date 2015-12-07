@@ -138,7 +138,7 @@ public class Dealer {
          }
 
          player.bet(this.getCurrentBet());
-         this.setPot(this.getPot() + this.getTotalBet() - callAmount - prevTotalBet);
+         this.setPot(this.getPot() + betAmount);
 
          mainApp.updateBetAmountZero(Integer.toString(player.getTotalBet()));
 
