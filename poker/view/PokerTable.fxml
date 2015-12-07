@@ -7,17 +7,17 @@
 <?import java.lang.*?>
 <?import javafx.scene.layout.*?>
 
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="1000.0" style="-fx-background-color: #000000;" stylesheets="@style.css" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="poker.controller.PokerTableController">
+<AnchorPane fx:id="playerBestWinLabel" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="1000.0" style="-fx-background-color: #000000;" stylesheets="@style.css" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="poker.controller.PokerTableController">
    <children>
-      <Button fx:id="betButton" layoutX="118.0" layoutY="396.0" mnemonicParsing="false" onAction="#betButtonClicked" prefHeight="25.0" prefWidth="53.0" text="Bet" />
-      <Button fx:id="checkCallButton" layoutX="23.0" layoutY="396.0" mnemonicParsing="false" onAction="#checkCallButtonClicked" text="Check/Call" />
-      <Button fx:id="foldButton" layoutX="196.0" layoutY="396.0" mnemonicParsing="false" onAction="#foldButtonClicked" text="Fold" />
-      <Button fx:id="potButton" layoutX="151.0" layoutY="428.0" mnemonicParsing="false" onAction="#potButtonClicked" text="Pot" visible="false" />
-      <Button fx:id="halfButton" layoutX="80.0" layoutY="428.0" mnemonicParsing="false" onAction="#halfButtonClicked" text="Half Pot" visible="false" />
-      <Button fx:id="minButton" layoutX="23.0" layoutY="428.0" mnemonicParsing="false" onAction="#minButtonClicked" text="Min" visible="false" />
-      <Button fx:id="maxButton" layoutX="196.0" layoutY="428.0" mnemonicParsing="false" onAction="#maxButtonClicked" text="Max" visible="false" />
-      <TextField fx:id="playerBetTextField" layoutX="37.0" layoutY="361.0" prefHeight="25.0" prefWidth="66.0" visible="false" />
-      <Button fx:id="confirmButton" disable="true" layoutX="125.0" layoutY="361.0" mnemonicParsing="false" onAction="#confirmButtonClicked" text="Confirm" visible="false" />
+      <Button fx:id="betButton" layoutX="106.0" layoutY="369.0" mnemonicParsing="false" onAction="#betButtonClicked" prefHeight="25.0" prefWidth="53.0" text="Bet" />
+      <Button fx:id="checkCallButton" layoutX="11.0" layoutY="369.0" mnemonicParsing="false" onAction="#checkCallButtonClicked" text="Check/Call" />
+      <Button fx:id="foldButton" layoutX="184.0" layoutY="369.0" mnemonicParsing="false" onAction="#foldButtonClicked" text="Fold" />
+      <Button fx:id="potButton" layoutX="139.0" layoutY="401.0" mnemonicParsing="false" onAction="#potButtonClicked" text="Pot" visible="false" />
+      <Button fx:id="halfButton" layoutX="68.0" layoutY="401.0" mnemonicParsing="false" onAction="#halfButtonClicked" text="Half Pot" visible="false" />
+      <Button fx:id="minButton" layoutX="11.0" layoutY="401.0" mnemonicParsing="false" onAction="#minButtonClicked" text="Min" visible="false" />
+      <Button fx:id="maxButton" layoutX="184.0" layoutY="401.0" mnemonicParsing="false" onAction="#maxButtonClicked" text="Max" visible="false" />
+      <TextField fx:id="playerBetTextField" layoutX="25.0" layoutY="334.0" prefHeight="25.0" prefWidth="66.0" visible="false" />
+      <Button fx:id="confirmButton" disable="true" layoutX="113.0" layoutY="334.0" mnemonicParsing="false" onAction="#confirmButtonClicked" text="Confirm" visible="false" />
       <VBox fx:id="playerBox" layoutX="82.0" layoutY="185.0">
          <children>
             <Label fx:id="nameLabel0" layoutX="82.0" layoutY="185.0" text="Player 0" textFill="WHITE" />
@@ -37,7 +37,108 @@
             <Label fx:id="stackLabel1" text="Stack" textFill="WHITE" />
          </children>
       </VBox>
-      <TextArea fx:id="logTextArea" editable="false" layoutY="467.0" prefHeight="134.0" prefWidth="516.0" />
+      <TabPane layoutY="443.0" prefHeight="158.0" prefWidth="516.0">
+         <tabs>
+            <Tab closable="false" text="Console">
+               <content>
+                  <TextArea fx:id="logTextArea" editable="false" layoutY="467.0" prefHeight="100.0" prefWidth="516.0" />
+               </content>
+            </Tab>
+            <Tab closable="false" text="Stats">
+              <content>
+                <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+                     <children>
+                        <TabPane prefHeight="200.0" prefWidth="516.0" tabClosingPolicy="UNAVAILABLE">
+                          <tabs>
+                            <Tab text="Player 0">
+                              <content>
+                                    <AnchorPane>
+                                       <children>
+                                          <ScrollPane prefHeight="98.0" prefViewportHeight="171.0" prefViewportWidth="516.0" prefWidth="518.0">
+                                             <content>
+                                                <HBox>
+                                                   <children>
+                                                      <GridPane prefHeight="140.0" prefWidth="194.0">
+                                                        <columnConstraints>
+                                                          <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                                                          <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                                                        </columnConstraints>
+                                                        <rowConstraints>
+                                                            <RowConstraints maxHeight="20.0" minHeight="20.0" prefHeight="20.0" vgrow="SOMETIMES" />
+                                                            <RowConstraints maxHeight="20.0" minHeight="20.0" prefHeight="20.0" vgrow="SOMETIMES" />
+                                                            <RowConstraints maxHeight="20.0" minHeight="20.0" prefHeight="20.0" vgrow="SOMETIMES" />
+                                                            <RowConstraints maxHeight="20.0" minHeight="20.0" prefHeight="20.0" vgrow="SOMETIMES" />
+                                                            <RowConstraints maxHeight="20.0" minHeight="20.0" prefHeight="20.0" vgrow="SOMETIMES" />
+                                                            <RowConstraints maxHeight="20.0" minHeight="20.0" prefHeight="20.0" vgrow="SOMETIMES" />
+                                                            <RowConstraints maxHeight="20.0" minHeight="20.0" prefHeight="20.0" vgrow="SOMETIMES" />
+                                                        </rowConstraints>
+                                                         <children>
+                                                            <Label text="Hands:" GridPane.columnIndex="0" GridPane.rowIndex="0" />
+                                                            <Label text="Losses:" GridPane.columnIndex="0" GridPane.rowIndex="1" />
+                                                            <Label text="Folds:" GridPane.columnIndex="0" GridPane.rowIndex="2" />
+                                                            <Label text="Preflop Folds:" GridPane.columnIndex="0" GridPane.rowIndex="3" />
+                                                            <Label text="Flop Folds:" GridPane.columnIndex="0" GridPane.rowIndex="4" />
+                                                            <Label text="Turn Folds:" GridPane.columnIndex="0" GridPane.rowIndex="5" />
+                                                            <Label text="River Folds:" GridPane.columnIndex="0" GridPane.rowIndex="6" />
+                                                            <Label fx:id="playerHandsLabel" text="" GridPane.columnIndex="1" GridPane.rowIndex="0" />
+                                                            <Label fx:id="playerLossesLabel" text="" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+                                                            <Label fx:id="playerFoldsLabel" text="" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+                                                            <Label fx:id="playerPreflopFoldsLabel" text="" GridPane.columnIndex="1" GridPane.rowIndex="3" />
+                                                            <Label fx:id="playerFlopFoldsLabel" text="" GridPane.columnIndex="1" GridPane.rowIndex="4" />
+                                                            <Label fx:id="playerTurnFoldsLabel" text="" GridPane.columnIndex="1" GridPane.rowIndex="5" />
+                                                            <Label fx:id="playerRiverFoldsLabel" text="" GridPane.columnIndex="1" GridPane.rowIndex="6" />
+                                                         </children>
+                                                      </GridPane>
+                                                      <GridPane prefHeight="140.0" prefWidth="273.0">
+                                                  <columnConstraints>
+                                                    <ColumnConstraints hgrow="SOMETIMES" maxWidth="195.0" minWidth="10.0" prefWidth="167.0" />
+                                                    <ColumnConstraints hgrow="SOMETIMES" maxWidth="146.0" minWidth="10.0" prefWidth="106.0" />
+                                                  </columnConstraints>
+                                                  <rowConstraints>
+                                                      <RowConstraints maxHeight="20.0" minHeight="20.0" prefHeight="20.0" vgrow="SOMETIMES" />
+                                                      <RowConstraints maxHeight="20.0" minHeight="20.0" prefHeight="20.0" vgrow="SOMETIMES" />
+                                                      <RowConstraints maxHeight="20.0" minHeight="20.0" prefHeight="20.0" vgrow="SOMETIMES" />
+                                                      <RowConstraints maxHeight="20.0" minHeight="20.0" prefHeight="20.0" vgrow="SOMETIMES" />
+                                                      <RowConstraints maxHeight="20.0" minHeight="20.0" prefHeight="20.0" vgrow="SOMETIMES" />
+                                                      <RowConstraints maxHeight="20.0" minHeight="20.0" prefHeight="20.0" vgrow="SOMETIMES" />
+                                                  </rowConstraints>
+                                                   <children>
+                                                      <Label text="Wins:" GridPane.columnIndex="0" GridPane.rowIndex="0" />
+                                                      <Label text="Raises:" GridPane.columnIndex="0" GridPane.rowIndex="1" />
+                                                      <Label text="Average Winnings Per Hand:" GridPane.columnIndex="0" GridPane.rowIndex="2" />
+                                                      <Label text="Winnings:" GridPane.columnIndex="0" GridPane.rowIndex="3" />
+                                                      <Label text="Best Hand:" GridPane.columnIndex="0" GridPane.rowIndex="4" />
+                                                      <Label text="Biggest Win:" GridPane.columnIndex="0" GridPane.rowIndex="5" />
+                                                      <Label fx:id="playerWinsLabel" text="" GridPane.columnIndex="1" GridPane.rowIndex="0" />
+                                                      <Label fx:id="playerRaisesLabel" text="" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+                                                      <Label fx:id="playerAverageWinningsLabel" text="" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+                                                      <Label fx:id="playerWinningsLabel" text="" GridPane.columnIndex="1" GridPane.rowIndex="3" />
+                                                      <Label fx:id="playerBestHandLabel" text="" GridPane.columnIndex="1" GridPane.rowIndex="4" />
+                                                      <Label fx:id="playerBiggestWinLabel" text="" GridPane.columnIndex="1" GridPane.rowIndex="5" />
+                                                   </children>
+                                                </GridPane>
+                                                      
+                                                   </children>
+                                                </HBox>
+                                             </content>
+                                          </ScrollPane>
+                                       </children>
+                                    </AnchorPane>
+                              </content>
+                            </Tab>
+                            <Tab text="Bot 1">
+                              <content>
+                                <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0" />
+                              </content>
+                            </Tab>
+                          </tabs>
+                        </TabPane>
+                     </children>
+                  </AnchorPane>
+              </content>
+            </Tab>
+         </tabs>
+      </TabPane>
       <Label fx:id="potValueLabel" alignment="CENTER" contentDisplay="CENTER" layoutX="467.0" layoutY="125.0" prefHeight="21.0" prefWidth="42.0" textAlignment="CENTER">
          <font>
             <Font name="Arial" size="18.0" />
@@ -256,7 +357,6 @@
             <Font name="Arial" size="18.0" />
          </font>
       </Label>
-      <ComboBox fx:id="profileBox" layoutX="835.0" layoutY="242.0" onAction="#botProfileSet" prefHeight="26.0" prefWidth="130.0" visible="false" />
       <Label fx:id="stackLabel11" layoutX="758.0" layoutY="260.0" prefHeight="16.0" prefWidth="48.0" text="Profile: " textFill="WHITE" />
       <ComboBox fx:id="profileBox" layoutX="814.0" layoutY="255.0" onAction="#botProfileSet" prefWidth="150.0" />
    </children>

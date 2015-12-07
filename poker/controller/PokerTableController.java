@@ -350,7 +350,7 @@ public class PokerTableController {
    private void botProfileSet(ActionEvent e) {
       // Set bot to different profile
       Profile profile = profileBox.getSelectionModel().getSelectedItem();
-      //this.mainApp.poker.bot.changeProfile(profile);
+      // this.mainApp.poker.bot.changeProfile(profile);
    }
 
    /**
