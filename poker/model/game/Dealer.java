@@ -502,7 +502,7 @@ public class Dealer {
                }
             }
             else {
-               player.stats.losses--;
+               player.stats.losses++;
             }
 
             if (player instanceof Bot) {
