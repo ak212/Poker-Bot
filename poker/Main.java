@@ -15,6 +15,7 @@ import poker.controller.PokerTableController;
 import poker.model.Poker;
 import poker.model.cards.Card;
 import poker.model.cards.HoleCards;
+import poker.model.player.PlayerStats;
 import poker.model.player.Turn;
 
 public class Main extends Application {
@@ -119,6 +120,24 @@ public class Main extends Application {
          @Override
          public void run() {
             tableController.updateBetAmountOne(text);
+         }
+      });
+   }
+
+   public void updatePlayerStats(PlayerStats stats) {
+      Platform.runLater(new Runnable() {
+         @Override
+         public void run() {
+            tableController.updatePlayerStats(stats);
+         }
+      });
+   }
+
+   public void updateBotStats(PlayerStats stats) {
+      Platform.runLater(new Runnable() {
+         @Override
+         public void run() {
+            tableController.updateBotStats(stats);
          }
       });
    }

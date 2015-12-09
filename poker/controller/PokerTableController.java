@@ -16,6 +16,7 @@ import poker.Main;
 import poker.model.cards.Card;
 import poker.model.cards.HoleCards;
 import poker.model.player.Action;
+import poker.model.player.PlayerStats;
 import poker.model.player.Profile;
 import poker.model.player.Turn;
 
@@ -36,6 +37,14 @@ public class PokerTableController {
    private Label betAmountLabel0, betAmountLabel1;
    @FXML
    private Label cardRank0, cardRank1, cardRank2, cardRank3, cardRank4, cardRank5, cardRank6, cardRank7, cardRank8;
+   @FXML
+   private Label playerHandsLabel, playerLossesLabel, playerFoldsLabel, playerPreflopFoldsLabel, playerFlopFoldsLabel,
+         playerTurnFoldsLabel, playerRiverFoldsLabel, playerWinsLabel, playerRaisesLabel, playerAverageWinningsLabel,
+         playerWinningsLabel, playerBestHandLabel, playerBiggestWinLabel;
+   @FXML
+   private Label botHandsLabel, botLossesLabel, botFoldsLabel, botPreflopFoldsLabel, botFlopFoldsLabel,
+         botTurnFoldsLabel, botRiverFoldsLabel, botWinsLabel, botRaisesLabel, botAverageWinningsLabel,
+         botWinningsLabel, botBestHandLabel, botBiggestWinLabel;
 
    @FXML
    private Button checkCallButton, betButton, foldButton, minButton, halfButton, potButton, maxButton, confirmButton;
@@ -244,6 +253,38 @@ public class PokerTableController {
       betAmountLabel1.setTextAlignment(TextAlignment.CENTER);
       betChipImage1.setVisible(text != null && !text.equals("") && !text.equals("0"));
       betAmountLabel1.toFront();
+   }
+
+   public void updatePlayerStats(PlayerStats stats) {
+      playerHandsLabel.setText(Integer.toString(stats.hands));
+      playerLossesLabel.setText(Integer.toString(stats.losses));
+      playerFoldsLabel.setText(Integer.toString(stats.folds));
+      playerPreflopFoldsLabel.setText(Integer.toString(stats.preFlopFolds));
+      playerFlopFoldsLabel.setText(Integer.toString(stats.flopFolds));
+      playerTurnFoldsLabel.setText(Integer.toString(stats.turnFolds));
+      playerRiverFoldsLabel.setText(Integer.toString(stats.riverFolds));
+      playerWinsLabel.setText(Integer.toString(stats.wins));
+      playerRaisesLabel.setText(Integer.toString(stats.raises));
+      playerAverageWinningsLabel.setText(Double.toString(stats.averageWinningPerHand));
+      playerWinningsLabel.setText(Integer.toString(stats.winnings));
+      playerBestHandLabel.setText(stats.bestHand.toString());
+      playerBiggestWinLabel.setText(Integer.toString(stats.biggestWin));
+   }
+
+   public void updateBotStats(PlayerStats stats) {
+      botHandsLabel.setText(Integer.toString(stats.hands));
+      botLossesLabel.setText(Integer.toString(stats.losses));
+      botFoldsLabel.setText(Integer.toString(stats.folds));
+      botPreflopFoldsLabel.setText(Integer.toString(stats.preFlopFolds));
+      botFlopFoldsLabel.setText(Integer.toString(stats.flopFolds));
+      botTurnFoldsLabel.setText(Integer.toString(stats.turnFolds));
+      botRiverFoldsLabel.setText(Integer.toString(stats.riverFolds));
+      botWinsLabel.setText(Integer.toString(stats.wins));
+      botRaisesLabel.setText(Integer.toString(stats.raises));
+      botAverageWinningsLabel.setText(Double.toString(stats.averageWinningPerHand));
+      botWinningsLabel.setText(Integer.toString(stats.winnings));
+      botBestHandLabel.setText(stats.bestHand.toString());
+      botBiggestWinLabel.setText(Integer.toString(stats.biggestWin));
    }
 
    public void toggleDealerZero(boolean dealer) {

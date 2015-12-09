@@ -128,7 +128,78 @@
                             </Tab>
                             <Tab text="Bot 1">
                               <content>
-                                <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0" />
+                                    <AnchorPane>
+                                       <children>
+                                          <ScrollPane prefHeight="98.0" prefViewportHeight="171.0" prefViewportWidth="516.0" prefWidth="518.0">
+                                             <content>
+                                                <HBox>
+                                                   <children>
+                                                      <GridPane prefHeight="140.0" prefWidth="194.0">
+                                                        <columnConstraints>
+                                                          <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                                                          <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                                                        </columnConstraints>
+                                                        <rowConstraints>
+                                                            <RowConstraints maxHeight="20.0" minHeight="20.0" prefHeight="20.0" vgrow="SOMETIMES" />
+                                                            <RowConstraints maxHeight="20.0" minHeight="20.0" prefHeight="20.0" vgrow="SOMETIMES" />
+                                                            <RowConstraints maxHeight="20.0" minHeight="20.0" prefHeight="20.0" vgrow="SOMETIMES" />
+                                                            <RowConstraints maxHeight="20.0" minHeight="20.0" prefHeight="20.0" vgrow="SOMETIMES" />
+                                                            <RowConstraints maxHeight="20.0" minHeight="20.0" prefHeight="20.0" vgrow="SOMETIMES" />
+                                                            <RowConstraints maxHeight="20.0" minHeight="20.0" prefHeight="20.0" vgrow="SOMETIMES" />
+                                                            <RowConstraints maxHeight="20.0" minHeight="20.0" prefHeight="20.0" vgrow="SOMETIMES" />
+                                                        </rowConstraints>
+                                                         <children>
+                                                            <Label text="Hands:" GridPane.columnIndex="0" GridPane.rowIndex="0" />
+                                                            <Label text="Losses:" GridPane.columnIndex="0" GridPane.rowIndex="1" />
+                                                            <Label text="Folds:" GridPane.columnIndex="0" GridPane.rowIndex="2" />
+                                                            <Label text="Preflop Folds:" GridPane.columnIndex="0" GridPane.rowIndex="3" />
+                                                            <Label text="Flop Folds:" GridPane.columnIndex="0" GridPane.rowIndex="4" />
+                                                            <Label text="Turn Folds:" GridPane.columnIndex="0" GridPane.rowIndex="5" />
+                                                            <Label text="River Folds:" GridPane.columnIndex="0" GridPane.rowIndex="6" />
+                                                            <Label fx:id="botHandsLabel" text="" GridPane.columnIndex="1" GridPane.rowIndex="0" />
+                                                            <Label fx:id="botLossesLabel" text="" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+                                                            <Label fx:id="botFoldsLabel" text="" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+                                                            <Label fx:id="botPreflopFoldsLabel" text="" GridPane.columnIndex="1" GridPane.rowIndex="3" />
+                                                            <Label fx:id="botFlopFoldsLabel" text="" GridPane.columnIndex="1" GridPane.rowIndex="4" />
+                                                            <Label fx:id="botTurnFoldsLabel" text="" GridPane.columnIndex="1" GridPane.rowIndex="5" />
+                                                            <Label fx:id="botRiverFoldsLabel" text="" GridPane.columnIndex="1" GridPane.rowIndex="6" />
+                                                         </children>
+                                                      </GridPane>
+                                                      <GridPane prefHeight="140.0" prefWidth="273.0">
+                                                  <columnConstraints>
+                                                    <ColumnConstraints hgrow="SOMETIMES" maxWidth="195.0" minWidth="10.0" prefWidth="167.0" />
+                                                    <ColumnConstraints hgrow="SOMETIMES" maxWidth="146.0" minWidth="10.0" prefWidth="106.0" />
+                                                  </columnConstraints>
+                                                  <rowConstraints>
+                                                      <RowConstraints maxHeight="20.0" minHeight="20.0" prefHeight="20.0" vgrow="SOMETIMES" />
+                                                      <RowConstraints maxHeight="20.0" minHeight="20.0" prefHeight="20.0" vgrow="SOMETIMES" />
+                                                      <RowConstraints maxHeight="20.0" minHeight="20.0" prefHeight="20.0" vgrow="SOMETIMES" />
+                                                      <RowConstraints maxHeight="20.0" minHeight="20.0" prefHeight="20.0" vgrow="SOMETIMES" />
+                                                      <RowConstraints maxHeight="20.0" minHeight="20.0" prefHeight="20.0" vgrow="SOMETIMES" />
+                                                      <RowConstraints maxHeight="20.0" minHeight="20.0" prefHeight="20.0" vgrow="SOMETIMES" />
+                                                  </rowConstraints>
+                                                   <children>
+                                                      <Label text="Wins:" GridPane.columnIndex="0" GridPane.rowIndex="0" />
+                                                      <Label text="Raises:" GridPane.columnIndex="0" GridPane.rowIndex="1" />
+                                                      <Label text="Average Winnings Per Hand:" GridPane.columnIndex="0" GridPane.rowIndex="2" />
+                                                      <Label text="Winnings:" GridPane.columnIndex="0" GridPane.rowIndex="3" />
+                                                      <Label text="Best Hand:" GridPane.columnIndex="0" GridPane.rowIndex="4" />
+                                                      <Label text="Biggest Win:" GridPane.columnIndex="0" GridPane.rowIndex="5" />
+                                                      <Label fx:id="botWinsLabel" text="" GridPane.columnIndex="1" GridPane.rowIndex="0" />
+                                                      <Label fx:id="botRaisesLabel" text="" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+                                                      <Label fx:id="botAverageWinningsLabel" text="" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+                                                      <Label fx:id="botWinningsLabel" text="" GridPane.columnIndex="1" GridPane.rowIndex="3" />
+                                                      <Label fx:id="botBestHandLabel" text="" GridPane.columnIndex="1" GridPane.rowIndex="4" />
+                                                      <Label fx:id="botBiggestWinLabel" text="" GridPane.columnIndex="1" GridPane.rowIndex="5" />
+                                                   </children>
+                                                </GridPane>
+                                                      
+                                                   </children>
+                                                </HBox>
+                                             </content>
+                                          </ScrollPane>
+                                       </children>
+                                    </AnchorPane>
                               </content>
                             </Tab>
                           </tabs>

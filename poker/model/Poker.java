@@ -229,6 +229,12 @@ public class Poker {
          mainApp.updateBetAmountOne(null);
 
          for (Player player : players) {
+            if (player instanceof Bot) {
+               mainApp.updateBotStats(player.stats);
+            }
+            else {
+               mainApp.updatePlayerStats(player.stats);
+            }
             player.setPlayerActed(false);
             player.setTotalBet(0);
          }
