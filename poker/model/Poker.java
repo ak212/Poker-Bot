@@ -24,23 +24,31 @@ public class Poker {
    public static Dealer dealer;
    public static Bot bot;
    public Main mainApp;
+   public int hands;
+   public int smallBlind;
+   public int stack;
+
+   public Poker(int stack, int smallBlind, int hands) {
+      this.hands = hands;
+      this.smallBlind = smallBlind;
+      this.stack = stack;
+   }
 
    /**
     * Function that controls the poker game. Handles all aspects of the game.
     */
    public void playPoker() {
-      dealer = new Dealer();
       dealer.setMainApp(mainApp);
+      dealer = new Dealer(this.smallBlind, this.hands);
 
       int gameState = 0;
       boolean playGame = true;
       int playerId = 0;
 
-      int startingChips = 2500;
       ArrayList<Player> players = new ArrayList<Player>();
       ArrayList<Player> playersEliminated = new ArrayList<Player>();
-      players.add(new Player(playerId++, startingChips));
-      players.add(new Bot(playerId++, startingChips));
+      players.add(new Player(playerId++, this.stack));
+      players.add(new Bot(playerId++, this.stack));
       // players.add(new Bot(playerId++, startingChips));
 
       for (Player player : players) {

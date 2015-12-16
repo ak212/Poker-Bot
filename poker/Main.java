@@ -6,12 +6,15 @@ import java.util.ArrayList;
 import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.concurrent.Task;
+import javafx.event.EventHandler;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.image.Image;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
+import javafx.stage.WindowEvent;
 import poker.controller.PokerTableController;
+import poker.controller.SetupController;
 import poker.model.Poker;
 import poker.model.cards.Card;
 import poker.model.cards.HoleCards;
@@ -29,8 +32,19 @@ public class Main extends Application {
    public void start(Stage primaryStage) throws Exception {
       this.primaryStage = primaryStage;
       this.primaryStage.setTitle("Poker");
-      showMainView();
-      poker = new Poker();
+      showSetupView();
+
+      primaryStage.setOnCloseRequest(new EventHandler<WindowEvent>() {
+         @Override
+         public void handle(WindowEvent t) {
+            Platform.exit();
+            System.exit(0);
+         }
+      });
+   }
+
+   public void startGame(int chips, int blind, int hands) {
+      poker = new Poker(chips, blind, hands);
       poker.setMainApp(this);
 
       Task<Void> task = new Task<Void>() {
@@ -43,11 +57,34 @@ public class Main extends Application {
 
       new Thread(task).start();
    }
-
-   public void showMainView() {
+   
+   public void showSetupView() {
 
       try {
-         // Load root layout from fxml file.
+         // Load Setup layout from fxml file.
+         FXMLLoader loader = new FXMLLoader();
+         loader.setLocation(Main.class.getResource("view/Setup.fxml"));
+         rootLayout = (AnchorPane) loader.load();
+
+         // Show the scene containing the root layout.
+         Scene scene = new Scene(rootLayout);
+         primaryStage.setScene(scene);
+         primaryStage.show();
+
+         // set controller and application information
+         SetupController controller = loader.getController();
+         controller.setMainApp(this);
+
+      }
+      catch (IOException e) {
+         e.printStackTrace();
+      }
+   }
+
+   public void showMainView(int chips, int blind, int hands) {
+
+      try {
+         // Load PokerTable layout from fxml file.
          FXMLLoader loader = new FXMLLoader();
          loader.setLocation(Main.class.getResource("view/PokerTable.fxml"));
          rootLayout = (AnchorPane) loader.load();
@@ -64,6 +101,7 @@ public class Main extends Application {
          tableController.setMainApp(this);
          tableController.addListener();
 
+         startGame(chips, blind, hands);
       }
       catch (IOException e) {
          e.printStackTrace();

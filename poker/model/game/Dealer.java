@@ -29,6 +29,7 @@ public class Dealer {
    private ArrayList<Player> playersTied;
    private int smallBlindAmount;
    private int bigBlindAmount;
+   private int handsPerLevel;
    int dealerButtonPosition;
    int smallBlindPosition;
    int bigBlindPosition;
@@ -51,12 +52,13 @@ public class Dealer {
    /**
     * Construct the dealer, setting member variables to their default values.
     */
-   public Dealer() {
+   public Dealer(int startingSmallBlind, int handsPerLevel) {
       this.dealerButtonPosition = 0;
       this.smallBlindPosition = 1;
       this.bigBlindPosition = 2;
-      this.setSmallBlindAmount(25);
-      this.setBigBlindAmount(50);
+      this.setSmallBlindAmount(startingSmallBlind);
+      this.setBigBlindAmount(startingSmallBlind * 2);
+      this.handsPerLevel = handsPerLevel;
       this.setPot(0);
       this.setCurrentBet(0);
       this.setWinner(new Player(-1, 0));
@@ -757,8 +759,8 @@ public class Dealer {
       this.getWinner().setCurrentHand(new HandStrength(Hand.NoHand, new ArrayList<Integer>()));
       this.numHandsPlayed += 1;
 
-      // increases the blinds every 6 hands
-      if (this.numHandsPlayed % 6 == 0) {
+      // increases the blinds
+      if (this.numHandsPlayed % this.handsPerLevel == 0) {
          this.setBigBlindAmount(this.getBigBlindAmount() * 2);
          this.setSmallBlindAmount(this.getSmallBlindAmount() * 2);
       }
