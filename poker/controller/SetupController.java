@@ -16,6 +16,10 @@ public class SetupController {
 
    @FXML
    private void intialize() {
+
+   }
+
+   public void addListener() {
       stackTextField.textProperty().addListener(new ChangeListener<String>() {
          @Override
          public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
@@ -28,7 +32,7 @@ public class SetupController {
                stackTextField.setText(oldValue);
             }
             
-            if (temp >= 1000 && temp <= 1000000) {
+            if (temp >= 0 && temp <= 1000000) {
                stack = temp;
                stackTextField.setText(newValue);
             }
@@ -72,7 +76,7 @@ public class SetupController {
                smallBlindTextField.setText(oldValue);
             }
 
-            if (temp >= stack / 50 && temp <= stack / 10) {
+            if (temp >= 0 && temp <= stack / 10) {
                smallBlind = temp;
                smallBlindTextField.setText(newValue);
             }
@@ -85,7 +89,9 @@ public class SetupController {
 
    @FXML
    private void handlePlay() {
-      mainApp.showMainView(stack, smallBlind, hands);
+      if (smallBlind >= stack / 100 && smallBlind <= stack / 10 && hands > 0 && hands < 100) {
+         mainApp.showMainView(stack, smallBlind, hands);
+      }
    }
 
    public void setMainApp(Main mainApp) {

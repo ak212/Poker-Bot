@@ -73,6 +73,7 @@ public class Main extends Application {
 
          // set controller and application information
          SetupController controller = loader.getController();
+         controller.addListener();
          controller.setMainApp(this);
 
       }

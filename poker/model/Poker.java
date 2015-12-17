@@ -38,8 +38,8 @@ public class Poker {
     * Function that controls the poker game. Handles all aspects of the game.
     */
    public void playPoker() {
-      dealer.setMainApp(mainApp);
       dealer = new Dealer(this.smallBlind, this.hands);
+      dealer.setMainApp(mainApp);
 
       int gameState = 0;
       boolean playGame = true;
